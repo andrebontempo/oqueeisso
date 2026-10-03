@@ -39,10 +39,9 @@ copyImageIfExist('cat_madeira', 'cat-madeira.jpg');
 copyImageIfExist('cat_bolsas_bonecas', 'cat-bolsas-bonecas.jpg');
 copyImageIfExist('cat_croche', 'cat-croche.jpg');
 
-copyImageIfExist('artisan_fernanda', 'artisan-fernanda.jpg');
-copyImageIfExist('artisan_rodrigo', 'artisan-rodrigo.jpg');
-copyImageIfExist('artisan_marcia', 'artisan-marcia.jpg');
-copyImageIfExist('artisan_juliana', 'artisan-juliana.jpg');
+copyImageIfExist('artisan_nara', 'artisan-nara.jpg');
+copyImageIfExist('artisan_humberto', 'artisan-humberto.jpg');
+copyImageIfExist('artisan_alcione', 'artisan-alcione.jpg');
 
 const seedDB = async () => {
   try {
@@ -59,50 +58,42 @@ const seedDB = async () => {
 
     console.log('[Seed] Coleções antigas limpas.');
 
-    // 0. Criar Artesãos da Família
+    // 0. Criar Os 3 Artesãos da Família
     const artisansData = [
       {
-        name: 'Fernanda',
-        role: 'Esposa',
-        specialty: 'Crochê & Amigurumis',
-        bio: 'Dedica horas tecendo com carinho tapetes rendados, amigurumis e caminhos de mesa em fio de algodão.',
-        avatar: '/images/artisan-fernanda.jpg',
+        name: 'Nara Bontempo',
+        role: 'Artesã',
+        specialty: 'Bolsas e Bonecas',
+        bio: 'Confecciona bolsas em tecido de alta durabilidade, niqueleiras com fecho vintage e bonecas de pano afetivas cheias de charme.',
+        avatar: '/images/artisan-nara.jpg',
         order: 1,
       },
       {
-        name: 'Rodrigo',
-        role: 'Irmão',
+        name: 'Humberto Bontempo',
+        role: 'Artesão',
         specialty: 'Trabalhos em Madeira',
-        bio: 'Mestre no entalhe de madeiras nobres, esculpindo tábuas rústicas gourmet e peças funcionais para o lar.',
-        avatar: '/images/artisan-rodrigo.jpg',
+        bio: 'Mestre no entalhe de madeiras nobres sustentáveis, esculpindo tábuas rústicas gourmet e peças funcionais para o lar.',
+        avatar: '/images/artisan-humberto.jpg',
         order: 2,
       },
       {
-        name: 'Márcia',
-        role: 'Cunhada',
-        specialty: 'Bolsas & Costura Criativa',
-        bio: 'Confecciona bolsas em tecido de alta durabilidade, niqueleiras com fecho vintage e acessórios elegantes.',
-        avatar: '/images/artisan-marcia.jpg',
+        name: 'Alcione Pereira',
+        role: 'Artesã',
+        specialty: 'Crochês e Afins',
+        bio: 'Dedica horas tecendo com carinho tapetes rendados, amigurumis e artigos aconchegantes em fio de algodão.',
+        avatar: '/images/artisan-alcione.jpg',
         order: 3,
-      },
-      {
-        name: 'Juliana',
-        role: 'Cunhada',
-        specialty: 'Bonecas de Pano Afetivas',
-        bio: 'Cria bonecas de pano artesanais cheias de charme, vestidinhos florais e detalhes únicos de vestuário.',
-        avatar: '/images/artisan-juliana.jpg',
-        order: 4,
       },
     ];
 
     await Artisan.insertMany(artisansData);
-    console.log('[Seed] Artesãos da família cadastrados com sucesso!');
+    console.log('[Seed] Artesãos cadastrados com sucesso!');
 
     // 1. Criar Usuário Admin Padrão e Usuário Cliente de Teste
     const adminUser = await User.create({
-      name: 'Rodrigo (Admin O Que É Isso)',
+      name: 'Humberto Bontempo (Admin O Que É Isso)',
       email: 'admin@oqueeisso.com',
-      password: 'admin123', // Será hasheado automaticamente via pre('save')
+      password: 'admin123',
       role: 'admin',
       phone: '(11) 98888-7777',
       address: {
@@ -138,7 +129,7 @@ const seedDB = async () => {
     const catMadeira = await Category.create({
       name: 'Trabalhos em Madeira',
       slug: 'trabalhos-em-madeira',
-      description: 'Peças artesanais entalhadas e lixadas à mão em madeira nobre sustentável.',
+      description: 'Peças artesanais entalhadas e lixadas à mão em madeira nobre sustentável por Humberto Bontempo.',
       image: '/images/cat-madeira.jpg',
       icon: 'fa-tree',
     });
@@ -146,7 +137,7 @@ const seedDB = async () => {
     const catBolsasBonecas = await Category.create({
       name: 'Bolsas e Bonecas',
       slug: 'bolsas-e-bonecas',
-      description: 'Bolsas de tecido bordadas, niqueleiras e bonecas de pano afetivas confeccionadas à mão.',
+      description: 'Bolsas de tecido bordadas, niqueleiras e bonecas de pano afetivas por Nara Bontempo.',
       image: '/images/cat-bolsas-bonecas.jpg',
       icon: 'fa-shopping-bag',
     });
@@ -154,7 +145,7 @@ const seedDB = async () => {
     const catCroche = await Category.create({
       name: 'Crochê',
       slug: 'croche',
-      description: 'Tapetes, caminhos de mesa, amigurumis e artigos aconchegantes tecidos em fio de algodão.',
+      description: 'Tapetes, caminhos de mesa, amigurumis e artigos aconchegantes em crochê por Alcione Pereira.',
       image: '/images/cat-croche.jpg',
       icon: 'fa-certificate',
     });
@@ -163,7 +154,7 @@ const seedDB = async () => {
 
     // 3. Criar Produtos Exclusivos
     const productsData = [
-      // TRABALHOS EM MADEIRA (Irmão - Rodrigo)
+      // TRABALHOS EM MADEIRA (Humberto Bontempo)
       {
         name: 'Tábua Rústica em Madeira Nobre Cumaru',
         slug: 'tabua-rustica-madeira-cumaru',
@@ -171,7 +162,7 @@ const seedDB = async () => {
         price: 149.90,
         originalPrice: 180.00,
         category: catMadeira._id,
-        artisan: 'Irmão (Rodrigo)',
+        artisan: 'Humberto Bontempo',
         stock: 5,
         images: ['/images/cat-madeira.jpg', '/images/hero-artesanato.jpg'],
         featured: true,
@@ -182,25 +173,25 @@ const seedDB = async () => {
       {
         name: 'Caixa Organizadora Entalhada em Madeira',
         slug: 'caixa-organizadora-entalhada-madeira',
-        description: 'Baú decorativo pequeno em madeira de reflorestamento com entalhes florais na tampa. Fecho em latão envelhecido e interior aveludado, perfeita para guardar joias e lembranças.',
+        description: 'Baú decorativo pequeno em madeira de reflorestamento com entalhes florais na tampa. Fecho em latão envelhecido e interior aveludado.',
         price: 119.00,
         originalPrice: 140.00,
         category: catMadeira._id,
-        artisan: 'Irmão (Rodrigo)',
+        artisan: 'Humberto Bontempo',
         stock: 3,
         images: ['/images/hero-artesanato.jpg'],
         featured: true,
         isBestSeller: false,
         dimensions: '22cm x 15cm x 10cm',
-        materials: 'Madeira Pinus Nobre, Latão, Veludo Interno',
+        materials: 'Madeira Pinus Nobre, Latão',
       },
       {
         name: 'Descanso de Panela Rústico Hexagonal (Par)',
         slug: 'descanso-de-panela-rustico-hexagonal',
-        description: 'Conjunto com 2 descansos de panela em formato hexagonal confeccionados com pequenas ripas de madeira maciça de peroba rosa de reuso. Protege sua mesa com elegância rústica.',
+        description: 'Conjunto com 2 descansos de panela em formato hexagonal confeccionados com ripas de madeira maciça de peroba rosa de reuso.',
         price: 65.00,
         category: catMadeira._id,
-        artisan: 'Irmão (Rodrigo)',
+        artisan: 'Humberto Bontempo',
         stock: 8,
         images: ['/images/cat-madeira.jpg'],
         featured: false,
@@ -209,82 +200,82 @@ const seedDB = async () => {
         materials: 'Peroba Rosa de Reuso',
       },
 
-      // BOLSAS E BONECAS (Cunhadas - Márcia e Juliana)
+      // BOLSAS E BONECAS (Nara Bontempo)
       {
         name: 'Bolsa Tote em Tecido Botânico com Alça em Couro',
         slug: 'bolsa-tote-tecido-botanico-alca-couro',
-        description: 'Bolsa espaçosa e elegante confeccionada em sarja de algodão com estampa botânica exclusiva. Alças resistentes em couro sintético e fecho interno com botão magnético.',
+        description: 'Bolsa espaçosa e elegante confeccionada em sarja de algodão com estampa botânica exclusiva. Alças resistentes em couro sintético e fecho interno.',
         price: 189.90,
         originalPrice: 220.00,
         category: catBolsasBonecas._id,
-        artisan: 'Cunhada (Márcia)',
+        artisan: 'Nara Bontempo',
         stock: 4,
         images: ['/images/cat-bolsas-bonecas.jpg', '/images/hero-artesanato.jpg'],
         featured: true,
         isBestSeller: true,
         dimensions: '38cm x 32cm x 12cm',
-        materials: 'Sarja 100% Algodão, Alças de Couro Sintético',
+        materials: 'Sarja 100% Algodão',
       },
       {
         name: 'Boneca de Pano Afetiva "Clarinha"',
         slug: 'boneca-de-pano-afetiva-clarinha',
-        description: 'Encantadora boneca de pano articulada artesanal. Vestidinho floral em tricoline com detalhes em renda guipir e cabelos em lã natural trançados com laço.',
+        description: 'Encantadora boneca de pano articulada artesanal. Vestidinho floral em tricoline com detalhes em renda guipir e cabelos em lã natural trançados.',
         price: 135.00,
         originalPrice: 160.00,
         category: catBolsasBonecas._id,
-        artisan: 'Cunhada (Juliana)',
+        artisan: 'Nara Bontempo',
         stock: 6,
         images: ['/images/cat-bolsas-bonecas.jpg'],
         featured: true,
         isBestSeller: true,
         dimensions: 'Alt: 40cm, Larg: 18cm',
-        materials: 'Algodão Cru, Tricoline, Enchimento Anti-alérgico',
+        materials: 'Algodão Cru, Tricoline',
       },
       {
         name: 'Necessaire Niqueleira Vintage com Fecho da Vovó',
-        slug: 'necessaire-niqueleira-vintage-fecho-vovó',
-        description: 'Porta-moedas e maquiagem artesanal com fecho da vovó metálico retrô. Forro reforçado em linho cru e tecido externo estampa vintage.',
+        slug: 'necessaire-niqueleira-vintage-fecho-vovo',
+        description: 'Porta-moedas e maquiagem artesanal com fecho da vovó metálico retrô. Forro reforçado em linho cru.',
         price: 48.00,
         category: catBolsasBonecas._id,
-        artisan: 'Cunhada (Márcia)',
+        artisan: 'Nara Bontempo',
         stock: 10,
         images: ['/images/hero-artesanato.jpg'],
         featured: false,
         isBestSeller: false,
         dimensions: '16cm x 12cm x 6cm',
-        materials: 'Linho, Algodão, Fecho Metálico Bronze',
+        materials: 'Linho, Algodão',
       },
 
-      // CROCHÊ (Esposa - Fernanda)
+      // CROCHÊ (Alcione Pereira)
       {
         name: 'Caminho de Mesa em Crochê Rendado Algodão Cru',
         slug: 'caminho-de-mesa-croche-rendado-algodao',
-        description: 'Trilho de mesa minunciosamente tecido à mão em ponto rendado florido. Perfeito para mesas de 6 ou 8 lugares, trazendo aconchego e sofisticação ao ambiente.',
+        description: 'Trilho de mesa minunciosamente tecido à mão em ponto rendado florido. Perfeito para mesas de 6 ou 8 lugares.',
         price: 159.00,
         originalPrice: 190.00,
         category: catCroche._id,
-        artisan: 'Esposa (Fernanda)',
+        artisan: 'Alcione Pereira',
         stock: 3,
         images: ['/images/cat-croche.jpg', '/images/hero-artesanato.jpg'],
         featured: true,
         isBestSeller: true,
         dimensions: '140cm x 40cm',
-        materials: 'Fio Barroco 100% Algodão Cru',
+        materials: 'Fio Barroco 100% Algodão',
       },
       {
         name: 'Tapete Redondo de Crochê Terracota e Bege',
         slug: 'tapete-redondo-croche-terracota-bege',
-        description: 'Tapete macio e encorpado confeccionado em barbante ecológico de alta gramatura. Design circular degradê em tons de bege e terracota.',
+        description: 'Tapete macio e encorpado confeccionado em barbante ecológico de alta gramatura. Design circular degradê em tons bege e terracota.',
         price: 179.90,
         originalPrice: 210.00,
         category: catCroche._id,
-        artisan: 'Esposa (Fernanda)',
+        artisan: 'Alcione Pereira',
         stock: 2,
         images: ['/images/cat-croche.jpg'],
         featured: true,
         isBestSeller: false,
         dimensions: 'Diâmetro: 95cm',
-        materials: 'Barbante Ecológico nº 8',
+        materials: 'Barbante Ecológico',
       },
       {
         name: 'Amigurumi Ursinho de Pelúcia em Crochê',
@@ -292,13 +283,13 @@ const seedDB = async () => {
         description: 'Bichinho amigurumi fofinho tecido à mão com olhos de segurança. Ideal para decoração do quarto de bebê ou presente afetivo.',
         price: 89.90,
         category: catCroche._id,
-        artisan: 'Esposa (Fernanda)',
+        artisan: 'Alcione Pereira',
         stock: 5,
         images: ['/images/hero-artesanato.jpg'],
         featured: false,
         isBestSeller: true,
         dimensions: 'Altura: 24cm',
-        materials: 'Fio Amigurumi Soft, Enchimento Anti-alérgico',
+        materials: 'Fio Amigurumi Soft',
       },
     ];
 
@@ -319,7 +310,7 @@ const seedDB = async () => {
           price: 149.90,
           quantity: 1,
           image: '/images/cat-madeira.jpg',
-          artisan: 'Irmão (Rodrigo)',
+          artisan: 'Humberto Bontempo',
         },
       ],
       subtotal: 149.90,
