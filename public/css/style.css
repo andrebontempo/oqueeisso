@@ -120,11 +120,36 @@ img {
 .navbar-container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 16px 24px;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  width: 100%;
+}
+
+.navbar-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.navbar-search-row {
+  flex: 1;
+  max-width: 460px;
+}
+
+.admin-badge-btn {
+  background: var(--accent);
+  color: #FFF;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .brand-logo {
@@ -988,7 +1013,22 @@ img {
   gap: 32px;
 }
 
-/* Responsividade Mobile Extensiva */
+/* ==========================================================================
+   RESPONSIVIDADE MOBILE & TABLETS (FLUIDA & SEM OVERFLOW)
+   ========================================================================== */
+
+/* Prevenção Absoluta de Transbordo Horizontal */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+.main-wrapper, .hero-section, .family-section, .footer, .footer-container, .navbar-container {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+}
+
 @media (max-width: 992px) {
   .hero-section {
     grid-template-columns: 1fr;
@@ -1015,76 +1055,123 @@ img {
   }
   .footer-container {
     grid-template-columns: 1fr 1fr;
+    gap: 24px;
   }
 }
 
-@media (max-width: 640px) {
-  .top-bar {
-    font-size: 0.75rem;
-    padding: 6px 12px;
-  }
+@media (max-width: 768px) {
   .navbar-container {
-    flex-wrap: wrap;
-    padding: 12px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px 14px;
     gap: 10px;
   }
-  .brand-name {
-    font-size: 1.3rem;
+
+  .navbar-top-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .brand-icon {
-    width: 38px;
-    height: 38px;
-    font-size: 1.1rem;
-  }
-  .search-form {
-    order: 3;
+
+  .navbar-search-row {
     width: 100%;
     max-width: 100%;
   }
+
+  .search-form {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .brand-name {
+    font-size: 1.3rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.65rem;
+  }
+
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+
+  .user-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .top-bar-inner {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75rem;
+    padding: 4px 12px;
+  }
+
   .hero-section {
-    padding: 24px 18px;
-    margin-bottom: 28px;
+    padding: 24px 16px;
+    margin-bottom: 24px;
     border-radius: var(--radius-md);
   }
+
   .hero-title {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
   }
+
   .hero-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
+
   .hero-cta {
     flex-direction: column;
     width: 100%;
   }
+
   .hero-cta .btn {
     width: 100%;
   }
+
   .family-title {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
+
   .family-cards-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
+
   .family-card-item {
     padding: 16px;
   }
+
   .form-row-responsive {
     grid-template-columns: 1fr !important;
   }
+
   .main-wrapper {
     padding: 16px 12px;
   }
+
   .section-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
+
   .footer-container {
     grid-template-columns: 1fr;
+    padding: 0 16px;
   }
+
   .footer-bottom {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     text-align: center;
+    padding: 16px;
   }
 }
 
@@ -1099,5 +1186,6 @@ img {
     opacity: 1;
   }
 }
+
 
 
