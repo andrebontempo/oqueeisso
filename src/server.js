@@ -46,6 +46,7 @@ app.use('/', require('./routes/authRoutes'));
 app.use('/', require('./routes/cartRoutes'));
 app.use('/', require('./routes/checkoutRoutes'));
 app.use('/', require('./routes/userRoutes'));
+app.use('/', require('./routes/contactRoutes'));
 app.use('/admin', require('./routes/adminRoutes'));
 
 // Tratar Rota Não Encontrada (404)

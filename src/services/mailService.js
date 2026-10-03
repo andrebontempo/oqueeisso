@@ -279,6 +279,60 @@ const sendStatusUpdateEmail = async (order) => {
   });
 };
 
+// ─── 7. MENSAGEM DE CONTATO (ADMIN & CONFIRMAÇÃO CLIENTE) ──────────────────────
+const sendContactEmail = async ({ name, email, phone, subject, message }) => {
+  const adminHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 2px solid #E85D04; border-radius: 8px; padding: 24px; background: #ffffff;">
+      <h2 style="color: #E85D04; margin-top: 0;">📬 Nova Mensagem de Contato!</h2>
+      <p>Recebemos uma nova mensagem através da página de contato do site:</p>
+      
+      <div style="background: #FFF9F3; padding: 16px; border-radius: 6px; border-left: 4px solid #E85D04; margin: 16px 0;">
+        <p style="margin: 4px 0;"><strong>Nome:</strong> ${name}</p>
+        <p style="margin: 4px 0;"><strong>E-mail:</strong> ${email}</p>
+        <p style="margin: 4px 0;"><strong>Telefone:</strong> ${phone || 'Não informado'}</p>
+        <p style="margin: 4px 0;"><strong>Assunto:</strong> ${subject || 'Contato via Site'}</p>
+        <p style="margin: 4px 0;"><strong>Data:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+      </div>
+
+      <h3 style="color: #2C1A11; margin-bottom: 8px;">Mensagem:</h3>
+      <div style="background: #FAF7F2; padding: 16px; border-radius: 6px; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${message}</div>
+    </div>
+  `;
+
+  const customerHtml = `
+    <div style="font-family: 'Segoe UI', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #eaeaea; border-radius: 12px; overflow: hidden;">
+      <div style="background: #2C1A11; padding: 24px; text-align: center; color: #ffffff;">
+        <h1 style="margin: 0; font-size: 22px;">Mensagem Recebida! 🌸</h1>
+        <p style="margin: 6px 0 0; color: #E85D04; font-size: 13px; text-transform: uppercase;">O Que É Isso? Artesanato</p>
+      </div>
+
+      <div style="padding: 28px; line-height: 1.6; color: #333333;">
+        <p>Olá, <strong>${name}</strong>!</p>
+        <p>Agradecemos o seu contato com a <strong>O Que É Isso? Artesanato</strong>. Recebemos sua mensagem sobre "<strong>${subject || 'Contato'}</strong>" e em breve nossa equipe retornará a você.</p>
+        
+        <div style="background: #FFF9F3; border-left: 4px solid #E85D04; padding: 16px; border-radius: 6px; margin: 20px 0; font-size: 14px;">
+          <strong>Sua Mensagem:</strong><br/>
+          <em style="color: #555;">"${message}"</em>
+        </div>
+
+        <p style="font-size: 14px; color: #666666;">Nosso atendimento funciona via e-mail (<strong>atendimento@oqueeisso.com</strong>). Tenha um excelente dia!</p>
+      </div>
+    </div>
+  `;
+
+  await sendEmail({
+    to: ADMIN_ALERT_EMAIL,
+    subject: `📬 [Contato Site] ${subject || 'Nova Mensagem'} — ${name}`,
+    html: adminHtml,
+  });
+
+  return sendEmail({
+    to: email,
+    subject: `🌸 Recebemos sua mensagem — O Que É Isso? Artesanato`,
+    html: customerHtml,
+  });
+};
+
 module.exports = {
   sendEmail,
   sendWelcomeEmail,
@@ -287,4 +341,5 @@ module.exports = {
   sendAdminNewOrderAlert,
   sendPaymentApprovedEmail,
   sendStatusUpdateEmail,
+  sendContactEmail,
 };

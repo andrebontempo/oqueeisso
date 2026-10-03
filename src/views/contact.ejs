@@ -1,0 +1,121 @@
+<%- include('partials/header') %>
+
+<div style="max-width: 1100px; margin: 0 auto; padding-bottom: 48px;">
+  
+  <div style="text-align: center; margin-bottom: 40px;">
+    <span style="background: var(--bg-main); color: var(--secondary); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+      <i class="fas fa-comments"></i> Atendimento ao Cliente
+    </span>
+    <h1 style="font-size: 2.5rem; margin: 12px 0 8px; color: var(--text-dark);">Fale Conosco</h1>
+    <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 620px; margin: 0 auto;">
+      Tire dúvidas sobre seus pedidos, peça orçamentos para peças sob encomenda ou nos envie uma mensagem carinhosa.
+    </p>
+  </div>
+
+  <% if (success) { %>
+    <div class="alert alert-success" style="font-size: 1rem; padding: 18px; text-align: center; margin-bottom: 32px; border-radius: var(--radius-md);">
+      <i class="fas fa-check-circle" style="font-size: 1.3rem;"></i> <%= success %>
+    </div>
+  <% } %>
+
+  <% if (error) { %>
+    <div class="alert alert-danger" style="font-size: 1rem; padding: 18px; text-align: center; margin-bottom: 32px; border-radius: var(--radius-md);">
+      <i class="fas fa-exclamation-triangle" style="font-size: 1.3rem;"></i> <%= error %>
+    </div>
+  <% } %>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 36px; align-items: start;">
+    
+    <!-- Coluna de Informações de Contato -->
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+      
+      <div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          <div style="width: 50px; height: 50px; background: #FFF9F3; color: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+            <i class="fas fa-envelope-open-text"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin: 0; color: var(--text-dark);">E-mail Oficial</h3>
+            <span style="font-size: 0.88rem; color: var(--text-muted);">Atendimento geral e suporte</span>
+          </div>
+        </div>
+        <p style="margin: 0; font-size: 1rem; font-weight: 700; color: var(--primary);">
+          <a href="mailto:atendimento@oqueeisso.com" style="color: inherit; text-decoration: underline;">atendimento@oqueeisso.com</a>
+        </p>
+      </div>
+
+      <div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          <div style="width: 50px; height: 50px; background: #F0FDFB; color: #32BCAD; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+            <i class="fas fa-heart"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin: 0; color: var(--text-dark);">Atendimento Familiar</h3>
+            <span style="font-size: 0.88rem; color: var(--text-muted);">Resposta rápida e dedicada</span>
+          </div>
+        </div>
+        <p style="margin: 0; font-size: 0.92rem; color: var(--text-muted); line-height: 1.6;">
+          Respondemos todas as mensagens recebidas por e-mail no prazo máximo de 24 horas úteis.
+        </p>
+      </div>
+
+      <div style="background: linear-gradient(135deg, #2C1A11 0%, #4A2818 100%); color: #FFF; padding: 28px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);">
+        <h3 style="font-size: 1.2rem; color: #FFF; margin-bottom: 12px;">
+          <i class="fas fa-palette" style="color: var(--secondary);"></i> Encomendas Personalizadas
+        </h3>
+        <p style="font-size: 0.92rem; color: rgba(255,255,255,0.85); line-height: 1.6; margin-bottom: 0;">
+          Quer uma tábua de madeira entalhada com nome, uma boneca sob medida ou um artigo exclusivo de crochê? Descreva sua ideia no formulário ao lado!
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Formulário de Contato -->
+    <div style="background: #FFF; padding: 32px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-md);">
+      <h2 style="font-size: 1.4rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 12px; color: var(--text-dark);">
+        Envie sua Mensagem
+      </h2>
+
+      <form action="/contato" method="POST">
+        <div class="form-group">
+          <label class="form-label">Seu Nome Completo *</label>
+          <input type="text" name="name" class="form-control" placeholder="Ex: Maria Santos" required value="<%= user ? user.name : (formData.name || '') %>">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label class="form-label">E-mail para Resposta *</label>
+            <input type="email" name="email" class="form-control" placeholder="seu@email.com" required value="<%= user ? user.email : (formData.email || '') %>">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefone / WhatsApp</label>
+            <input type="tel" name="phone" class="form-control" placeholder="(11) 99999-9999" value="<%= user ? user.phone : (formData.phone || '') %>">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Assunto</label>
+          <select name="subject" class="form-control">
+            <option value="Dúvida sobre Produto ou Pedido">Dúvida sobre Produto ou Pedido</option>
+            <option value="Encomenda Especial / Personalizada">Encomenda Especial / Personalizada</option>
+            <option value="Elogios ou Sugestões">Elogios ou Sugestões</option>
+            <option value="Outros Assuntos">Outros Assuntos</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Sua Mensagem *</label>
+          <textarea name="message" class="form-control" rows="5" placeholder="Escreva aqui como podemos te ajudar..." required><%= formData.message || '' %></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 1.05rem; margin-top: 8px;">
+          <i class="fas fa-paper-plane"></i> Enviar Mensagem
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>
