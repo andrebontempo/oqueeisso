@@ -40,10 +40,19 @@
       <div class="form-group">
         <label class="form-label">Artesão Responsável *</label>
         <select name="artisan" class="form-control" required>
-          <option value="Esposa (Fernanda)" <%= product && product.artisan === 'Esposa (Fernanda)' ? 'selected' : '' %>>Esposa (Fernanda)</option>
-          <option value="Irmão (Rodrigo)" <%= product && product.artisan === 'Irmão (Rodrigo)' ? 'selected' : '' %>>Irmão (Rodrigo)</option>
-          <option value="Cunhada (Márcia)" <%= product && product.artisan === 'Cunhada (Márcia)' ? 'selected' : '' %>>Cunhada (Márcia)</option>
-          <option value="Cunhada (Juliana)" <%= product && product.artisan === 'Cunhada (Juliana)' ? 'selected' : '' %>>Cunhada (Juliana)</option>
+          <option value="">Selecione o artesão...</option>
+          <% if (typeof artisans !== 'undefined' && artisans && artisans.length > 0) { %>
+            <% artisans.forEach(art => { %>
+              <option value="<%= art.name %> (<%= art.role %>)" <%= product && (product.artisan === art.name || product.artisan.includes(art.name)) ? 'selected' : '' %>>
+                <%= art.name %> (<%= art.role %> - <%= art.specialty %>)
+              </option>
+            <% }); %>
+          <% } else { %>
+            <option value="Esposa (Fernanda)" <%= product && product.artisan === 'Esposa (Fernanda)' ? 'selected' : '' %>>Esposa (Fernanda)</option>
+            <option value="Irmão (Rodrigo)" <%= product && product.artisan === 'Irmão (Rodrigo)' ? 'selected' : '' %>>Irmão (Rodrigo)</option>
+            <option value="Cunhada (Márcia)" <%= product && product.artisan === 'Cunhada (Márcia)' ? 'selected' : '' %>>Cunhada (Márcia)</option>
+            <option value="Cunhada (Juliana)" <%= product && product.artisan === 'Cunhada (Juliana)' ? 'selected' : '' %>>Cunhada (Juliana)</option>
+          <% } %>
           <option value="Família O Que É Isso" <%= product && product.artisan === 'Família O Que É Isso' ? 'selected' : '' %>>Família O Que É Isso</option>
         </select>
       </div>

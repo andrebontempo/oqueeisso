@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const Category = require('../models/Category');
+const Artisan = require('../models/Artisan');
 
 exports.getHome = async (req, res) => {
   try {
@@ -7,6 +8,7 @@ exports.getHome = async (req, res) => {
     const featuredProducts = await Product.find({ featured: true }).populate('category').limit(8);
     const bestSellers = await Product.find({ isBestSeller: true }).populate('category').limit(4);
     const recentProducts = await Product.find().sort({ createdAt: -1 }).populate('category').limit(8);
+    const artisans = await Artisan.find().sort({ order: 1 });
 
     res.render('index', {
       title: 'O Que É Isso? - Peças Exclusivas de Artesanato Feitas à Mão',
@@ -14,6 +16,7 @@ exports.getHome = async (req, res) => {
       featuredProducts,
       bestSellers,
       recentProducts,
+      artisans,
     });
   } catch (error) {
     console.error('Erro ao carregar home:', error);

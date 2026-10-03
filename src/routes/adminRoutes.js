@@ -17,6 +17,14 @@ router.get('/produtos/editar/:id', adminController.renderEditProduct);
 router.post('/produtos/editar/:id', upload.array('images', 5), adminController.updateProduct);
 router.post('/produtos/excluir/:id', adminController.deleteProduct);
 
+// Artesãos (Gestão da Família)
+router.get('/artesaos', adminController.getArtisans);
+router.get('/artesaos/novo', adminController.renderCreateArtisan);
+router.post('/artesaos/novo', upload.single('avatar'), adminController.createArtisan);
+router.get('/artesaos/editar/:id', adminController.renderEditArtisan);
+router.post('/artesaos/editar/:id', upload.single('avatar'), adminController.updateArtisan);
+router.post('/artesaos/excluir/:id', adminController.deleteArtisan);
+
 // Pedidos
 router.get('/pedidos', adminController.getOrders);
 router.post('/pedidos/status/:id', adminController.updateOrderStatus);

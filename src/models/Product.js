@@ -33,8 +33,8 @@ const productSchema = new mongoose.Schema(
     },
     artisan: {
       type: String,
-      enum: ['Esposa (Fernanda)', 'Irmão (Rodrigo)', 'Cunhada (Márcia)', 'Cunhada (Juliana)', 'Família O Que É Isso'],
       default: 'Família O Que É Isso',
+      trim: true,
     },
     stock: {
       type: Number,

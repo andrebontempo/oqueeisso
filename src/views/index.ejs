@@ -155,4 +155,33 @@
   </div>
 </section>
 
+<!-- Seção Conheça Nossos Artesãos da Família -->
+<section id="artesaos" style="margin-bottom: 56px;">
+  <div class="section-header">
+    <h2 class="section-title">Conheça Nossos Artesãos</h2>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px;">
+    <% if (typeof artisans !== 'undefined' && artisans && artisans.length > 0) { %>
+      <% artisans.forEach(artisan => { %>
+        <div style="background: #FFF; border-radius: var(--radius-md); padding: 32px 24px; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); text-align: center; display: flex; flex-direction: column; align-items: center; transition: all var(--transition-normal);" onmouseenter="this.style.transform='translateY(-6px)'; this.style.boxShadow='var(--shadow-md)';" onmouseleave="this.style.transform='none'; this.style.boxShadow='var(--shadow-sm)';">
+          <div style="width: 104px; height: 104px; border-radius: 50%; overflow: hidden; margin-bottom: 16px; border: 4px solid var(--secondary); box-shadow: var(--shadow-sm);">
+            <img src="<%= artisan.avatar %>" alt="<%= artisan.name %>" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <span style="background: rgba(210, 105, 30, 0.1); color: var(--secondary); font-size: 0.78rem; font-weight: 700; padding: 4px 14px; border-radius: var(--radius-full); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+            <%= artisan.role %>
+          </span>
+          <h3 style="font-size: 1.35rem; margin-bottom: 4px;"><%= artisan.name %></h3>
+          <span style="font-size: 0.88rem; font-weight: 700; color: var(--primary); margin-bottom: 14px;">
+            <i class="fas fa-magic"></i> <%= artisan.specialty %>
+          </span>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-top: auto;">
+            "<%= artisan.bio %>"
+          </p>
+        </div>
+      <% }); %>
+    <% } %>
+  </div>
+</section>
+
 <%- include('partials/footer') %>

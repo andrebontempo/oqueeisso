@@ -9,6 +9,7 @@ const User = require('../models/User');
 const Category = require('../models/Category');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
+const Artisan = require('../models/Artisan');
 
 // Copiar imagens geradas para public/images se existirem
 const artifactDir = '/home/andre/.gemini/antigravity/brain/37619418-56eb-4d6f-aff8-654f880253da';
@@ -38,6 +39,11 @@ copyImageIfExist('cat_madeira', 'cat-madeira.jpg');
 copyImageIfExist('cat_bolsas_bonecas', 'cat-bolsas-bonecas.jpg');
 copyImageIfExist('cat_croche', 'cat-croche.jpg');
 
+copyImageIfExist('artisan_fernanda', 'artisan-fernanda.jpg');
+copyImageIfExist('artisan_rodrigo', 'artisan-rodrigo.jpg');
+copyImageIfExist('artisan_marcia', 'artisan-marcia.jpg');
+copyImageIfExist('artisan_juliana', 'artisan-juliana.jpg');
+
 const seedDB = async () => {
   try {
     const connStr = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/oqueeisso';
@@ -49,8 +55,48 @@ const seedDB = async () => {
     await Category.deleteMany({});
     await Product.deleteMany({});
     await Order.deleteMany({});
+    await Artisan.deleteMany({});
 
     console.log('[Seed] Coleções antigas limpas.');
+
+    // 0. Criar Artesãos da Família
+    const artisansData = [
+      {
+        name: 'Fernanda',
+        role: 'Esposa',
+        specialty: 'Crochê & Amigurumis',
+        bio: 'Dedica horas tecendo com carinho tapetes rendados, amigurumis e caminhos de mesa em fio de algodão.',
+        avatar: '/images/artisan-fernanda.jpg',
+        order: 1,
+      },
+      {
+        name: 'Rodrigo',
+        role: 'Irmão',
+        specialty: 'Trabalhos em Madeira',
+        bio: 'Mestre no entalhe de madeiras nobres, esculpindo tábuas rústicas gourmet e peças funcionais para o lar.',
+        avatar: '/images/artisan-rodrigo.jpg',
+        order: 2,
+      },
+      {
+        name: 'Márcia',
+        role: 'Cunhada',
+        specialty: 'Bolsas & Costura Criativa',
+        bio: 'Confecciona bolsas em tecido de alta durabilidade, niqueleiras com fecho vintage e acessórios elegantes.',
+        avatar: '/images/artisan-marcia.jpg',
+        order: 3,
+      },
+      {
+        name: 'Juliana',
+        role: 'Cunhada',
+        specialty: 'Bonecas de Pano Afetivas',
+        bio: 'Cria bonecas de pano artesanais cheias de charme, vestidinhos florais e detalhes únicos de vestuário.',
+        avatar: '/images/artisan-juliana.jpg',
+        order: 4,
+      },
+    ];
+
+    await Artisan.insertMany(artisansData);
+    console.log('[Seed] Artesãos da família cadastrados com sucesso!');
 
     // 1. Criar Usuário Admin Padrão e Usuário Cliente de Teste
     const adminUser = await User.create({

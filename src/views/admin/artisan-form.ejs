@@ -1,0 +1,70 @@
+<%- include('../partials/header') %>
+
+<div style="margin-bottom: 24px;">
+  <a href="/admin/artesaos" style="color: var(--text-muted); font-size: 0.9rem;">
+    <i class="fas fa-arrow-left"></i> Voltar para Lista de Artesãos
+  </a>
+</div>
+
+<div style="max-width: 700px; margin: 0 auto; background: #FFF; padding: 36px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 48px;">
+  
+  <h1 style="font-size: 2rem; margin-bottom: 8px;"><%= artisan && artisan._id ? 'Editar Artesão' : 'Cadastrar Novo Artesão' %></h1>
+  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Preencha os dados do membro da família que cria as peças artesanais.</p>
+
+  <% if (error) { %>
+    <div class="alert alert-danger">
+      <i class="fas fa-exclamation-triangle"></i> <%= error %>
+    </div>
+  <% } %>
+
+  <form action="<%= artisan && artisan._id ? '/admin/artesaos/editar/' + artisan._id : '/admin/artesaos/novo' %>" method="POST" enctype="multipart/form-data">
+    
+    <div class="form-group">
+      <label class="form-label">Nome Completo *</label>
+      <input type="text" name="name" class="form-control" required value="<%= artisan ? artisan.name : '' %>" placeholder="Ex: Fernanda Silva">
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="form-group">
+        <label class="form-label">Vínculo / Função *</label>
+        <input type="text" name="role" class="form-control" required value="<%= artisan ? artisan.role : '' %>" placeholder="Ex: Esposa, Irmão, Cunhada">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Especialidade *</label>
+        <input type="text" name="specialty" class="form-control" required value="<%= artisan ? artisan.specialty : '' %>" placeholder="Ex: Crochê & Amigurumis">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Resumo / Biografia (O que faz) *</label>
+      <textarea name="bio" class="form-control" rows="4" required placeholder="Escreva um breve texto sobre o amor e dedicação do artesão nas peças que cria..."><%= artisan ? artisan.bio : '' %></textarea>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+      <div class="form-group">
+        <label class="form-label">Foto de Perfil / Rosto</label>
+        <input type="file" name="avatar" class="form-control" accept="image/*">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Ordem de Exibição</label>
+        <input type="number" name="order" class="form-control" value="<%= artisan ? artisan.order : 0 %>">
+      </div>
+    </div>
+
+    <% if (artisan && artisan.avatar) { %>
+      <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+        <img src="<%= artisan.avatar %>" alt="<%= artisan.name %>" style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%; border: 2px solid var(--secondary);">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Foto atual salva</span>
+      </div>
+    <% } %>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 1.05rem;">
+      <i class="fas fa-save"></i> <%= artisan && artisan._id ? 'Salvar Alterações' : 'Cadastrar Artesão' %>
+    </button>
+  </form>
+
+</div>
+
+<%- include('../partials/footer') %>
