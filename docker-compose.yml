@@ -4,9 +4,9 @@ services:
     container_name: oqueeisso_mongo
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
     volumes:
-      - ./data/mongo:/data/db
+      - mongo_data:/data/db
     networks:
       - app-network
 
@@ -16,15 +16,19 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    env_file:
+      - .env
     environment:
       - PORT=3000
       - MONGODB_URI=mongodb://mongo:27017/oqueeisso
-      - JWT_SECRET=oqueeisso_super_secret_jwt_key_2026_artesanato
       - NODE_ENV=production
     depends_on:
       - mongo
     networks:
       - app-network
+
+volumes:
+  mongo_data:
 
 networks:
   app-network:
