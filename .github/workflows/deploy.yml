@@ -1,4 +1,4 @@
-name: CI/CD Pipeline (Deploy O Que É Isso?)
+name: CI/CD Pipeline (Validação & Deploy)
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   code-checks:
-    name: Validação de Sintaxe
+    name: Validação de Sintaxe & Integração
     runs-on: ubuntu-latest
     steps:
       - name: Checkout do Código
@@ -24,13 +24,3 @@ jobs:
 
       - name: Checar Sintaxe do Servidor
         run: node -c src/server.js
-
-  deploy:
-    name: Deploy na VPS Hostinger
-    needs: code-checks
-    runs-on: self-hosted
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: Executar Script de Deploy na VPS
-        run: |
-          bash ./deploy.sh
