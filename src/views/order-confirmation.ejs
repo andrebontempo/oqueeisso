@@ -2,55 +2,85 @@
 
 <div style="max-width: 800px; margin: 0 auto; background: #FFF; padding: 48px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-md); text-align: center; margin-bottom: 48px;">
   
-  <div style="width: 80px; height: 80px; background: #D1FAE5; color: #065F46; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 24px;">
-    <i class="fas fa-check"></i>
+  <div id="status-icon" style="width: 80px; height: 80px; background: <%= order.paymentStatus === 'Aprovado' ? '#D1FAE5' : '#FEF3C7' %>; color: <%= order.paymentStatus === 'Aprovado' ? '#065F46' : '#92400E' %>; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 24px;">
+    <i class="<%= order.paymentStatus === 'Aprovado' ? 'fas fa-check' : 'fas fa-clock' %>"></i>
   </div>
 
-  <h1 style="font-size: 2.4rem; color: var(--text-dark); margin-bottom: 8px;">Pedido Realizado com Sucesso!</h1>
+  <h1 style="font-size: 2.4rem; color: var(--text-dark); margin-bottom: 8px;">
+    <%= order.paymentStatus === 'Aprovado' ? 'Pagamento Aprovado!' : 'Pedido Realizado com Sucesso!' %>
+  </h1>
   <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 24px;">
-    Obrigado por escolher a <strong>O Que É Isso? Artesanato</strong>! O número do seu pedido é <strong style="color: var(--primary);">#<%= order.orderNumber %></strong>.
+    Obrigado por comprar na <strong>O Que É Isso? Artesanato</strong>! O número do seu pedido é <strong style="color: var(--primary);">#<%= order.orderNumber %></strong>.
   </p>
 
-  <% if (order.paymentMethod === 'pix') { %>
-    <!-- Bloco de Pagamento Pix -->
-    <div style="background: var(--bg-main); border: 2px dashed var(--secondary); border-radius: var(--radius-md); padding: 32px; margin-bottom: 36px; text-align: center;">
+  <!-- Status do Pagamento Badge -->
+  <div style="margin-bottom: 24px;">
+    <span id="payment-status-badge" class="status-badge status-<%= order.paymentStatus.toLowerCase() %>" style="font-size: 1rem; padding: 8px 18px;">
+      Status do Pagamento: <strong><%= order.paymentStatus %></strong>
+    </span>
+  </div>
+
+  <% if (order.paymentStatus === 'Pendente' && order.paymentMethod === 'pix') { %>
+    <!-- Bloco de Pagamento Pix Real Mercado Pago -->
+    <div id="pix-payment-box" style="background: #F0FDFB; border: 2px dashed #32BCAD; border-radius: var(--radius-md); padding: 32px; margin-bottom: 36px; text-align: center;">
       <h3 style="font-size: 1.3rem; margin-bottom: 12px; color: var(--text-dark);">
-        <i class="fab fa-pix" style="color: #32BCAD;"></i> Pague agora via Pix
+        <i class="fab fa-pix" style="color: #32BCAD;"></i> Pague agora via Pix (Mercado Pago)
       </h3>
       <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;">
-        Abra o aplicativo do seu banco, escolha a opção <strong>Pix QR Code / Copia e Cola</strong> e conclua o pagamento de <strong><%= formatMoney(order.totalAmount) %></strong>.
+        Abra o app do seu banco, selecione a opção <strong>Pix QR Code ou Copia e Cola</strong> e conclua o pagamento de <strong style="color: var(--primary); font-size: 1.1rem;"><%= formatMoney(order.totalAmount) %></strong>.
       </p>
 
-      <!-- Simulador de QR Code -->
-      <div style="width: 180px; height: 180px; background: #FFF; border: 2px solid var(--text-dark); border-radius: 12px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; padding: 12px; box-shadow: var(--shadow-sm);">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=<%= encodeURIComponent(order.pixCode) %>" alt="QR Code Pix" style="width: 100%; height: 100%;">
+      <!-- Exibição de QR Code Real (Base64 Mercado Pago ou Gerado) -->
+      <div style="width: 200px; height: 200px; background: #FFF; border: 2px solid #32BCAD; border-radius: 16px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; padding: 12px; box-shadow: var(--shadow-sm);">
+        <% if (order.pixQrCodeBase64) { %>
+          <img src="data:image/png;base64,<%= order.pixQrCodeBase64 %>" alt="QR Code Pix Mercado Pago" style="width: 100%; height: 100%; object-fit: contain;">
+        <% } else { %>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=<%= encodeURIComponent(order.pixCode) %>" alt="QR Code Pix" style="width: 100%; height: 100%; object-fit: contain;">
+        <% } %>
       </div>
 
-      <div class="form-group" style="max-width: 500px; margin: 0 auto 16px;">
-        <input type="text" id="pix-code-input" readonly value="<%= order.pixCode %>" class="form-control" style="font-size: 0.8rem; text-align: center; background: #FFF;">
+      <div class="form-group" style="max-width: 520px; margin: 0 auto 16px;">
+        <input type="text" id="pix-code-input" readonly value="<%= order.pixCode %>" class="form-control" style="font-size: 0.8rem; text-align: center; background: #FFF; font-family: monospace;">
       </div>
 
-      <button onclick="copyPixCode()" class="btn btn-primary" style="padding: 10px 24px; font-size: 0.95rem;">
+      <button onclick="copyPixCode()" id="btn-copy-pix" class="btn btn-primary" style="padding: 12px 28px; font-size: 1rem; background: #32BCAD; border-color: #32BCAD;">
         <i class="fas fa-copy"></i> Copiar Código Pix (Copia e Cola)
       </button>
+
+      <div style="margin-top: 18px; font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="fas fa-spinner fa-spin" style="color: #32BCAD;"></i>
+        <span>Aguardando confirmação do banco em tempo real...</span>
+      </div>
     </div>
-  <% } else { %>
-    <div class="alert alert-success" style="margin-bottom: 32px;">
-      <i class="fas fa-info-circle"></i> Pagamento aprovado! Seu pedido já deu entrada no ateliê e iniciará a separação/produção.
+  <% } else if (order.paymentStatus === 'Pendente' && order.mercadopagoInitPoint) { %>
+    <div style="background: #E6F5FC; border: 2px dashed #009EE3; border-radius: var(--radius-md); padding: 32px; margin-bottom: 36px;">
+      <h3 style="font-size: 1.3rem; margin-bottom: 12px; color: #009EE3;">
+        <i class="fas fa-credit-card"></i> Conclua seu pagamento no Mercado Pago
+      </h3>
+      <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;">
+        Seu pedido foi registrado. Para finalizar a compra, clique no botão abaixo para pagar no Mercado Pago.
+      </p>
+      <a href="<%= order.mercadopagoInitPoint %>" target="_blank" class="btn btn-primary" style="background: #009EE3; border-color: #009EE3; padding: 14px 32px; font-size: 1.05rem;">
+        <i class="fas fa-external-link-alt"></i> Pagar <%= formatMoney(order.totalAmount) %> no Mercado Pago
+      </a>
+    </div>
+  <% } else if (order.paymentStatus === 'Aprovado') { %>
+    <div class="alert alert-success" style="margin-bottom: 32px; font-size: 1rem; padding: 16px;">
+      <i class="fas fa-check-circle" style="font-size: 1.3rem;"></i> <strong>Pagamento Confirmado!</strong> Seu pedido já entrou na esteira de produção e você receberá atualizações no seu e-mail.
     </div>
   <% } %>
 
-  <!-- Resumo da Entrega -->
-  <div style="text-align: left; background: #FAF7F2; padding: 24px; border-radius: var(--radius-md); margin-bottom: 32px;">
-    <h3 style="font-size: 1.1rem; margin-bottom: 12px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px;">
-      Endereço de Entrega
+  <!-- Resumo do Endereço de Entrega -->
+  <div style="text-align: left; background: #FAF7F2; padding: 24px; border-radius: var(--radius-md); margin-bottom: 32px; border: 1px solid var(--border-light);">
+    <h3 style="font-size: 1.1rem; margin-bottom: 12px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px; color: var(--text-dark);">
+      <i class="fas fa-truck" style="color: var(--secondary);"></i> Endereço de Entrega
     </h3>
-    <p style="font-size: 0.95rem; color: var(--text-dark); margin-bottom: 4px;"><strong><%= order.customerName %></strong></p>
+    <p style="font-size: 0.95rem; color: var(--text-dark); margin-bottom: 4px;"><strong><%= order.customerName %></strong> (<%= order.customerEmail %>)</p>
     <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2px;"><%= order.shippingAddress.street %>, <%= order.shippingAddress.number %> <%= order.shippingAddress.complement %></p>
-    <p style="font-size: 0.9rem; color: var(--text-muted);"><%= order.shippingAddress.neighborhood %> - <%= order.shippingAddress.city %> / <%= order.shippingAddress.state %> - CEP: <%= order.shippingAddress.zipCode %></p>
+    <p style="font-size: 0.9rem; color: var(--text-muted);"><%= order.shippingAddress.neighborhood %> — <%= order.shippingAddress.city %> / <%= order.shippingAddress.state %> — CEP: <%= order.shippingAddress.zipCode %></p>
   </div>
 
-  <div style="display: flex; justify-content: center; gap: 16px;">
+  <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
     <% if (locals.user) { %>
       <a href="/minha-conta" class="btn btn-primary">
         <i class="fas fa-box"></i> Ver Meus Pedidos
@@ -62,5 +92,62 @@
   </div>
 
 </div>
+
+<script>
+  function copyPixCode() {
+    const input = document.getElementById('pix-code-input');
+    if (!input) return;
+    input.select();
+    input.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(input.value).then(() => {
+      const btn = document.getElementById('btn-copy-pix');
+      if (btn) {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Código Copiado!';
+        btn.style.background = '#059669';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.background = '#32BCAD';
+        }, 3000);
+      }
+    }).catch(err => {
+      alert('Código copiado para a área de transferência!');
+    });
+  }
+
+  // Polling em tempo real para detectar aprovação do pagamento Pix pelo Mercado Pago
+  <% if (order.paymentStatus === 'Pendente') { %>
+    const orderId = "<%= order._id %>";
+    const pollInterval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/pedidos/' + orderId + '/status');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.paymentStatus === 'Aprovado') {
+            clearInterval(pollInterval);
+            // Atualizar UI instantaneamente
+            const badge = document.getElementById('payment-status-badge');
+            if (badge) {
+              badge.className = 'status-badge status-aprovado';
+              badge.innerHTML = 'Status do Pagamento: <strong>Aprovado</strong>';
+            }
+            const pixBox = document.getElementById('pix-payment-box');
+            if (pixBox) {
+              pixBox.outerHTML = '<div class="alert alert-success" style="margin-bottom: 32px; font-size: 1rem; padding: 16px;"><i class="fas fa-check-circle" style="font-size: 1.3rem;"></i> <strong>Pagamento Aprovado com Sucesso!</strong> Seu pedido já entrou na produção.</div>';
+            }
+            const icon = document.getElementById('status-icon');
+            if (icon) {
+              icon.style.background = '#D1FAE5';
+              icon.style.color = '#065F46';
+              icon.innerHTML = '<i class="fas fa-check"></i>';
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Erro no polling do pedido:', e);
+      }
+    }, 4000);
+  <% } %>
+</script>
 
 <%- include('partials/footer') %>

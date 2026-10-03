@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const Order = require('../models/Order');
+const mercadopagoConfig = require('../config/mercadopago');
 
 const getCartFromCookie = (req) => {
   try {
@@ -42,7 +43,7 @@ exports.getCheckout = async (req, res) => {
       shippingFee,
       total,
       user: req.user || null,
-      error: null,
+      error: req.query.error ? 'Houve um problema com o pagamento. Por favor, tente novamente.' : null,
     });
   } catch (error) {
     console.error('Erro ao renderizar checkout:', error);
@@ -75,7 +76,7 @@ exports.processOrder = async (req, res) => {
     if (!customerName || !customerEmail || !street || !number || !city || !state || !zipCode) {
       return res.status(400).render('checkout', {
         title: 'Checkout Seguro | O Que É Isso?',
-        cartItems: [], // Preencher no render se necessário
+        cartItems: [],
         subtotal: 0,
         shippingFee: 0,
         total: 0,
@@ -109,14 +110,7 @@ exports.processOrder = async (req, res) => {
 
     const shippingFee = subtotal > 200 ? 0 : 25;
     const totalAmount = subtotal + shippingFee;
-
     const orderNumber = 'OQI-' + Math.floor(100000 + Math.random() * 900000);
-
-    // Gerar código Pix simulado se método for Pix
-    let pixCode = '';
-    if (paymentMethod === 'pix') {
-      pixCode = `00020126580014BR.GOV.BCB.PIX0136oqueeisso-artesanato-pix-${orderNumber}5204000053039865405${totalAmount.toFixed(2)}5802BR5920O QUE EISSO ARTESANATO6009SAO PAULO62070503***6304`;
-    }
 
     const order = await Order.create({
       orderNumber,
@@ -137,15 +131,47 @@ exports.processOrder = async (req, res) => {
         state,
         zipCode,
       },
-      paymentMethod,
-      paymentStatus: paymentMethod === 'pix' ? 'Pendente' : 'Aprovado',
+      paymentMethod: paymentMethod || 'pix',
+      paymentStatus: 'Pendente',
       orderStatus: 'Pendente',
-      pixCode,
       notes: notes || '',
     });
 
-    // Limpar carrinho
+    // Limpar carrinho após criar pedido
     res.clearCookie('cart');
+
+    // ─── Processamento de Pagamento via Mercado Pago ───────────────────────
+    if (paymentMethod === 'mercadopago' || paymentMethod === 'credit_card' || paymentMethod === 'boleto') {
+      try {
+        const pref = await mercadopagoConfig.createPreference(order);
+        order.mercadopagoPreferenceId = pref.id;
+        order.mercadopagoInitPoint = pref.init_point;
+        await order.save();
+
+        // Redireciona para o Checkout Seguro do Mercado Pago
+        return res.redirect(pref.init_point);
+      } catch (mpErr) {
+        console.error('Erro ao gerar preferência Mercado Pago:', mpErr);
+      }
+    } else if (paymentMethod === 'pix') {
+      try {
+        const pixRes = await mercadopagoConfig.createPixPayment(order);
+        if (pixRes.qrCode) {
+          order.pixCode = pixRes.qrCode;
+          order.pixQrCodeBase64 = pixRes.qrCodeBase64;
+          order.mercadopagoPaymentId = pixRes.paymentId;
+          await order.save();
+        } else {
+          // Fallback Pix
+          order.pixCode = `00020126580014BR.GOV.BCB.PIX0136oqueeisso-artesanato-pix-${orderNumber}5204000053039865405${totalAmount.toFixed(2)}5802BR5920O QUE EISSO ARTESANATO6009SAO PAULO62070503***6304`;
+          await order.save();
+        }
+      } catch (pixErr) {
+        console.error('Erro ao gerar Pix no Mercado Pago:', pixErr);
+        order.pixCode = `00020126580014BR.GOV.BCB.PIX0136oqueeisso-artesanato-pix-${orderNumber}5204000053039865405${totalAmount.toFixed(2)}5802BR5920O QUE EISSO ARTESANATO6009SAO PAULO62070503***6304`;
+        await order.save();
+      }
+    }
 
     res.redirect(`/pedido/confirmacao/${order._id}`);
   } catch (error) {
@@ -166,6 +192,13 @@ exports.getOrderConfirmation = async (req, res) => {
       });
     }
 
+    // Se o retorno do Mercado Pago veio como aprovado
+    if (req.query.status === 'approved' && order.paymentStatus === 'Pendente') {
+      order.paymentStatus = 'Aprovado';
+      order.orderStatus = 'Em Produção';
+      await order.save();
+    }
+
     res.render('order-confirmation', {
       title: `Pedido #${order.orderNumber} Confirmado | O Que É Isso?`,
       order,
@@ -176,5 +209,60 @@ exports.getOrderConfirmation = async (req, res) => {
       title: 'Erro',
       message: 'Não foi possível carregar a confirmação do pedido.',
     });
+  }
+};
+
+// ─── API Webhook do Mercado Pago (Notificações IPN em tempo real) ────────────
+exports.handleWebhook = async (req, res) => {
+  try {
+    const { query, body } = req;
+    const topic = query.topic || body.type;
+    const id = query.id || (body.data && body.data.id);
+
+    if (topic === 'payment' && id) {
+      const paymentData = await mercadopagoConfig.getPayment(id);
+      if (paymentData) {
+        const { status, external_reference, metadata } = paymentData;
+        const orderId = external_reference || (metadata && metadata.order_id);
+
+        if (orderId) {
+          const order = await Order.findById(orderId);
+          if (order) {
+            order.mercadopagoPaymentId = id.toString();
+            if (status === 'approved') {
+              order.paymentStatus = 'Aprovado';
+              if (order.orderStatus === 'Pendente') {
+                order.orderStatus = 'Em Produção';
+              }
+            } else if (status === 'rejected' || status === 'cancelled') {
+              order.paymentStatus = 'Recusado';
+            } else if (status === 'refunded') {
+              order.paymentStatus = 'Reembolsado';
+            }
+            await order.save();
+            console.log(`[MercadoPago Webhook] Pedido #${order.orderNumber} atualizado: status=${status} -> paymentStatus=${order.paymentStatus}`);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('[MercadoPago Webhook Error]:', error);
+  }
+
+  res.sendStatus(200);
+};
+
+// ─── API Polling Status do Pedido (para atualização ao vivo da tela do Pix) ──
+exports.getOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id).select('paymentStatus orderStatus orderNumber');
+    if (!order) return res.status(404).json({ error: 'Pedido não encontrado' });
+    res.json({
+      paymentStatus: order.paymentStatus,
+      orderStatus: order.orderStatus,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

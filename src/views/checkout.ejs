@@ -87,39 +87,39 @@
 
       <!-- Forma de Pagamento -->
       <div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
-        <h3 style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
-          <i class="fas fa-credit-card" style="color: var(--secondary);"></i> 3. Forma de Pagamento
+        <h3 style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+          <span><i class="fas fa-shield-alt" style="color: #009EE3;"></i> 3. Forma de Pagamento</span>
+          <span style="font-size: 0.8rem; background: #E6F5FC; color: #009EE3; padding: 4px 10px; border-radius: 12px; font-weight: 700;">
+            <i class="fas fa-lock"></i> Mercado Pago
+          </span>
         </h3>
 
         <div style="display: flex; flex-direction: column; gap: 16px;">
           
-          <!-- Opção PIX -->
-          <label style="display: flex; align-items: center; gap: 16px; padding: 16px; border: 2px solid var(--secondary); border-radius: var(--radius-sm); cursor: pointer; background: #FFF9F3;">
-            <input type="radio" name="paymentMethod" value="pix" checked style="accent-color: var(--primary);">
-            <i class="fab fa-pix" style="font-size: 1.8rem; color: #32BCAD;"></i>
-            <div>
-              <strong style="display: block;">Pix (Desconto & Aprovação Imediata)</strong>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Gere o QR Code e copie a chave na tela de confirmação.</span>
+          <!-- Opção PIX Mercado Pago -->
+          <label style="display: flex; align-items: center; gap: 16px; padding: 18px; border: 2px solid #32BCAD; border-radius: var(--radius-sm); cursor: pointer; background: #F0FDFB;">
+            <input type="radio" name="paymentMethod" value="pix" checked style="accent-color: #32BCAD; width: 20px; height: 20px;">
+            <div style="width: 44px; height: 44px; background: #32BCAD; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #FFF; font-size: 1.5rem;">
+              <i class="fab fa-pix"></i>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <strong style="font-size: 1.05rem; color: var(--text-dark);">Pix (Aprovação Imediata)</strong>
+                <span style="background: #32BCAD; color: #FFF; font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; font-weight: 700;">MAIS RÁPIDO</span>
+              </div>
+              <span style="font-size: 0.88rem; color: var(--text-muted); display: block; margin-top: 2px;">QR Code real e chave Copia e Cola gerados na hora via Mercado Pago.</span>
             </div>
           </label>
 
-          <!-- Opção Cartão -->
-          <label style="display: flex; align-items: center; gap: 16px; padding: 16px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); cursor: pointer;">
-            <input type="radio" name="paymentMethod" value="credit_card" style="accent-color: var(--primary);">
-            <i class="fas fa-credit-card" style="font-size: 1.6rem; color: var(--primary);"></i>
-            <div>
-              <strong style="display: block;">Cartão de Crédito</strong>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Parcele em até 3x sem juros.</span>
+          <!-- Opção Mercado Pago (Cartão / Boleto / Conta MP) -->
+          <label style="display: flex; align-items: center; gap: 16px; padding: 18px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); cursor: pointer; background: #FFF;">
+            <input type="radio" name="paymentMethod" value="mercadopago" style="accent-color: #009EE3; width: 20px; height: 20px;">
+            <div style="width: 44px; height: 44px; background: #009EE3; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #FFF; font-size: 1.4rem;">
+              <i class="fas fa-credit-card"></i>
             </div>
-          </label>
-
-          <!-- Opção Boleto -->
-          <label style="display: flex; align-items: center; gap: 16px; padding: 16px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); cursor: pointer;">
-            <input type="radio" name="paymentMethod" value="boleto" style="accent-color: var(--primary);">
-            <i class="fas fa-barcode" style="font-size: 1.6rem; color: var(--text-dark);"></i>
-            <div>
-              <strong style="display: block;">Boleto Bancário</strong>
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Vencimento em 3 dias úteis.</span>
+            <div style="flex: 1;">
+              <strong style="font-size: 1.05rem; color: var(--text-dark); display: block;">Cartão de Crédito, Boleto ou Mercado Pago</strong>
+              <span style="font-size: 0.88rem; color: var(--text-muted); display: block; margin-top: 2px;">Parcele em até 12x no cartão com total segurança pelo Mercado Pago.</span>
             </div>
           </label>
 

@@ -61,7 +61,7 @@ const orderSchema = new mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ['pix', 'credit_card', 'boleto'],
+      enum: ['pix', 'credit_card', 'boleto', 'mercadopago'],
       default: 'pix',
     },
     paymentStatus: {
@@ -75,6 +75,22 @@ const orderSchema = new mongoose.Schema(
       default: 'Pendente',
     },
     pixCode: {
+      type: String,
+      default: '',
+    },
+    pixQrCodeBase64: {
+      type: String,
+      default: '',
+    },
+    mercadopagoPreferenceId: {
+      type: String,
+      default: '',
+    },
+    mercadopagoPaymentId: {
+      type: String,
+      default: '',
+    },
+    mercadopagoInitPoint: {
       type: String,
       default: '',
     },
