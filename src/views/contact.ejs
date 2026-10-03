@@ -24,7 +24,7 @@
     </div>
   <% } %>
 
-  <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 36px; align-items: start;">
+  <div class="cart-layout-grid" style="align-items: start;">
     
     <!-- Coluna de Informações de Contato -->
     <div style="display: flex; flex-direction: column; gap: 24px;">
@@ -82,7 +82,7 @@
           <input type="text" name="name" class="form-control" placeholder="Ex: Maria Santos" required value="<%= user ? user.name : (formData.name || '') %>">
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-row-responsive">
           <div class="form-group">
             <label class="form-label">E-mail para Resposta *</label>
             <input type="email" name="email" class="form-control" placeholder="seu@email.com" required value="<%= user ? user.email : (formData.email || '') %>">

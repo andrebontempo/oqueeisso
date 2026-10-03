@@ -12,7 +12,7 @@
 <% } %>
 
 <form action="/checkout" method="POST">
-  <div style="display: grid; grid-template-columns: 1fr 380px; gap: 36px;">
+  <div class="checkout-layout-grid">
     
     <!-- Dados do Cliente e Endereço -->
     <div>
@@ -28,7 +28,7 @@
           <input type="text" name="customerName" class="form-control" required value="<%= user ? user.name : '' %>">
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-row-responsive">
           <div class="form-group">
             <label class="form-label">E-mail *</label>
             <input type="email" name="customerEmail" class="form-control" required value="<%= user ? user.email : '' %>">
@@ -46,7 +46,7 @@
           <i class="fas fa-map-marker-alt" style="color: var(--secondary);"></i> 2. Endereço de Entrega
         </h3>
 
-        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px;">
+        <div class="form-row-responsive">
           <div class="form-group">
             <label class="form-label">CEP *</label>
             <input type="text" name="zipCode" class="form-control" placeholder="00000-000" required value="<%= user && user.address ? user.address.zipCode : '' %>">
@@ -57,7 +57,7 @@
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px;">
+        <div class="form-row-responsive">
           <div class="form-group">
             <label class="form-label">Número *</label>
             <input type="text" name="number" class="form-control" required value="<%= user && user.address ? user.address.number : '' %>">
@@ -68,8 +68,8 @@
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
-          <div class="form-group" style="grid-column: span 2;">
+        <div class="form-row-responsive">
+          <div class="form-group">
             <label class="form-label">Cidade *</label>
             <input type="text" name="city" class="form-control" required value="<%= user && user.address ? user.address.city : '' %>">
           </div>
