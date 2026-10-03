@@ -15,7 +15,8 @@ echo "🧹 [2/4] Removendo arquivos antigos não rastreados (mantendo .env e dat
 git clean -fd -e .env -e data/
 
 echo "🐳 [3/4] Atualizando e reiniciando containers Docker..."
-docker compose down
+docker rm -f oqueeisso_app oqueeisso_mongo 2>/dev/null || true
+docker compose down --remove-orphans
 docker compose up -d --build --remove-orphans
 
 echo "===================================================="
