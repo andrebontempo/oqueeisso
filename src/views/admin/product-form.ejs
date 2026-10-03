@@ -1,0 +1,116 @@
+<%- include('../partials/header') %>
+
+<div style="margin-bottom: 24px;">
+  <a href="/admin/produtos" style="color: var(--text-muted); font-size: 0.9rem;">
+    <i class="fas fa-arrow-left"></i> Voltar para Lista de Produtos
+  </a>
+</div>
+
+<div style="max-width: 800px; margin: 0 auto; background: #FFF; padding: 36px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 48px;">
+  
+  <h1 style="font-size: 2rem; margin-bottom: 8px;"><%= product && product._id ? 'Editar Produto' : 'Cadastrar Novo Produto' %></h1>
+  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Preencha os detalhes da peça de artesanato para exibição na loja.</p>
+
+  <% if (error) { %>
+    <div class="alert alert-danger">
+      <i class="fas fa-exclamation-triangle"></i> <%= error %>
+    </div>
+  <% } %>
+
+  <form action="<%= product && product._id ? '/admin/produtos/editar/' + product._id : '/admin/produtos/novo' %>" method="POST" enctype="multipart/form-data">
+    
+    <div class="form-group">
+      <label class="form-label">Nome do Produto *</label>
+      <input type="text" name="name" class="form-control" required value="<%= product ? product.name : '' %>" placeholder="Ex: Tábua Rústica em Madeira Nobre Entalhada">
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="form-group">
+        <label class="form-label">Categoria *</label>
+        <select name="categoryId" class="form-control" required>
+          <option value="">Selecione uma categoria...</option>
+          <% categories.forEach(cat => { %>
+            <option value="<%= cat._id %>" <%= product && product.category && (product.category._id || product.category).toString() === cat._id.toString() ? 'selected' : '' %>>
+              <%= cat.name %>
+            </option>
+          <% }); %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Artesão Responsável *</label>
+        <select name="artisan" class="form-control" required>
+          <option value="Esposa (Fernanda)" <%= product && product.artisan === 'Esposa (Fernanda)' ? 'selected' : '' %>>Esposa (Fernanda)</option>
+          <option value="Irmão (Rodrigo)" <%= product && product.artisan === 'Irmão (Rodrigo)' ? 'selected' : '' %>>Irmão (Rodrigo)</option>
+          <option value="Cunhada (Márcia)" <%= product && product.artisan === 'Cunhada (Márcia)' ? 'selected' : '' %>>Cunhada (Márcia)</option>
+          <option value="Cunhada (Juliana)" <%= product && product.artisan === 'Cunhada (Juliana)' ? 'selected' : '' %>>Cunhada (Juliana)</option>
+          <option value="Família O Que É Isso" <%= product && product.artisan === 'Família O Que É Isso' ? 'selected' : '' %>>Família O Que É Isso</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+      <div class="form-group">
+        <label class="form-label">Preço (R$) *</label>
+        <input type="number" step="0.01" name="price" class="form-control" required value="<%= product ? product.price : '' %>" placeholder="120.00">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Preço Original (opcional)</label>
+        <input type="number" step="0.01" name="originalPrice" class="form-control" value="<%= product ? product.originalPrice : '' %>" placeholder="150.00">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Estoque *</label>
+        <input type="number" name="stock" class="form-control" required value="<%= product ? product.stock : 1 %>">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Descrição Detalhada *</label>
+      <textarea name="description" class="form-control" rows="4" required placeholder="Descreva o processo de confecção artesanal, detalhes do acabamento..."><%= product ? product.description : '' %></textarea>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div class="form-group">
+        <label class="form-label">Dimensões (Ex: 40cm x 25cm x 3cm)</label>
+        <input type="text" name="dimensions" class="form-control" value="<%= product ? product.dimensions : '' %>">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Materiais (Ex: Madeira Cumaru, Óleo Mineral)</label>
+        <input type="text" name="materials" class="form-control" value="<%= product ? product.materials : '' %>">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Imagens do Produto (até 5 arquivos)</label>
+      <input type="file" name="images" class="form-control" multiple accept="image/*">
+      <% if (product && product.images && product.images.length > 0) { %>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <% product.images.forEach(img => { %>
+            <img src="<%= img %>" alt="Foto produto" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-light);">
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+
+    <div style="display: flex; gap: 24px; margin-top: 20px; margin-bottom: 28px;">
+      <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+        <input type="checkbox" name="featured" <%= product && product.featured ? 'checked' : '' %> style="accent-color: var(--primary);">
+        Produto em Destaque na Home
+      </label>
+
+      <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
+        <input type="checkbox" name="isBestSeller" <%= product && product.isBestSeller ? 'checked' : '' %> style="accent-color: var(--primary);">
+        Mais Vendido / Recomendado
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 1.05rem;">
+      <i class="fas fa-save"></i> <%= product && product._id ? 'Salvar Alterações' : 'Cadastrar Produto' %>
+    </button>
+  </form>
+
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,128 @@
+<%- include('partials/header') %>
+
+<div style="margin-bottom: 24px;">
+  <a href="/categoria/<%= product.category ? product.category.slug : '' %>" style="color: var(--text-muted); font-size: 0.9rem;">
+    <i class="fas fa-arrow-left"></i> Voltar para <%= product.category ? product.category.name : 'Produtos' %>
+  </a>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; background: #FFF; padding: 36px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 48px;">
+  
+  <!-- Galeria de Imagens -->
+  <div>
+    <div style="border-radius: var(--radius-md); overflow: hidden; background: #F3EFEA; height: 420px; margin-bottom: 16px; border: 1px solid var(--border-light);">
+      <img id="main-product-img" src="<%= product.images[0] %>" alt="<%= product.name %>" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    
+    <% if (product.images.length > 1) { %>
+      <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px;">
+        <% product.images.forEach((img, idx) => { %>
+          <img src="<%= img %>" alt="<%= product.name %>" style="width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius-sm); border: 2px solid <%= idx === 0 ? 'var(--primary)' : 'var(--border-light)' %>; cursor: pointer;" onclick="document.getElementById('main-product-img').src = this.src;">
+        <% }); %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- Detalhes e Ações -->
+  <div style="display: flex; flex-direction: column;">
+    <span style="color: var(--secondary); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+      <%= product.category ? product.category.name : 'Artesanato' %>
+    </span>
+
+    <h1 style="font-size: 2.2rem; margin-bottom: 12px;"><%= product.name %></h1>
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+      <span style="background: rgba(139, 69, 19, 0.1); color: var(--primary); font-size: 0.85rem; font-weight: 700; padding: 6px 14px; border-radius: var(--radius-full);">
+        <i class="fas fa-hammer"></i> Artesão: <%= product.artisan %>
+      </span>
+
+      <% if (product.stock > 0) { %>
+        <span style="color: #065F46; font-weight: 700; font-size: 0.85rem;">
+          <i class="fas fa-check-circle"></i> Em Estoque (<%= product.stock %> disponíveis)
+        </span>
+      <% } else { %>
+        <span style="color: #991B1B; font-weight: 700; font-size: 0.85rem;">
+          <i class="fas fa-times-circle"></i> Esgotado
+        </span>
+      <% } %>
+    </div>
+
+    <!-- Preço -->
+    <div style="margin-bottom: 24px; padding: 18px 24px; background: var(--bg-main); border-radius: var(--radius-md); display: flex; align-items: baseline; gap: 16px;">
+      <span style="font-family: 'Outfit', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--primary);">
+        <%= formatMoney(product.price) %>
+      </span>
+      <% if (product.originalPrice && product.originalPrice > product.price) { %>
+        <span style="font-size: 1.1rem; color: var(--text-light); text-decoration: line-through;">
+          <%= formatMoney(product.originalPrice) %>
+        </span>
+      <% } %>
+    </div>
+
+    <!-- Descrição -->
+    <div style="margin-bottom: 24px; color: var(--text-muted); line-height: 1.8;">
+      <p><%= product.description %></p>
+    </div>
+
+    <!-- Especificações -->
+    <div style="margin-bottom: 28px; background: #FFF; border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 16px;">
+      <% if (product.dimensions) { %>
+        <div style="font-size: 0.9rem; margin-bottom: 6px;">
+          <strong>Dimensões:</strong> <%= product.dimensions %>
+        </div>
+      <% } %>
+      <% if (product.materials) { %>
+        <div style="font-size: 0.9rem;">
+          <strong>Materiais:</strong> <%= product.materials %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Formulário de Compra -->
+    <form action="/carrinho/adicionar" method="POST" style="margin-top: auto; display: flex; gap: 16px;">
+      <input type="hidden" name="productId" value="<%= product._id %>">
+      
+      <div style="width: 100px;">
+        <label class="form-label">Qtd.</label>
+        <input type="number" name="quantity" value="1" min="1" max="<%= product.stock %>" class="form-control" style="text-align: center; font-weight: 700;">
+      </div>
+
+      <div style="flex: 1; align-self: flex-end;">
+        <button type="submit" class="btn btn-primary" style="width: 100%; height: 48px;" <%= product.stock <= 0 ? 'disabled' : '' %>>
+          <i class="fas fa-shopping-bag"></i> <%= product.stock > 0 ? 'Adicionar ao Carrinho' : 'Indisponível' %>
+        </button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+<!-- Produtos Relacionados -->
+<% if (relatedProducts && relatedProducts.length > 0) { %>
+  <section style="margin-bottom: 48px;">
+    <div class="section-header">
+      <h2 class="section-title">Você Também Pode Gostar</h2>
+    </div>
+
+    <div class="products-grid">
+      <% relatedProducts.forEach(rel => { %>
+        <div class="product-card">
+          <div class="product-thumb">
+            <img src="<%= rel.images[0] %>" alt="<%= rel.name %>">
+          </div>
+          <div class="product-body">
+            <span class="product-category"><%= rel.category ? rel.category.name : '' %></span>
+            <h3 class="product-title"><a href="/produto/<%= rel.slug || rel._id %>"><%= rel.name %></a></h3>
+            <div class="product-price-row">
+              <span class="current-price"><%= formatMoney(rel.price) %></span>
+              <a href="/produto/<%= rel.slug || rel._id %>" class="btn-add-cart"><i class="fas fa-eye"></i></a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </section>
+<% } %>
+
+<%- include('partials/footer') %>

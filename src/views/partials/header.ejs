@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'O Que É Isso? - Artesanato Feito à Mão' %></title>
+  <meta name="description" content="Peças exclusivas de artesanato feitas à mão pela nossa família: Trabalhos em Madeira, Bolsas e Bonecas, e Crochê. Compre online com segurança!">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Design System CSS -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <span><i class="fas fa-heart"></i> Artesanato Exclusivo Feito à Mão em Família</span>
+      </div>
+      <div>
+        <span><i class="fas fa-truck"></i> Frete Grátis para compras acima de R$ 200</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="header-nav">
+    <div class="navbar-container">
+      
+      <!-- Brand Logo -->
+      <a href="/" class="brand-logo" id="header-brand-logo">
+        <div class="brand-icon">
+          <i class="fas fa-hands-holding"></i>
+        </div>
+        <div>
+          <span class="brand-name">O Que É Isso?</span>
+          <span class="brand-tagline">Artesanato com Amor</span>
+        </div>
+      </a>
+
+      <!-- Search Bar -->
+      <form action="/busca" method="GET" class="search-form" id="header-search-form">
+        <input type="text" name="q" class="search-input" placeholder="Buscar por tábuas, bonecas, crochê..." value="<%= typeof query !== 'undefined' ? query : '' %>" required>
+        <button type="submit" class="search-btn" title="Buscar">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+
+      <!-- User Actions & Cart -->
+      <div class="nav-actions">
+        
+        <!-- Cart Button -->
+        <a href="/carrinho" class="cart-icon-btn" id="header-cart-btn" title="Ver Carrinho">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="cart-badge"><%= typeof cartCount !== 'undefined' ? cartCount : 0 %></span>
+        </a>
+
+        <!-- User Profile / Login -->
+        <% if (locals.user) { %>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <a href="/minha-conta" class="user-btn" id="header-user-btn">
+              <i class="fas fa-user-circle"></i>
+              <span><%= locals.user.name.split(' ')[0] %></span>
+            </a>
+            <% if (locals.user.role === 'admin') { %>
+              <a href="/admin/dashboard" style="background: var(--accent); color: #FFF; padding: 8px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;" title="Painel Admin">
+                <i class="fas fa-crown"></i> Admin
+              </a>
+            <% } %>
+            <a href="/logout" style="color: var(--text-muted); font-size: 1.1rem; padding: 6px;" title="Sair">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
+          </div>
+        <% } else { %>
+          <a href="/login" class="user-btn" id="header-login-btn">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Entrar / Cadastrar</span>
+          </a>
+        <% } %>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Category Bar -->
+  <nav class="category-bar">
+    <div class="category-bar-inner">
+      <a href="/" class="cat-item <%= typeof title !== 'undefined' && title.includes('Peças Exclusivas') ? 'active' : '' %>">
+        <i class="fas fa-home"></i> Início
+      </a>
+      <a href="/categoria/trabalhos-em-madeira" class="cat-item <%= typeof category !== 'undefined' && category.slug === 'trabalhos-em-madeira' ? 'active' : '' %>">
+        <i class="fas fa-tree"></i> Trabalhos em Madeira
+      </a>
+      <a href="/categoria/bolsas-e-bonecas" class="cat-item <%= typeof category !== 'undefined' && category.slug === 'bolsas-e-bonecas' ? 'active' : '' %>">
+        <i class="fas fa-shopping-bag"></i> Bolsas e Bonecas
+      </a>
+      <a href="/categoria/croche" class="cat-item <%= typeof category !== 'undefined' && category.slug === 'croche' ? 'active' : '' %>">
+        <i class="fas fa-certificate"></i> Crochê
+      </a>
+    </div>
+  </nav>
+
+  <main class="main-wrapper">

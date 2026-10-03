@@ -1,3 +1,6 @@
 .env
 data/
+node_modules/
 wp-config.php
+.DS_Store
+*.log

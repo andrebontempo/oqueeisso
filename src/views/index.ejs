@@ -1,0 +1,153 @@
+<%- include('partials/header') %>
+
+<!-- Hero Banner -->
+<section class="hero-section">
+  <div>
+    <span class="hero-badge">
+      <i class="fas fa-sparkles"></i> Peças Únicas & Artesanais
+    </span>
+    <h1 class="hero-title">A Arte Feita à Mão que Transforma o Seu Lar</h1>
+    <p class="hero-subtitle">
+      Descubra o trabalho artesanal exclusivo feito com carinho pela nossa família. Entalhes em madeira nobre, bolsas elegantes, bonecas de pano e criações aconchegantes em crochê.
+    </p>
+    <div class="hero-cta">
+      <a href="#produtos-destaque" class="btn btn-primary">
+        <i class="fas fa-shopping-bag"></i> Explorar Coleção
+      </a>
+      <a href="#categorias" class="btn btn-secondary">
+        Ver Categorias
+      </a>
+    </div>
+  </div>
+  <div class="hero-image-box">
+    <img src="/images/hero-artesanato.jpg" alt="Artesanato O Que É Isso?">
+  </div>
+</section>
+
+<!-- Categorias em Destaque -->
+<section id="categorias" style="margin-bottom: 56px;">
+  <div class="section-header">
+    <h2 class="section-title">Categorias Principais</h2>
+  </div>
+
+  <div class="category-grid">
+    
+    <!-- Categoria 1: Trabalhos em Madeira -->
+    <a href="/categoria/trabalhos-em-madeira" class="cat-card">
+      <img src="/images/cat-madeira.jpg" alt="Trabalhos em Madeira">
+      <div class="cat-card-overlay">
+        <h3 class="cat-card-title"><i class="fas fa-tree" style="color: var(--accent-light);"></i> Trabalhos em Madeira</h3>
+        <p class="cat-card-desc">Tábuas entalhadas, caixas organizadoras, descansos de panela e peças rústicas em madeira nobre.</p>
+      </div>
+    </a>
+
+    <!-- Categoria 2: Bolsas e Bonecas -->
+    <a href="/categoria/bolsas-e-bonecas" class="cat-card">
+      <img src="/images/cat-bolsas-bonecas.jpg" alt="Bolsas e Bonecas">
+      <div class="cat-card-overlay">
+        <h3 class="cat-card-title"><i class="fas fa-shopping-bag" style="color: var(--accent-light);"></i> Bolsas e Bonecas</h3>
+        <p class="cat-card-desc">Bolsas em tecido de altíssimo acabamento, niqueleiras e bonecas de pano afetivas personalizadas.</p>
+      </div>
+    </a>
+
+    <!-- Categoria 3: Crochê -->
+    <a href="/categoria/croche" class="cat-card">
+      <img src="/images/cat-croche.jpg" alt="Crochê">
+      <div class="cat-card-overlay">
+        <h3 class="cat-card-title"><i class="fas fa-certificate" style="color: var(--accent-light);"></i> Crochê</h3>
+        <p class="cat-card-desc">Tapetes aconchegantes, amigurumis fofos, caminhos de mesa e artigos delicados tecidos à mão.</p>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- Produtos em Destaque -->
+<section id="produtos-destaque" style="margin-bottom: 56px;">
+  <div class="section-header">
+    <h2 class="section-title">Produtos em Destaque</h2>
+  </div>
+
+  <div class="products-grid">
+    <% if (featuredProducts && featuredProducts.length > 0) { %>
+      <% featuredProducts.forEach(product => { %>
+        <div class="product-card">
+          <div class="product-thumb">
+            <img src="<%= product.images[0] %>" alt="<%= product.name %>" loading="lazy">
+            <% if (product.featured) { %>
+              <span class="product-badge">Destaque</span>
+            <% } %>
+            <span class="product-artisan-badge">
+              <i class="fas fa-user-ninja"></i> <%= product.artisan %>
+            </span>
+          </div>
+          <div class="product-body">
+            <span class="product-category"><%= product.category ? product.category.name : 'Artesanato' %></span>
+            <h3 class="product-title">
+              <a href="/produto/<%= product.slug || product._id %>"><%= product.name %></a>
+            </h3>
+            <div class="product-price-row">
+              <div class="price-box">
+                <% if (product.originalPrice && product.originalPrice > product.price) { %>
+                  <span class="old-price"><%= formatMoney(product.originalPrice) %></span>
+                <% } %>
+                <span class="current-price"><%= formatMoney(product.price) %></span>
+              </div>
+              <form action="/carrinho/adicionar" method="POST" class="form-add-cart-ajax">
+                <input type="hidden" name="productId" value="<%= product._id %>">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn-add-cart" title="Adicionar ao Carrinho">
+                  <i class="fas fa-shopping-cart"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <div style="grid-column: 1 / -1; text-align: center; padding: 48px; background: #FFF; border-radius: 16px;">
+        <p style="font-size: 1.1rem; color: var(--text-muted);">Nenhum produto cadastrado ainda. Execute o script de seed para popular os produtos iniciais!</p>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<!-- História da Família / Por Que Comprar Conosco -->
+<section style="background: #FFF; border-radius: var(--radius-lg); padding: 48px; border: 1px solid var(--border-light); margin-bottom: 48px; box-shadow: var(--shadow-sm);">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center;">
+    <div>
+      <span style="color: var(--secondary); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Família O Que É Isso?</span>
+      <h2 style="font-size: 2.2rem; margin-top: 6px; margin-bottom: 18px;">Feito por Mãos Dedicadas</h2>
+      <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 16px;">
+        Cada produto da nossa loja carrega a história e a alma do artesanato brasileiro. Minha esposa dedica horas em crochês minuciosos, meu irmão esculpe madeiras nobres transformando tábuas brutas em obras de arte funcionais, e minhas cunhadas desenham e costuram bolsas e bonecas cheias de charme.
+      </p>
+      <p style="color: var(--text-muted); line-height: 1.8;">
+        Ao comprar conosco, você apoia o trabalho feito à mão e leva para casa uma peça genuína, durável e cheia de significado.
+      </p>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div style="background: var(--bg-main); padding: 24px; border-radius: var(--radius-md); text-align: center;">
+        <i class="fas fa-leaf" style="font-size: 2rem; color: var(--primary); margin-bottom: 10px;"></i>
+        <h4 style="font-size: 1.1rem; margin-bottom: 6px;">Materiais Nobres</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Seleção cuidadosa de madeira sustentável, tecidos e fios de qualidade.</p>
+      </div>
+      <div style="background: var(--bg-main); padding: 24px; border-radius: var(--radius-md); text-align: center;">
+        <i class="fas fa-gem" style="font-size: 2rem; color: var(--secondary); margin-bottom: 10px;"></i>
+        <h4 style="font-size: 1.1rem; margin-bottom: 6px;">100% Exclusivo</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Nenhuma peça é exatamente igual à outra, garantindo exclusividade.</p>
+      </div>
+      <div style="background: var(--bg-main); padding: 24px; border-radius: var(--radius-md); text-align: center;">
+        <i class="fas fa-box-open" style="font-size: 2rem; color: var(--accent); margin-bottom: 10px;"></i>
+        <h4 style="font-size: 1.1rem; margin-bottom: 6px;">Embalagem Segura</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Envio rápido para todo o Brasil em caixas protegidas.</p>
+      </div>
+      <div style="background: var(--bg-main); padding: 24px; border-radius: var(--radius-md); text-align: center;">
+        <i class="fas fa-smile-beam" style="font-size: 2rem; color: #2D6A4F; margin-bottom: 10px;"></i>
+        <h4 style="font-size: 1.1rem; margin-bottom: 6px;">Atendimento Familiar</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Contato direto e carinho em todas as etapas da sua compra.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,119 @@
+<%- include('../partials/header') %>
+
+<div style="margin-bottom: 32px;">
+  <h1 style="font-size: 2.2rem; margin-bottom: 6px;">Minha Conta</h1>
+  <p style="color: var(--text-muted);">Bem-vindo(a) de volta, <strong><%= user.name %></strong>!</p>
+</div>
+
+<% if (success) { %>
+  <div class="alert alert-success">
+    <i class="fas fa-check-circle"></i> <%= success %>
+  </div>
+<% } %>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 36px;">
+  
+  <!-- Formulário de Perfil / Endereço -->
+  <div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); height: fit-content; box-shadow: var(--shadow-sm);">
+    <h3 style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
+      <i class="fas fa-user-edit" style="color: var(--secondary);"></i> Meus Dados
+    </h3>
+
+    <form action="/minha-conta/perfil" method="POST">
+      <div class="form-group">
+        <label class="form-label">Nome Completo</label>
+        <input type="text" name="name" class="form-control" value="<%= user.name %>" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">E-mail (Não alterável)</label>
+        <input type="email" class="form-control" value="<%= user.email %>" disabled style="background: #F3EFEA;">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Telefone</label>
+        <input type="text" name="phone" class="form-control" value="<%= user.phone || '' %>">
+      </div>
+
+      <h4 style="font-size: 1rem; margin: 20px 0 12px; color: var(--primary);">Endereço Padrão</h4>
+
+      <div class="form-group">
+        <label class="form-label">CEP</label>
+        <input type="text" name="zipCode" class="form-control" value="<%= user.address ? user.address.zipCode : '' %>">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Rua / Número</label>
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+          <input type="text" name="street" class="form-control" placeholder="Rua" value="<%= user.address ? user.address.street : '' %>">
+          <input type="text" name="number" class="form-control" placeholder="Nº" value="<%= user.address ? user.address.number : '' %>">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Cidade / Estado</label>
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+          <input type="text" name="city" class="form-control" placeholder="Cidade" value="<%= user.address ? user.address.city : '' %>">
+          <input type="text" name="state" class="form-control" placeholder="UF" value="<%= user.address ? user.address.state : '' %>">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;">
+        <i class="fas fa-save"></i> Salvar Alterações
+      </button>
+    </form>
+  </div>
+
+  <!-- Histórico de Pedidos -->
+  <div>
+    <div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+      <h3 style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
+        <i class="fas fa-box" style="color: var(--secondary);"></i> Meus Pedidos (<%= orders.length %>)
+      </h3>
+
+      <% if (orders && orders.length > 0) { %>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nº Pedido</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th style="text-align: right;">Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orders.forEach(order => { %>
+                <tr>
+                  <td><strong>#<%= order.orderNumber %></strong></td>
+                  <td><%= new Date(order.createdAt).toLocaleDateString('pt-BR') %></td>
+                  <td>
+                    <span class="status-badge status-<%= order.orderStatus.toLowerCase().replace(/\s+/g, '-') %>">
+                      <%= order.orderStatus %>
+                    </span>
+                  </td>
+                  <td style="font-weight: 700; color: var(--primary);"><%= formatMoney(order.totalAmount) %></td>
+                  <td style="text-align: right;">
+                    <a href="/minha-conta/pedido/<%= order._id %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem;">
+                      Ver Detalhes
+                    </a>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div style="text-align: center; padding: 40px 20px;">
+          <i class="fas fa-shopping-basket" style="font-size: 2.5rem; color: var(--border-active); margin-bottom: 12px;"></i>
+          <p style="color: var(--text-muted); margin-bottom: 16px;">Você ainda não realizou nenhum pedido conosco.</p>
+          <a href="/" class="btn btn-primary">Ir para a Loja</a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>

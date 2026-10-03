@@ -1,0 +1,46 @@
+<%- include('partials/header') %>
+
+<div style="margin-bottom: 32px;">
+  <h1 style="font-size: 2.2rem; margin-bottom: 6px;">Resultados para "<%= query %>"</h1>
+  <p style="color: var(--text-muted);">Encontramos <strong><%= products.length %></strong> produto(s) correspondentes.</p>
+</div>
+
+<% if (products && products.length > 0) { %>
+  <div class="products-grid">
+    <% products.forEach(product => { %>
+      <div class="product-card">
+        <div class="product-thumb">
+          <img src="<%= product.images[0] %>" alt="<%= product.name %>" loading="lazy">
+          <span class="product-artisan-badge">
+            <i class="fas fa-user-ninja"></i> <%= product.artisan %>
+          </span>
+        </div>
+        <div class="product-body">
+          <span class="product-category"><%= product.category ? product.category.name : '' %></span>
+          <h3 class="product-title">
+            <a href="/produto/<%= product.slug || product._id %>"><%= product.name %></a>
+          </h3>
+          <div class="product-price-row">
+            <span class="current-price"><%= formatMoney(product.price) %></span>
+            <form action="/carrinho/adicionar" method="POST" class="form-add-cart-ajax">
+              <input type="hidden" name="productId" value="<%= product._id %>">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="btn-add-cart" title="Adicionar ao Carrinho">
+                <i class="fas fa-shopping-cart"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+<% } else { %>
+  <div style="text-align: center; padding: 64px 24px; background: #FFF; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+    <i class="fas fa-search" style="font-size: 3rem; color: var(--border-active); margin-bottom: 16px;"></i>
+    <h3 style="font-size: 1.4rem; margin-bottom: 8px;">Nenhum produto encontrado</h3>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">Tente pesquisar com outros termos ou navegue pelas nossas categorias.</p>
+    <a href="/" class="btn btn-primary">Voltar para a Página Inicial</a>
+  </div>
+<% } %>
+
+<%- include('partials/footer') %>

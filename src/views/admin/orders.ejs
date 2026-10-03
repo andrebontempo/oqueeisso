@@ -1,0 +1,90 @@
+<%- include('../partials/header') %>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+  <div>
+    <h1 style="font-size: 2.2rem; margin-bottom: 4px;">Gerenciar Pedidos</h1>
+    <p style="color: var(--text-muted);">Acompanhamento de vendas e alteração de status de entrega</p>
+  </div>
+</div>
+
+<% if (success) { %>
+  <div class="alert alert-success">
+    <i class="fas fa-check-circle"></i> <%= success %>
+  </div>
+<% } %>
+
+<div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+  <% if (orders && orders.length > 0) { %>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nº Pedido</th>
+            <th>Cliente & Contato</th>
+            <th>Endereço</th>
+            <th>Pagamento</th>
+            <th>Status Pedido</th>
+            <th>Total</th>
+            <th style="text-align: right;">Atualizar Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(order => { %>
+            <tr>
+              <td>
+                <strong>#<%= order.orderNumber %></strong><br>
+                <span style="font-size: 0.78rem; color: var(--text-muted);"><%= new Date(order.createdAt).toLocaleDateString('pt-BR') %></span>
+              </td>
+              <td>
+                <strong><%= order.customerName %></strong><br>
+                <span style="font-size: 0.8rem; color: var(--text-muted);"><%= order.customerEmail %></span><br>
+                <span style="font-size: 0.8rem; color: var(--secondary);"><%= order.customerPhone %></span>
+              </td>
+              <td>
+                <span style="font-size: 0.85rem;">
+                  <%= order.shippingAddress.street %>, <%= order.shippingAddress.number %><br>
+                  <%= order.shippingAddress.city %> / <%= order.shippingAddress.state %>
+                </span>
+              </td>
+              <td>
+                <span style="font-weight: 700; text-transform: uppercase;"><%= order.paymentMethod %></span><br>
+                <span class="status-badge status-<%= order.paymentStatus.toLowerCase() %>">
+                  <%= order.paymentStatus %>
+                </span>
+              </td>
+              <td>
+                <span class="status-badge status-<%= order.orderStatus.toLowerCase().replace(/\s+/g, '-') %>">
+                  <%= order.orderStatus %>
+                </span>
+              </td>
+              <td style="font-weight: 700; color: var(--primary);"><%= formatMoney(order.totalAmount) %></td>
+              <td style="text-align: right;">
+                <form action="/admin/pedidos/status/<%= order._id %>" method="POST" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
+                  <select name="orderStatus" class="form-control" style="font-size: 0.8rem; padding: 4px 8px; width: 140px;">
+                    <option value="Pendente" <%= order.orderStatus === 'Pendente' ? 'selected' : '' %>>Pendente</option>
+                    <option value="Em Produção" <%= order.orderStatus === 'Em Produção' ? 'selected' : '' %>>Em Produção</option>
+                    <option value="Enviado" <%= order.orderStatus === 'Enviado' ? 'selected' : '' %>>Enviado</option>
+                    <option value="Entregue" <%= order.orderStatus === 'Entregue' ? 'selected' : '' %>>Entregue</option>
+                    <option value="Cancelado" <%= order.orderStatus === 'Cancelado' ? 'selected' : '' %>>Cancelado</option>
+                  </select>
+
+                  <select name="paymentStatus" class="form-control" style="font-size: 0.8rem; padding: 4px 8px; width: 140px;">
+                    <option value="Pendente" <%= order.paymentStatus === 'Pendente' ? 'selected' : '' %>>Pag. Pendente</option>
+                    <option value="Aprovado" <%= order.paymentStatus === 'Aprovado' ? 'selected' : '' %>>Pag. Aprovado</option>
+                    <option value="Recusado" <%= order.paymentStatus === 'Recusado' ? 'selected' : '' %>>Pag. Recusado</option>
+                  </select>
+
+                  <button type="submit" class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;">Salvar</button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } else { %>
+    <p style="text-align: center; padding: 36px; color: var(--text-muted);">Nenhum pedido realizado até o momento.</p>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

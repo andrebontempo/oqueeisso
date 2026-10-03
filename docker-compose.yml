@@ -1,36 +1,31 @@
 services:
-  db:
-    image: mariadb:11.3
-    container_name: ${MYSQL_CONTAINER_NAME}
+  mongo:
+    image: mongo:7.0
+    container_name: oqueeisso_mongo
     restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "27017:27017"
     volumes:
-      - ./data/db:/var/lib/mysql
+      - ./data/mongo:/data/db
     networks:
-      - proxy
+      - app-network
 
-  wordpress:
-    image: wordpress:php8.2-apache
-    container_name: ${WORDPRESS_CONTAINER_NAME}
-    depends_on:
-      - db
+  app:
+    build: .
+    container_name: oqueeisso_app
     restart: unless-stopped
+    ports:
+      - "3000:3000"
     environment:
-      WORDPRESS_DB_HOST: ${MYSQL_CONTAINER_NAME}:3306
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
-    volumes:
-      - ./data/wordpress:/var/www/html
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongo:27017/oqueeisso
+      - JWT_SECRET=oqueeisso_super_secret_jwt_key_2026_artesanato
+      - NODE_ENV=production
+    depends_on:
+      - mongo
     networks:
-      - proxy
-#    ports:
-#      - "8080:80"
+      - app-network
+
 networks:
-  proxy:
-    external: true
+  app-network:
+    driver: bridge
