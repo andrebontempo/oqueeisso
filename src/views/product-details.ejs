@@ -45,6 +45,12 @@
           <i class="fas fa-times-circle"></i> Esgotado
         </span>
       <% } %>
+
+      <% if (locals.user && locals.user.role === 'admin') { %>
+        <a href="/admin/produtos/editar/<%= product._id %>" style="background: var(--accent); color: #FFF; font-size: 0.85rem; font-weight: 700; padding: 6px 14px; border-radius: var(--radius-full); margin-left: auto;" title="Editar no Painel Admin">
+          <i class="fas fa-pencil-alt"></i> Editar Produto
+        </a>
+      <% } %>
     </div>
 
     <!-- Preço -->

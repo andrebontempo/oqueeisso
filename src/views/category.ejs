@@ -73,6 +73,11 @@
               <span class="product-artisan-badge">
                 <i class="fas fa-user-ninja"></i> <%= product.artisan %>
               </span>
+              <% if (locals.user && locals.user.role === 'admin') { %>
+                <a href="/admin/produtos/editar/<%= product._id %>" style="position: absolute; top: 12px; right: 12px; background: var(--primary); color: #FFF; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; box-shadow: var(--shadow-sm); z-index: 10;" title="Editar Produto">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+              <% } %>
             </div>
             <div class="product-body">
               <span class="product-category"><%= category.name %></span>
