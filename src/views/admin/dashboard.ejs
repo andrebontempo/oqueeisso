@@ -220,9 +220,9 @@
                   <% } %>
                 </td>
                 <td style="text-align: right;">
-                  <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                    <a href="/admin/produtos/editar/<%= prod._id %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem;" title="Editar">
-                      <i class="fas fa-edit"></i>
+                  <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+                    <a href="/admin/produtos/editar/<%= prod._id %>" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.85rem; font-weight: 700; background: #FFF9F3; border: 1px solid var(--secondary); color: var(--primary);" title="Editar Produto">
+                      <i class="fas fa-pencil-alt"></i> Editar
                     </a>
                     <form action="/admin/produtos/excluir/<%= prod._id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');" style="display: inline;">
                       <button type="submit" class="btn" style="background: #FEE2E2; color: #991B1B; padding: 6px 12px; font-size: 0.82rem;" title="Excluir">
@@ -369,14 +369,14 @@
                 <td><strong style="color: var(--primary);"><%= u.orderCount %> pedido(s)</strong></td>
                 <td><%= new Date(u.createdAt).toLocaleDateString('pt-BR') %></td>
                 <td style="text-align: right;">
-                  <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                    <a href="/admin/usuarios/editar/<%= u._id %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem;" title="Editar Usuário">
-                      <i class="fas fa-edit"></i> Editar
+                  <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+                    <a href="/admin/usuarios/editar/<%= u._id %>" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.85rem; font-weight: 700; background: #FFF9F3; border: 1px solid var(--secondary); color: var(--primary);" title="Editar Usuário">
+                      <i class="fas fa-pencil-alt"></i> Editar
                     </a>
                     <% if (u._id.toString() !== locals.user._id.toString()) { %>
                       <form action="/admin/usuarios/excluir/<%= u._id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" style="display: inline;">
                         <button type="submit" class="btn" style="background: #FEE2E2; color: #991B1B; padding: 6px 12px; font-size: 0.82rem;" title="Excluir">
-                          <i class="fas fa-trash-alt"></i> Excluir
+                          <i class="fas fa-trash-alt"></i>
                         </button>
                       </form>
                     <% } %>
@@ -429,9 +429,9 @@
                 <td><strong style="color: var(--primary);"><%= art.specialty %></strong></td>
                 <td style="max-width: 300px; font-size: 0.88rem; color: var(--text-muted);"><%= art.bio %></td>
                 <td style="text-align: right;">
-                  <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                    <a href="/admin/artesaos/editar/<%= art._id %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem;" title="Editar">
-                      <i class="fas fa-edit"></i>
+                  <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+                    <a href="/admin/artesaos/editar/<%= art._id %>" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.85rem; font-weight: 700; background: #FFF9F3; border: 1px solid var(--secondary); color: var(--primary);" title="Editar Artesão">
+                      <i class="fas fa-pencil-alt"></i> Editar
                     </a>
                     <form action="/admin/artesaos/excluir/<%= art._id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja remover este artesão?');" style="display: inline;">
                       <button type="submit" class="btn" style="background: #FEE2E2; color: #991B1B; padding: 6px 12px; font-size: 0.82rem;" title="Excluir">
@@ -487,9 +487,9 @@
                 <td><i class="fas <%= cat.icon %>" style="font-size: 1.2rem; color: var(--secondary);"></i></td>
                 <td style="font-size: 0.88rem; color: var(--text-muted);"><%= cat.description %></td>
                 <td style="text-align: right;">
-                  <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                    <a href="/admin/categorias/editar/<%= cat._id %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem;" title="Editar">
-                      <i class="fas fa-edit"></i>
+                  <div style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+                    <a href="/admin/categorias/editar/<%= cat._id %>" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.85rem; font-weight: 700; background: #FFF9F3; border: 1px solid var(--secondary); color: var(--primary);" title="Editar Categoria">
+                      <i class="fas fa-pencil-alt"></i> Editar
                     </a>
                     <form action="/admin/categorias/excluir/<%= cat._id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta categoria?');" style="display: inline;">
                       <button type="submit" class="btn" style="background: #FEE2E2; color: #991B1B; padding: 6px 12px; font-size: 0.82rem;" title="Excluir">
