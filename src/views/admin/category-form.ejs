@@ -1,0 +1,56 @@
+<%- include('../partials/header') %>
+
+<div style="margin-bottom: 24px;">
+  <a href="/admin/dashboard?tab=categorias" style="color: var(--text-muted); font-size: 0.9rem;">
+    <i class="fas fa-arrow-left"></i> Voltar para Categorias
+  </a>
+</div>
+
+<div style="max-width: 650px; margin: 0 auto; background: #FFF; padding: 36px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 48px;">
+  
+  <h1 style="font-size: 2rem; margin-bottom: 8px;"><%= category && category._id ? 'Editar Categoria' : 'Cadastrar Nova Categoria' %></h1>
+  <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Organize os produtos por categorias de artesanato.</p>
+
+  <% if (error) { %>
+    <div class="alert alert-danger">
+      <i class="fas fa-exclamation-triangle"></i> <%= error %>
+    </div>
+  <% } %>
+
+  <form action="<%= category && category._id ? '/admin/categorias/editar/' + category._id : '/admin/categorias/novo' %>" method="POST" enctype="multipart/form-data">
+    
+    <div class="form-group">
+      <label class="form-label">Nome da Categoria *</label>
+      <input type="text" name="name" class="form-control" required value="<%= category ? category.name : '' %>" placeholder="Ex: Trabalhos em Madeira">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Ícone FontAwesome (Ex: fa-tree, fa-shopping-bag, fa-certificate)</label>
+      <input type="text" name="icon" class="form-control" value="<%= category ? category.icon : 'fa-shapes' %>" placeholder="fa-shapes">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Descrição da Categoria</label>
+      <textarea name="description" class="form-control" rows="3" placeholder="Breve descrição dos tipos de peças inclusas nesta categoria..."><%= category ? category.description : '' %></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Imagem de Capa da Categoria</label>
+      <input type="file" name="image" class="form-control" accept="image/*">
+    </div>
+
+    <% if (category && category.image) { %>
+      <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+        <img src="<%= category.image %>" alt="<%= category.name %>" style="width: 80px; height: 50px; object-fit: cover; border-radius: 6px;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Imagem atual salva</span>
+      </div>
+    <% } %>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 1.05rem; margin-top: 12px;">
+      <i class="fas fa-save"></i> <%= category && category._id ? 'Salvar Alterações' : 'Cadastrar Categoria' %>
+    </button>
+  </form>
+
+</div>
+
+<%- include('../partials/footer') %>

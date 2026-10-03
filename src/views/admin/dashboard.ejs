@@ -1,109 +1,512 @@
 <%- include('../partials/header') %>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
-  <div>
-    <h1 style="font-size: 2.2rem; margin-bottom: 4px;">Painel de Controle Admin</h1>
-    <p style="color: var(--text-muted);">Gerenciamento do e-commerce O Que É Isso? Artesanato</p>
+<div style="margin-bottom: 24px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <h1 style="font-size: 2.2rem; margin-bottom: 4px;">Painel de Controle Admin</h1>
+      <p style="color: var(--text-muted);">Central unificada de gestão do e-commerce O Que É Isso?</p>
+    </div>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <a href="/admin/produtos/novo" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.9rem;">
+        <i class="fas fa-plus"></i> Novo Produto
+      </a>
+      <a href="/admin/usuarios/novo" class="btn btn-secondary" style="padding: 10px 18px; font-size: 0.9rem;">
+        <i class="fas fa-user-plus"></i> Novo Cliente/User
+      </a>
+    </div>
   </div>
-  <div style="display: flex; gap: 12px;">
-    <a href="/admin/artesaos" class="btn btn-secondary">
-      <i class="fas fa-users-gear"></i> Gerenciar Artesãos
-    </a>
-    <a href="/admin/produtos/novo" class="btn btn-primary">
+</div>
+
+<% if (typeof success !== 'undefined' && success) { %>
+  <div class="alert alert-success">
+    <i class="fas fa-check-circle"></i> <%= success %>
+  </div>
+<% } %>
+
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger">
+    <i class="fas fa-exclamation-triangle"></i> <%= error %>
+  </div>
+<% } %>
+
+<!-- Barra de Navegação em Abas (Tabs Bar) -->
+<div class="admin-tabs-nav" style="display: flex; gap: 8px; border-bottom: 2px solid var(--border-light); margin-bottom: 32px; overflow-x: auto; padding-bottom: 4px;">
+  <a href="/admin/dashboard?tab=overview" class="admin-tab-btn <%= activeTab === 'overview' ? 'active' : '' %>" id="tab-btn-overview">
+    <i class="fas fa-chart-line"></i> Visão Geral
+  </a>
+  <a href="/admin/dashboard?tab=produtos" class="admin-tab-btn <%= activeTab === 'produtos' ? 'active' : '' %>" id="tab-btn-produtos">
+    <i class="fas fa-boxes-stacked"></i> Produtos (<%= totalProducts %>)
+  </a>
+  <a href="/admin/dashboard?tab=pedidos" class="admin-tab-btn <%= activeTab === 'pedidos' ? 'active' : '' %>" id="tab-btn-pedidos">
+    <i class="fas fa-truck-fast"></i> Controle de Pedidos (<%= totalOrders %>)
+  </a>
+  <a href="/admin/dashboard?tab=usuarios" class="admin-tab-btn <%= activeTab === 'usuarios' ? 'active' : '' %>" id="tab-btn-usuarios">
+    <i class="fas fa-users"></i> Usuários & Clientes (<%= totalUsers %>)
+  </a>
+  <a href="/admin/dashboard?tab=artesaos" class="admin-tab-btn <%= activeTab === 'artesaos' ? 'active' : '' %>" id="tab-btn-artesaos">
+    <i class="fas fa-palette"></i> Artesãos (<%= totalArtisans %>)
+  </a>
+  <a href="/admin/dashboard?tab=categorias" class="admin-tab-btn <%= activeTab === 'categorias' ? 'active' : '' %>" id="tab-btn-categorias">
+    <i class="fas fa-tags"></i> Categorias (<%= totalCategories %>)
+  </a>
+</div>
+
+<style>
+  .admin-tab-btn {
+    padding: 12px 20px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 3px solid transparent;
+  }
+  .admin-tab-btn:hover {
+    color: var(--primary);
+    background: rgba(139, 69, 19, 0.05);
+  }
+  .admin-tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    background: #FFF;
+  }
+</style>
+
+<!-- =================================================================== -->
+<!-- ABA 1: VISÃO GERAL (OVERVIEW) -->
+<!-- =================================================================== -->
+<% if (activeTab === 'overview') { %>
+  <!-- Cards de Métricas -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 36px;">
+    <div style="background: #FFF; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 16px;">
+      <div style="width: 50px; height: 50px; background: #D1FAE5; color: #065F46; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+        <i class="fas fa-dollar-sign"></i>
+      </div>
+      <div>
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Faturamento Total</span>
+        <h3 style="font-size: 1.5rem; color: var(--primary); margin-top: 2px;"><%= formatMoney(totalRevenue) %></h3>
+      </div>
+    </div>
+
+    <div style="background: #FFF; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 16px;">
+      <div style="width: 50px; height: 50px; background: #DBEAFE; color: #1E40AF; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+        <i class="fas fa-shopping-bag"></i>
+      </div>
+      <div>
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Total de Pedidos</span>
+        <h3 style="font-size: 1.5rem; color: var(--text-dark); margin-top: 2px;"><%= totalOrders %></h3>
+      </div>
+    </div>
+
+    <div style="background: #FFF; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 16px;">
+      <div style="width: 50px; height: 50px; background: #FEF3C7; color: #92400E; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+        <i class="fas fa-boxes-stacked"></i>
+      </div>
+      <div>
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Produtos</span>
+        <h3 style="font-size: 1.5rem; color: var(--text-dark); margin-top: 2px;"><%= totalProducts %></h3>
+      </div>
+    </div>
+
+    <div style="background: #FFF; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 16px;">
+      <div style="width: 50px; height: 50px; background: #E0E7FF; color: #3730A3; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+        <i class="fas fa-users"></i>
+      </div>
+      <div>
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Clientes</span>
+        <h3 style="font-size: 1.5rem; color: var(--text-dark); margin-top: 2px;"><%= totalUsers %></h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendas Recentes -->
+  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 32px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h3 style="font-size: 1.2rem;">Últimos Pedidos Realizados</h3>
+      <a href="/admin/dashboard?tab=pedidos" style="color: var(--secondary); font-weight: 700; font-size: 0.85rem;">Ver Todos os Pedidos <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <% if (recentOrders && recentOrders.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nº Pedido</th>
+              <th>Cliente</th>
+              <th>Pagamento</th>
+              <th>Status do Pedido</th>
+              <th>Total</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% recentOrders.forEach(order => { %>
+              <tr>
+                <td><strong>#<%= order.orderNumber %></strong></td>
+                <td><%= order.customerName %><br><span style="font-size: 0.78rem; color: var(--text-muted);"><%= order.customerEmail %></span></td>
+                <td><span style="font-weight: 600;"><%= order.paymentMethod.toUpperCase() %></span> (<%= order.paymentStatus %>)</td>
+                <td>
+                  <span class="status-badge status-<%= order.orderStatus.toLowerCase().replace(/\s+/g, '-') %>">
+                    <%= order.orderStatus %>
+                  </span>
+                </td>
+                <td style="font-weight: 700; color: var(--primary);"><%= formatMoney(order.totalAmount) %></td>
+                <td><%= new Date(order.createdAt).toLocaleDateString('pt-BR') %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p style="color: var(--text-muted); text-align: center; padding: 24px;">Nenhum pedido recente registrado.</p>
+    <% } %>
+  </div>
+<% } %>
+
+<!-- =================================================================== -->
+<!-- ABA 2: GERENCIAMENTO DE PRODUTOS -->
+<!-- =================================================================== -->
+<% if (activeTab === 'produtos') { %>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h3 style="font-size: 1.3rem;">Catálogo de Produtos</h3>
+    <a href="/admin/produtos/novo" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.9rem;">
       <i class="fas fa-plus"></i> Novo Produto
     </a>
-    <a href="/admin/pedidos" class="btn btn-secondary">
-      <i class="fas fa-list-check"></i> Ver Pedidos
+  </div>
+
+  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+    <% if (products && products.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Nome do Produto</th>
+              <th>Categoria</th>
+              <th>Artesão</th>
+              <th>Preço</th>
+              <th>Estoque</th>
+              <th>Destaque</th>
+              <th style="text-align: right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(prod => { %>
+              <tr>
+                <td>
+                  <img src="<%= prod.images[0] %>" alt="<%= prod.name %>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                </td>
+                <td>
+                  <strong><%= prod.name %></strong>
+                </td>
+                <td><%= prod.category ? prod.category.name : '-' %></td>
+                <td><span style="font-size: 0.85rem; font-weight: 600;"><%= prod.artisan %></span></td>
+                <td style="font-weight: 700; color: var(--primary);"><%= formatMoney(prod.price) %></td>
+                <td>
+                  <span style="font-weight: 700; color: <%= prod.stock > 0 ? '#065F46' : '#991B1B' %>;">
+                    <%= prod.stock %> un.
+                  </span>
+                </td>
+                <td>
+                  <% if (prod.featured) { %>
+                    <span class="status-badge status-aprovado">Sim</span>
+                  <% } else { %>
+                    <span style="color: var(--text-light); font-size: 0.85rem;">Não</span>
+                  <% } %>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                    <a href="/admin/produtos/editar/<%= prod._id %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem;" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="/admin/produtos/excluir/<%= prod._id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');" style="display: inline;">
+                      <button type="submit" class="btn" style="background: #FEE2E2; color: #991B1B; padding: 6px 12px; font-size: 0.82rem;" title="Excluir">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p style="text-align: center; padding: 36px; color: var(--text-muted);">Nenhum produto cadastrado no catálogo.</p>
+    <% } %>
+  </div>
+<% } %>
+
+<!-- =================================================================== -->
+<!-- ABA 3: CONTROLE DE PEDIDOS -->
+<!-- =================================================================== -->
+<% if (activeTab === 'pedidos') { %>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h3 style="font-size: 1.3rem;">Gestão de Pedidos e Vendas</h3>
+  </div>
+
+  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+    <% if (orders && orders.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nº Pedido</th>
+              <th>Cliente & Contato</th>
+              <th>Endereço</th>
+              <th>Pagamento</th>
+              <th>Status Pedido</th>
+              <th>Total</th>
+              <th style="text-align: right;">Atualizar Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td>
+                  <strong>#<%= order.orderNumber %></strong><br>
+                  <span style="font-size: 0.78rem; color: var(--text-muted);"><%= new Date(order.createdAt).toLocaleDateString('pt-BR') %></span>
+                </td>
+                <td>
+                  <strong><%= order.customerName %></strong><br>
+                  <span style="font-size: 0.8rem; color: var(--text-muted);"><%= order.customerEmail %></span><br>
+                  <span style="font-size: 0.8rem; color: var(--secondary);"><%= order.customerPhone %></span>
+                </td>
+                <td>
+                  <span style="font-size: 0.85rem;">
+                    <%= order.shippingAddress.street %>, <%= order.shippingAddress.number %><br>
+                    <%= order.shippingAddress.city %> / <%= order.shippingAddress.state %>
+                  </span>
+                </td>
+                <td>
+                  <span style="font-weight: 700; text-transform: uppercase;"><%= order.paymentMethod %></span><br>
+                  <span class="status-badge status-<%= order.paymentStatus.toLowerCase() %>">
+                    <%= order.paymentStatus %>
+                  </span>
+                </td>
+                <td>
+                  <span class="status-badge status-<%= order.orderStatus.toLowerCase().replace(/\s+/g, '-') %>">
+                    <%= order.orderStatus %>
+                  </span>
+                </td>
+                <td style="font-weight: 700; color: var(--primary);"><%= formatMoney(order.totalAmount) %></td>
+                <td style="text-align: right;">
+                  <form action="/admin/pedidos/status/<%= order._id %>" method="POST" style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
+                    <select name="orderStatus" class="form-control" style="font-size: 0.8rem; padding: 4px 8px; width: 140px;">
+                      <option value="Pendente" <%= order.orderStatus === 'Pendente' ? 'selected' : '' %>>Pendente</option>
+                      <option value="Em Produção" <%= order.orderStatus === 'Em Produção' ? 'selected' : '' %>>Em Produção</option>
+                      <option value="Enviado" <%= order.orderStatus === 'Enviado' ? 'selected' : '' %>>Enviado</option>
+                      <option value="Entregue" <%= order.orderStatus === 'Entregue' ? 'selected' : '' %>>Entregue</option>
+                      <option value="Cancelado" <%= order.orderStatus === 'Cancelado' ? 'selected' : '' %>>Cancelado</option>
+                    </select>
+
+                    <select name="paymentStatus" class="form-control" style="font-size: 0.8rem; padding: 4px 8px; width: 140px;">
+                      <option value="Pendente" <%= order.paymentStatus === 'Pendente' ? 'selected' : '' %>>Pag. Pendente</option>
+                      <option value="Aprovado" <%= order.paymentStatus === 'Aprovado' ? 'selected' : '' %>>Pag. Aprovado</option>
+                      <option value="Recusado" <%= order.paymentStatus === 'Recusado' ? 'selected' : '' %>>Pag. Recusado</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;">Salvar</button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p style="text-align: center; padding: 36px; color: var(--text-muted);">Nenhum pedido realizado até o momento.</p>
+    <% } %>
+  </div>
+<% } %>
+
+<!-- =================================================================== -->
+<!-- ABA 4: USUÁRIOS E CLIENTES -->
+<!-- =================================================================== -->
+<% if (activeTab === 'usuarios') { %>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h3 style="font-size: 1.3rem;">Gestão de Usuários e Clientes Cadastrados</h3>
+    <a href="/admin/usuarios/novo" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.9rem;">
+      <i class="fas fa-user-plus"></i> Adicionar Usuário / Cliente
     </a>
   </div>
-</div>
 
-<!-- Cards de Estatísticas -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 40px;">
-  
-  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 20px;">
-    <div style="width: 56px; height: 56px; background: #D1FAE5; color: #065F46; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
-      <i class="fas fa-dollar-sign"></i>
-    </div>
-    <div>
-      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Faturamento Total</span>
-      <h3 style="font-size: 1.6rem; color: var(--primary); margin-top: 2px;"><%= formatMoney(totalRevenue) %></h3>
-    </div>
-  </div>
-
-  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 20px;">
-    <div style="width: 56px; height: 56px; background: #DBEAFE; color: #1E40AF; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
-      <i class="fas fa-shopping-bag"></i>
-    </div>
-    <div>
-      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Total de Pedidos</span>
-      <h3 style="font-size: 1.6rem; color: var(--text-dark); margin-top: 2px;"><%= totalOrders %></h3>
-    </div>
-  </div>
-
-  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 20px;">
-    <div style="width: 56px; height: 56px; background: #FEF3C7; color: #92400E; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
-      <i class="fas fa-boxes-stacked"></i>
-    </div>
-    <div>
-      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Produtos Ativos</span>
-      <h3 style="font-size: 1.6rem; color: var(--text-dark); margin-top: 2px;"><%= totalProducts %></h3>
-    </div>
-  </div>
-
-  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 20px;">
-    <div style="width: 56px; height: 56px; background: #E0E7FF; color: #3730A3; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
-      <i class="fas fa-users"></i>
-    </div>
-    <div>
-      <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Clientes Cadastrados</span>
-      <h3 style="font-size: 1.6rem; color: var(--text-dark); margin-top: 2px;"><%= totalUsers %></h3>
-    </div>
-  </div>
-
-</div>
-
-<!-- Pedidos Recentes -->
-<div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 40px;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h3 style="font-size: 1.3rem;">Pedidos Recentes</h3>
-    <a href="/admin/pedidos" style="color: var(--secondary); font-weight: 700; font-size: 0.9rem;">Ver Todos os Pedidos <i class="fas fa-arrow-right"></i></a>
-  </div>
-
-  <% if (recentOrders && recentOrders.length > 0) { %>
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Nº Pedido</th>
-            <th>Cliente</th>
-            <th>Pagamento</th>
-            <th>Status Pedido</th>
-            <th>Total</th>
-            <th>Data</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% recentOrders.forEach(order => { %>
+  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+    <% if (users && users.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
             <tr>
-              <td><strong>#<%= order.orderNumber %></strong></td>
-              <td><%= order.customerName %><br><span style="font-size: 0.78rem; color: var(--text-muted);"><%= order.customerEmail %></span></td>
-              <td><span style="font-weight: 600;"><%= order.paymentMethod.toUpperCase() %></span> (<%= order.paymentStatus %>)</td>
-              <td>
-                <span class="status-badge status-<%= order.orderStatus.toLowerCase().replace(/\s+/g, '-') %>">
-                  <%= order.orderStatus %>
-                </span>
-              </td>
-              <td style="font-weight: 700; color: var(--primary);"><%= formatMoney(order.totalAmount) %></td>
-              <td><%= new Date(order.createdAt).toLocaleDateString('pt-BR') %></td>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Telefone</th>
+              <th>Perfil</th>
+              <th>Pedidos Feitos</th>
+              <th>Data de Cadastro</th>
+              <th style="text-align: right;">Ações</th>
             </tr>
-          <% }); %>
-        </tbody>
-      </table>
-    </div>
-  <% } else { %>
-    <p style="color: var(--text-muted); text-align: center; padding: 24px;">Nenhum pedido recente registrado.</p>
-  <% } %>
-</div>
+          </thead>
+          <tbody>
+            <% users.forEach(u => { %>
+              <tr>
+                <td>
+                  <strong><%= u.name %></strong>
+                </td>
+                <td><%= u.email %></td>
+                <td><%= u.phone || '-' %></td>
+                <td>
+                  <% if (u.role === 'admin') { %>
+                    <span class="status-badge" style="background: #FEF3C7; color: #92400E;"><i class="fas fa-crown"></i> Admin</span>
+                  <% } else { %>
+                    <span class="status-badge status-aprovado">Cliente</span>
+                  <% } %>
+                </td>
+                <td><strong style="color: var(--primary);"><%= u.orderCount %> pedido(s)</strong></td>
+                <td><%= new Date(u.createdAt).toLocaleDateString('pt-BR') %></td>
+                <td style="text-align: right;">
+                  <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                    <a href="/admin/usuarios/editar/<%= u._id %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem;" title="Editar Usuário">
+                      <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <% if (u._id.toString() !== locals.user._id.toString()) { %>
+                      <form action="/admin/usuarios/excluir/<%= u._id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este usuário?');" style="display: inline;">
+                        <button type="submit" class="btn" style="background: #FEE2E2; color: #991B1B; padding: 6px 12px; font-size: 0.82rem;" title="Excluir">
+                          <i class="fas fa-trash-alt"></i> Excluir
+                        </button>
+                      </form>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p style="text-align: center; padding: 36px; color: var(--text-muted);">Nenhum usuário cadastrado.</p>
+    <% } %>
+  </div>
+<% } %>
+
+<!-- =================================================================== -->
+<!-- ABA 5: ARTESÃOS DA FAMÍLIA -->
+<!-- =================================================================== -->
+<% if (activeTab === 'artesaos') { %>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h3 style="font-size: 1.3rem;">Membros da Família & Artesãos</h3>
+    <a href="/admin/artesaos/novo" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.9rem;">
+      <i class="fas fa-plus"></i> Adicionar Artesão
+    </a>
+  </div>
+
+  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+    <% if (artisans && artisans.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Nome</th>
+              <th>Função</th>
+              <th>Especialidade</th>
+              <th>Resumo / Biografia</th>
+              <th style="text-align: right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% artisans.forEach(art => { %>
+              <tr>
+                <td>
+                  <img src="<%= art.avatar %>" alt="<%= art.name %>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; border: 2px solid var(--secondary);">
+                </td>
+                <td><strong><%= art.name %></strong></td>
+                <td><span class="status-badge status-aprovado"><%= art.role %></span></td>
+                <td><strong style="color: var(--primary);"><%= art.specialty %></strong></td>
+                <td style="max-width: 300px; font-size: 0.88rem; color: var(--text-muted);"><%= art.bio %></td>
+                <td style="text-align: right;">
+                  <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                    <a href="/admin/artesaos/editar/<%= art._id %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem;" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="/admin/artesaos/excluir/<%= art._id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja remover este artesão?');" style="display: inline;">
+                      <button type="submit" class="btn" style="background: #FEE2E2; color: #991B1B; padding: 6px 12px; font-size: 0.82rem;" title="Excluir">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p style="text-align: center; padding: 36px; color: var(--text-muted);">Nenhum artesão cadastrado.</p>
+    <% } %>
+  </div>
+<% } %>
+
+<!-- =================================================================== -->
+<!-- ABA 6: CATEGORIAS -->
+<!-- =================================================================== -->
+<% if (activeTab === 'categorias') { %>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h3 style="font-size: 1.3rem;">Categorias de Produtos</h3>
+    <a href="/admin/categorias/novo" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.9rem;">
+      <i class="fas fa-plus"></i> Nova Categoria
+    </a>
+  </div>
+
+  <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+    <% if (categories && categories.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Capa</th>
+              <th>Nome</th>
+              <th>Slug / URL</th>
+              <th>Ícone</th>
+              <th>Descrição</th>
+              <th style="text-align: right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% categories.forEach(cat => { %>
+              <tr>
+                <td>
+                  <img src="<%= cat.image %>" alt="<%= cat.name %>" style="width: 60px; height: 40px; object-fit: cover; border-radius: 6px;">
+                </td>
+                <td><strong><%= cat.name %></strong></td>
+                <td><code>/categoria/<%= cat.slug %></code></td>
+                <td><i class="fas <%= cat.icon %>" style="font-size: 1.2rem; color: var(--secondary);"></i></td>
+                <td style="font-size: 0.88rem; color: var(--text-muted);"><%= cat.description %></td>
+                <td style="text-align: right;">
+                  <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                    <a href="/admin/categorias/editar/<%= cat._id %>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.82rem;" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="/admin/categorias/excluir/<%= cat._id %>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta categoria?');" style="display: inline;">
+                      <button type="submit" class="btn" style="background: #FEE2E2; color: #991B1B; padding: 6px 12px; font-size: 0.82rem;" title="Excluir">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p style="text-align: center; padding: 36px; color: var(--text-muted);">Nenhuma categoria cadastrada.</p>
+    <% } %>
+  </div>
+<% } %>
 
 <%- include('../partials/footer') %>

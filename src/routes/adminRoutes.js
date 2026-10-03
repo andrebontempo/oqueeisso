@@ -7,6 +7,7 @@ const upload = require('../middleware/upload');
 // Todas as rotas de admin exigem estar logado como admin
 router.use(protect, adminOnly);
 
+// Dashboard em Abas
 router.get('/dashboard', adminController.getDashboard);
 
 // Produtos
@@ -24,6 +25,22 @@ router.post('/artesaos/novo', upload.single('avatar'), adminController.createArt
 router.get('/artesaos/editar/:id', adminController.renderEditArtisan);
 router.post('/artesaos/editar/:id', upload.single('avatar'), adminController.updateArtisan);
 router.post('/artesaos/excluir/:id', adminController.deleteArtisan);
+
+// Usuários & Clientes
+router.get('/usuarios', adminController.getUsers);
+router.get('/usuarios/novo', adminController.renderCreateUser);
+router.post('/usuarios/novo', adminController.createUser);
+router.get('/usuarios/editar/:id', adminController.renderEditUser);
+router.post('/usuarios/editar/:id', adminController.updateUser);
+router.post('/usuarios/excluir/:id', adminController.deleteUser);
+
+// Categorias
+router.get('/categorias', adminController.getCategories);
+router.get('/categorias/novo', adminController.renderCreateCategory);
+router.post('/categorias/novo', upload.single('image'), adminController.createCategory);
+router.get('/categorias/editar/:id', adminController.renderEditCategory);
+router.post('/categorias/editar/:id', upload.single('image'), adminController.updateCategory);
+router.post('/categorias/excluir/:id', adminController.deleteCategory);
 
 // Pedidos
 router.get('/pedidos', adminController.getOrders);
