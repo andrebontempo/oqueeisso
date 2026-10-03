@@ -52,7 +52,7 @@
           </div>
           <div>
             <span class="brand-name">O Que É Isso?</span>
-            <span class="brand-tagline">Artesanato com Amor</span>
+            <span class="brand-tagline hide-mobile">Artesanato com Amor</span>
           </div>
         </a>
 
@@ -67,17 +67,17 @@
 
           <!-- User Profile / Login -->
           <% if (locals.user) { %>
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
               <a href="/minha-conta" class="user-btn" id="header-user-btn">
                 <i class="fas fa-user-circle"></i>
                 <span class="user-name-text"><%= locals.user.name.split(' ')[0] %></span>
               </a>
               <% if (locals.user.role === 'admin') { %>
                 <a href="/admin/dashboard" class="admin-badge-btn" title="Painel Admin">
-                  <i class="fas fa-crown"></i> <span class="admin-badge-text">Admin</span>
+                  <i class="fas fa-crown"></i><span class="hide-mobile"> Admin</span>
                 </a>
               <% } %>
-              <a href="/logout" style="color: var(--text-muted); font-size: 1.1rem; padding: 4px;" title="Sair">
+              <a href="/logout" style="color: var(--text-muted); font-size: 1rem; padding: 2px;" title="Sair">
                 <i class="fas fa-sign-out-alt"></i>
               </a>
             </div>

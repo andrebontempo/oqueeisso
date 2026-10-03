@@ -1,4 +1,4 @@
-const CACHE_NAME = 'oqueeisso-v3';
+const CACHE_NAME = 'oqueeisso-v4';
 const STATIC_ASSETS = [
   '/',
   '/css/style.css',

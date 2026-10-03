@@ -1128,8 +1128,36 @@ html, body {
     width: 100%;
   }
 
+  .nav-actions {
+    gap: 6px;
+  }
+
+  .user-btn {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+    gap: 4px;
+  }
+
+  .admin-badge-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .cart-icon-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
+
+  .user-name-text {
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .brand-name {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
   }
 
   .brand-tagline {
