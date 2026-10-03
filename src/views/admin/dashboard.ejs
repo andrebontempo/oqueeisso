@@ -49,6 +49,9 @@
   <a href="/admin/dashboard?tab=categorias" class="admin-tab-btn <%= activeTab === 'categorias' ? 'active' : '' %>" id="tab-btn-categorias">
     <i class="fas fa-tags"></i> Categorias (<%= totalCategories %>)
   </a>
+  <a href="/admin/dashboard?tab=docs" class="admin-tab-btn <%= activeTab === 'docs' ? 'active' : '' %>" id="tab-btn-docs" style="background: rgba(139, 69, 19, 0.08); border-radius: 8px;">
+    <i class="fas fa-book-bookmark"></i> Documentação
+  </a>
 </div>
 
 <style>
@@ -506,6 +509,212 @@
     <% } else { %>
       <p style="text-align: center; padding: 36px; color: var(--text-muted);">Nenhuma categoria cadastrada.</p>
     <% } %>
+  </div>
+<% } %>
+
+<!-- =================================================================== -->
+<!-- ABA 7: DOCUMENTAÇÃO TÉCNICA COMPLETA -->
+<!-- =================================================================== -->
+<% if (activeTab === 'docs') { %>
+  <div style="background: #FFF; padding: 32px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 40px;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; border-bottom: 2px solid var(--border-light); padding-bottom: 20px;">
+      <div>
+        <h2 style="font-size: 1.8rem; color: var(--primary); display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+          <i class="fas fa-book-bookmark"></i> Documentação Técnica do Sistema
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Guia completo de arquitetura, integrações, variáveis de ambiente e manutenção do e-commerce <strong>O Que É Isso?</strong></p>
+      </div>
+      <div>
+        <span style="background: #D1FAE5; color: #065F46; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="fas fa-circle-check"></i> Produção v1.0
+        </span>
+      </div>
+    </div>
+
+    <!-- Seção 1: Arquitetura & Stack -->
+    <div style="margin-bottom: 40px;">
+      <h3 style="font-size: 1.3rem; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-layer-group" style="color: var(--accent);"></i> 1. Arquitetura do Sistema & Stack Tecnológica
+      </h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+        <div style="background: #FDFBF7; padding: 20px; border-radius: 12px; border: 1px solid var(--border-light);">
+          <div style="font-size: 1.4rem; color: var(--primary); margin-bottom: 8px;"><i class="fab fa-node-js"></i> Backend</div>
+          <strong style="display: block; font-size: 1rem; margin-bottom: 4px;">Node.js v20 & Express</strong>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Servidor RESTful com renderização de páginas EJS de alta performance.</span>
+        </div>
+
+        <div style="background: #FDFBF7; padding: 20px; border-radius: 12px; border: 1px solid var(--border-light);">
+          <div style="font-size: 1.4rem; color: #059669; margin-bottom: 8px;"><i class="fas fa-database"></i> Banco de Dados</div>
+          <strong style="display: block; font-size: 1rem; margin-bottom: 4px;">MongoDB v7.0 & Mongoose</strong>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Container isolado com volume persistente <code>mongo_data</code> na VPS.</span>
+        </div>
+
+        <div style="background: #FDFBF7; padding: 20px; border-radius: 12px; border: 1px solid var(--border-light);">
+          <div style="font-size: 1.4rem; color: #2563EB; margin-bottom: 8px;"><i class="fas fa-shield-halved"></i> Autenticação</div>
+          <strong style="display: block; font-size: 1rem; margin-bottom: 4px;">Passport + Google OAuth</strong>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Login por e-mail/senha com hash bcrypt e login social seguro do Google.</span>
+        </div>
+
+        <div style="background: #FDFBF7; padding: 20px; border-radius: 12px; border: 1px solid var(--border-light);">
+          <div style="font-size: 1.4rem; color: #D97706; margin-bottom: 8px;"><i class="fas fa-credit-card"></i> Pagamentos</div>
+          <strong style="display: block; font-size: 1rem; margin-bottom: 4px;">Mercado Pago & Webhook</strong>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Pix transparente instantâneo com atualização automática de status.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção 2: Variáveis de Ambiente -->
+    <div style="margin-bottom: 40px;">
+      <h3 style="font-size: 1.3rem; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-key" style="color: var(--accent);"></i> 2. Variáveis de Ambiente (Arquivo <code>.env</code>)
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">O arquivo <code>.env</code> na VPS deve ficar localizado em <code>/opt/docker/oqueeisso/.env</code> com o seguinte modelo:</p>
+      
+      <div style="background: #1E1E1E; color: #D4D4D4; padding: 20px; border-radius: 12px; font-family: monospace; font-size: 0.88rem; overflow-x: auto; line-height: 1.6;">
+<span style="color: #6A9955;"># Servidor & Banco de Dados</span>
+NODE_ENV=production
+PORT=80
+MONGODB_URI=mongodb://mongo:27017/oqueeisso
+JWT_SECRET=oqueeisso_super_secret_jwt_key_2026_artesanato
+
+<span style="color: #6A9955;"># URLs Públicas da Aplicação em Produção</span>
+BASE_URL=https://oqueeisso.com
+WEBHOOK_URL=https://oqueeisso.com
+
+<span style="color: #6A9955;"># Credenciais do Google OAuth 2.0</span>
+GOOGLE_CLIENT_ID=<span style="color: #CE9178;">seu_client_id.apps.googleusercontent.com</span>
+GOOGLE_CLIENT_SECRET=<span style="color: #CE9178;">seu_client_secret</span>
+GOOGLE_CALLBACK_URL=https://oqueeisso.com/auth/google/callback
+
+<span style="color: #6A9955;"># Credenciais do Mercado Pago</span>
+MERCADOPAGO_ACCESS_TOKEN=<span style="color: #CE9178;">APP_USR-seu_access_token_aqui</span>
+
+<span style="color: #6A9955;"># Serviço de E-mail SMTP (Hostinger)</span>
+SMTP_HOST=smtp.hostinger.com
+SMTP_PORT=465
+SMTP_USER=atendimento@oqueeisso.com
+SMTP_PASS=<span style="color: #CE9178;">sua_senha_do_email_hostinger</span>
+SMTP_FROM_NAME="O Que É Isso? Artesanato"
+ADMIN_ALERT_EMAIL=atendimento@oqueeisso.com
+      </div>
+    </div>
+
+    <!-- Seção 3: Guia de Integrações -->
+    <div style="margin-bottom: 40px;">
+      <h3 style="font-size: 1.3rem; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-plug" style="color: var(--accent);"></i> 3. Integrações de Serviços Externos
+      </h3>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Google OAuth -->
+        <div style="background: #FDFBF7; padding: 20px; border-radius: 12px; border: 1px solid var(--border-light);">
+          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+            <i class="fab fa-google" style="color: #EA4335;"></i> Google OAuth 2.0
+          </h4>
+          <ul style="font-size: 0.88rem; color: var(--text-color); padding-left: 18px; line-height: 1.6;">
+            <li>Configurado via GCP Console em <strong>APIs e Serviços > Credenciais</strong>.</li>
+            <li><strong>Origem Autorizada:</strong> <code>https://oqueeisso.com</code></li>
+            <li><strong>URI de Redirecionamento:</strong> <code>https://oqueeisso.com/auth/google/callback</code></li>
+            <li>Cria automaticamente o usuário com foto e e-mail verificado.</li>
+          </ul>
+        </div>
+
+        <!-- Mercado Pago & Webhook -->
+        <div style="background: #FDFBF7; padding: 20px; border-radius: 12px; border: 1px solid var(--border-light);">
+          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-wallet" style="color: #009EE3;"></i> Mercado Pago & Webhook
+          </h4>
+          <ul style="font-size: 0.88rem; color: var(--text-color); padding-left: 18px; line-height: 1.6;">
+            <li><strong>Geração do Pix:</strong> Códigos Pix copia-e-cola e QR Code nativos.</li>
+            <li><strong>Rota Webhook:</strong> <code>POST /api/payments/webhook</code></li>
+            <li>Quando o pagamento é aprovado, o pedido muda o status para <strong>"Aprovado"</strong> ou <strong>"Em Produção"</strong> sem intervenção manual.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção 4: E-mails Automáticos -->
+    <div style="margin-bottom: 40px;">
+      <h3 style="font-size: 1.3rem; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-envelope-open-text" style="color: var(--accent);"></i> 4. Notificações por E-mail (Hostinger SMTP)
+      </h3>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">Todos os e-mails são estilizados em HTML responsivo com a marca <strong>O Que É Isso?</strong> e enviados pelo remetente <code>atendimento@oqueeisso.com</code>:</p>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+        <div style="background: #FFF; padding: 14px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 0.88rem;">
+          <strong style="color: var(--primary);"><i class="fas fa-user-plus"></i> Boas-vindas:</strong> Enviado ao cliente ao se cadastrar.
+        </div>
+        <div style="background: #FFF; padding: 14px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 0.88rem;">
+          <strong style="color: var(--primary);"><i class="fas fa-bell"></i> Novo Usuário:</strong> Alerta administrativo enviado para o admin.
+        </div>
+        <div style="background: #FFF; padding: 14px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 0.88rem;">
+          <strong style="color: var(--primary);"><i class="fas fa-shopping-cart"></i> Novo Pedido:</strong> Confirmação do pedido com resumo e Pix para o cliente.
+        </div>
+        <div style="background: #FFF; padding: 14px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 0.88rem;">
+          <strong style="color: var(--primary);"><i class="fas fa-check-double"></i> Pagamento Aprovado:</strong> Confirmação enviada após alteração no webhook.
+        </div>
+        <div style="background: #FFF; padding: 14px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 0.88rem;">
+          <strong style="color: var(--primary);"><i class="fas fa-truck"></i> Atualização de Status:</strong> Notifica o cliente se o pedido for Enviado ou Entregue.
+        </div>
+        <div style="background: #FFF; padding: 14px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 0.88rem;">
+          <strong style="color: var(--primary);"><i class="fas fa-headset"></i> Formulário de Contato:</strong> Mensagem da página <code>/contato</code> enviada ao atendimento.
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção 5: PWA & Celular -->
+    <div style="margin-bottom: 40px;">
+      <h3 style="font-size: 1.3rem; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-mobile-screen-button" style="color: var(--accent);"></i> 5. PWA (Progressive Web App - Aplicativo Mobile)
+      </h3>
+      <div style="background: #FDFBF7; padding: 20px; border-radius: 12px; border: 1px solid var(--border-light); display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+        <img src="/images/icons/icon-192.png" alt="PWA Icon" style="width: 72px; height: 72px; border-radius: 16px; object-fit: cover; box-shadow: var(--shadow-sm);">
+        <div style="flex: 1; min-width: 260px;">
+          <h4 style="font-size: 1.05rem; color: var(--primary); margin-bottom: 4px;">Instalação Nativa no Celular</h4>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0 0 8px 0;">O e-commerce conta com <code>manifest.json</code> e <code>sw.js</code> (Service Worker). No Android/Chrome é exibido o banner de instalação direta. No iOS/Safari são exibidas instruções de "Adicionar à Tela de Início".</p>
+          <span style="font-size: 0.8rem; background: var(--secondary); color: #FFF; padding: 3px 10px; border-radius: 12px; font-weight: 700;">Modo Standalone sem barras de navegador</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção 6: Deploy & Comandos Úteis -->
+    <div>
+      <h3 style="font-size: 1.3rem; color: var(--primary); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-terminal" style="color: var(--accent);"></i> 6. Comandos Úteis na VPS (Terminal)
+      </h3>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div style="background: #F8FAFC; padding: 18px; border-radius: 10px; border: 1px solid var(--border-light);">
+          <strong style="font-size: 0.95rem; color: var(--primary); display: block; margin-bottom: 6px;">
+            <i class="fas fa-sync"></i> Executar Deploy Manual na VPS:
+          </strong>
+          <code style="background: #E2E8F0; padding: 6px 10px; border-radius: 6px; display: block; font-size: 0.85rem; color: #0F172A;">./deploy.sh</code>
+        </div>
+
+        <div style="background: #F8FAFC; padding: 18px; border-radius: 10px; border: 1px solid var(--border-light);">
+          <strong style="font-size: 0.95rem; color: var(--primary); display: block; margin-bottom: 6px;">
+            <i class="fas fa-seedling"></i> Executar Povoamento do Banco (Seed):
+          </strong>
+          <code style="background: #E2E8F0; padding: 6px 10px; border-radius: 6px; display: block; font-size: 0.85rem; color: #0F172A;">docker exec -it oqueeisso-app npm run seed</code>
+        </div>
+
+        <div style="background: #F8FAFC; padding: 18px; border-radius: 10px; border: 1px solid var(--border-light);">
+          <strong style="font-size: 0.95rem; color: var(--primary); display: block; margin-bottom: 6px;">
+            <i class="fas fa-scroll"></i> Ver Logs do Servidor em Tempo Real:
+          </strong>
+          <code style="background: #E2E8F0; padding: 6px 10px; border-radius: 6px; display: block; font-size: 0.85rem; color: #0F172A;">docker logs -f oqueeisso-app</code>
+        </div>
+
+        <div style="background: #F8FAFC; padding: 18px; border-radius: 10px; border: 1px solid var(--border-light);">
+          <strong style="font-size: 0.95rem; color: var(--primary); display: block; margin-bottom: 6px;">
+            <i class="fas fa-database"></i> Backup dos Dados do MongoDB:
+          </strong>
+          <code style="background: #E2E8F0; padding: 6px 10px; border-radius: 6px; display: block; font-size: 0.85rem; color: #0F172A;">docker exec -it oqueeisso-mongo mongodump --out /data/db/backup</code>
+        </div>
+      </div>
+    </div>
+
   </div>
 <% } %>
 

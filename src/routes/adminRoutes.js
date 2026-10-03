@@ -9,6 +9,7 @@ router.use(protect, adminOnly);
 
 // Dashboard em Abas
 router.get('/dashboard', adminController.getDashboard);
+router.get('/documentacao', (req, res) => res.redirect('/admin/dashboard?tab=docs'));
 
 // Produtos
 router.get('/produtos', adminController.getProducts);
