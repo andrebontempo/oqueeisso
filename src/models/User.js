@@ -17,9 +17,24 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'A senha é obrigatória'],
+      required: function () {
+        return !this.googleId;
+      },
       minlength: 6,
       select: false,
+    },
+    googleId: {
+      type: String,
+      default: null,
+    },
+    avatar: {
+      type: String,
+      default: '',
+    },
+    authProvider: {
+      type: String,
+      enum: ['local', 'google'],
+      default: 'local',
     },
     role: {
       type: String,
@@ -45,7 +60,7 @@ const userSchema = new mongoose.Schema(
 
 // Hash de senha antes de salvar
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+  if (!this.password || !this.isModified('password')) {
     return next();
   }
   const salt = await bcrypt.genSalt(10);
@@ -55,6 +70,7 @@ userSchema.pre('save', async function (next) {
 
 // Método para verificar senha
 userSchema.methods.matchPassword = async function (enteredPassword) {
+  if (!this.password) return false;
   return await bcrypt.compare(enteredPassword, this.password);
 };
 

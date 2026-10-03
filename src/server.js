@@ -5,8 +5,14 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const { optionalAuth } = require('./middleware/auth');
 
+const passport = require('passport');
+const configurePassport = require('./config/passport');
+
 // Carregar variáveis de ambiente
 dotenv.config();
+
+// Configurar Passport
+configurePassport();
 
 // Conectar ao MongoDB
 connectDB();
@@ -21,6 +27,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(passport.initialize());
 
 // Arquivos Estáticos
 app.use(express.static(path.join(__dirname, '../public')));

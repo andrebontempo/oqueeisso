@@ -735,6 +735,13 @@ img {
   margin-bottom: 28px;
 }
 
+.btn-google:hover {
+  background-color: #f8f9fa !important;
+  border-color: #c1c4c9 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-1px);
+}
+
 .auth-header h1 {
   font-size: 1.8rem;
   margin-bottom: 8px;

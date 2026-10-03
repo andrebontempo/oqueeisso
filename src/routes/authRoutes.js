@@ -8,4 +8,8 @@ router.get('/registro', authController.renderRegister);
 router.post('/registro', authController.register);
 router.get('/logout', authController.logout);
 
+// Rotas de Autenticação Google OAuth
+router.get('/auth/google', authController.googleAuth);
+router.get('/auth/google/callback', authController.googleCallback);
+
 module.exports = router;

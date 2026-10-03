@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'oqueeisso_super_secret_jwt_key_2026_artesanato', {
@@ -36,10 +37,14 @@ exports.renderLogin = (req, res) => {
   if (req.user) {
     return res.redirect('/');
   }
+  let error = null;
+  if (req.query.error === 'google_failed') {
+    error = 'Não foi possível autenticar com o Google. Tente novamente.';
+  }
   res.render('auth/login', {
     title: 'Entrar | O Que É Isso? Artesanato',
     redirect: req.query.redirect || '/',
-    error: null,
+    error: error,
   });
 };
 
@@ -145,4 +150,24 @@ exports.register = async (req, res) => {
 exports.logout = (req, res) => {
   res.clearCookie('token');
   res.redirect('/');
+};
+
+exports.googleAuth = (req, res, next) => {
+  const redirect = req.query.redirect || '/';
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    session: false,
+    state: redirect,
+  })(req, res, next);
+};
+
+exports.googleCallback = (req, res, next) => {
+  passport.authenticate('google', { session: false }, (err, user, info) => {
+    if (err || !user) {
+      console.error('Erro na autenticação via Google:', err || info);
+      return res.redirect('/login?error=google_failed');
+    }
+    const redirectUrl = req.query.state || '/';
+    sendTokenCookie(user, 200, res, redirectUrl);
+  })(req, res, next);
 };
