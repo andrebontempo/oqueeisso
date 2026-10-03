@@ -1,6 +1,7 @@
 const Product = require('../models/Product');
 const Order = require('../models/Order');
 const mercadopagoConfig = require('../config/mercadopago');
+const mailService = require('../services/mailService');
 
 const getCartFromCookie = (req) => {
   try {
@@ -141,15 +142,14 @@ exports.processOrder = async (req, res) => {
     res.clearCookie('cart');
 
     // ─── Processamento de Pagamento via Mercado Pago ───────────────────────
+    let initPointUrl = null;
     if (paymentMethod === 'mercadopago' || paymentMethod === 'credit_card' || paymentMethod === 'boleto') {
       try {
         const pref = await mercadopagoConfig.createPreference(order);
         order.mercadopagoPreferenceId = pref.id;
         order.mercadopagoInitPoint = pref.init_point;
         await order.save();
-
-        // Redireciona para o Checkout Seguro do Mercado Pago
-        return res.redirect(pref.init_point);
+        initPointUrl = pref.init_point;
       } catch (mpErr) {
         console.error('Erro ao gerar preferência Mercado Pago:', mpErr);
       }
@@ -173,6 +173,14 @@ exports.processOrder = async (req, res) => {
       }
     }
 
+    // Disparar e-mails de confirmação de pedido (para cliente) e alerta (para admin)
+    mailService.sendOrderConfirmationEmail(order).catch((err) => console.error('[Mail] Erro order customer:', err.message));
+    mailService.sendAdminNewOrderAlert(order).catch((err) => console.error('[Mail] Erro order admin:', err.message));
+
+    if (initPointUrl) {
+      return res.redirect(initPointUrl);
+    }
+
     res.redirect(`/pedido/confirmacao/${order._id}`);
   } catch (error) {
     console.error('Erro ao processar pedido:', error);
@@ -193,10 +201,13 @@ exports.getOrderConfirmation = async (req, res) => {
     }
 
     // Se o retorno do Mercado Pago veio como aprovado
-    if (req.query.status === 'approved' && order.paymentStatus === 'Pendente') {
+    if (req.query.status === 'approved' && order.paymentStatus !== 'Aprovado') {
       order.paymentStatus = 'Aprovado';
       order.orderStatus = 'Em Produção';
       await order.save();
+
+      // Disparar e-mail de pagamento aprovado
+      mailService.sendPaymentApprovedEmail(order).catch((err) => console.error('[Mail] Erro payment approved:', err.message));
     }
 
     res.render('order-confirmation', {
@@ -228,7 +239,9 @@ exports.handleWebhook = async (req, res) => {
         if (orderId) {
           const order = await Order.findById(orderId);
           if (order) {
+            const previousPaymentStatus = order.paymentStatus;
             order.mercadopagoPaymentId = id.toString();
+
             if (status === 'approved') {
               order.paymentStatus = 'Aprovado';
               if (order.orderStatus === 'Pendente') {
@@ -241,6 +254,11 @@ exports.handleWebhook = async (req, res) => {
             }
             await order.save();
             console.log(`[MercadoPago Webhook] Pedido #${order.orderNumber} atualizado: status=${status} -> paymentStatus=${order.paymentStatus}`);
+
+            // Se mudou para Aprovado agora, notificar cliente por e-mail
+            if (status === 'approved' && previousPaymentStatus !== 'Aprovado') {
+              mailService.sendPaymentApprovedEmail(order).catch((err) => console.error('[Mail] Erro payment approved webhook:', err.message));
+            }
           }
         }
       }

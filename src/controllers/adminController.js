@@ -4,6 +4,7 @@ const Order = require('../models/Order');
 const User = require('../models/User');
 const Artisan = require('../models/Artisan');
 const slugify = require('slugify');
+const mailService = require('../services/mailService');
 
 // ==========================================
 // DASHBOARD UNIFICADO EM ABAS
@@ -593,9 +594,17 @@ exports.updateOrderStatus = async (req, res) => {
 
     const order = await Order.findById(id);
     if (order) {
+      const oldOrderStatus = order.orderStatus;
+      const oldPaymentStatus = order.paymentStatus;
+
       if (orderStatus) order.orderStatus = orderStatus;
       if (paymentStatus) order.paymentStatus = paymentStatus;
       await order.save();
+
+      // Disparar e-mail de notificação de alteração de status se houver mudança
+      if ((orderStatus && orderStatus !== oldOrderStatus) || (paymentStatus && paymentStatus !== oldPaymentStatus)) {
+        mailService.sendStatusUpdateEmail(order).catch((err) => console.error('[Mail] Erro status update:', err.message));
+      }
     }
 
     res.redirect('/admin/dashboard?tab=pedidos&success=Status+do+pedido+atualizado');

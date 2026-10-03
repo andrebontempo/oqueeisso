@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
+const mailService = require('../services/mailService');
 
 function configurePassport() {
   if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
@@ -61,6 +62,10 @@ function configurePassport() {
               authProvider: 'google',
               role: 'user',
             });
+
+            // Disparar e-mails assíncronos
+            mailService.sendWelcomeEmail(user).catch((err) => console.error('[Mail] Erro welcome Google:', err.message));
+            mailService.sendAdminNewUserAlert(user).catch((err) => console.error('[Mail] Erro alert admin Google:', err.message));
 
             return done(null, user);
           } catch (err) {

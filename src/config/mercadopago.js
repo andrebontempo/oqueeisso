@@ -7,6 +7,14 @@ const client = new MercadoPagoConfig({ accessToken });
 const preferenceClient = new Preference(client);
 const paymentClient = new Payment(client);
 
+function getNotificationUrl() {
+  const webhookUrl = process.env.WEBHOOK_URL || '';
+  if (webhookUrl && !webhookUrl.includes('localhost') && !webhookUrl.includes('127.0.0.1')) {
+    return `${webhookUrl.replace(/\/$/, '')}/api/payments/webhook`;
+  }
+  return undefined;
+}
+
 /**
  * Criar preferência de pagamento no Mercado Pago para Checkout Transparente / Redirecionamento
  * @param {Object} order Objeto do Pedido Mongoose
@@ -14,7 +22,7 @@ const paymentClient = new Payment(client);
  */
 async function createPreference(order) {
   const baseUrl = (process.env.BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
-  const webhookUrl = process.env.WEBHOOK_URL || baseUrl;
+  const notification_url = getNotificationUrl();
 
   const items = order.items.map((item) => ({
     id: item.product ? item.product.toString() : item.name,
@@ -59,7 +67,7 @@ async function createPreference(order) {
     },
     auto_return: 'approved',
     external_reference: order._id.toString(),
-    notification_url: `${webhookUrl.replace(/\/$/, '')}/api/payments/webhook`,
+    notification_url,
     statement_descriptor: 'OQUEEISSO',
     metadata: {
       order_id: order._id.toString(),
@@ -81,8 +89,7 @@ async function createPreference(order) {
  * @returns {Promise<{paymentId: string, qrCode: string, qrCodeBase64: string, status: string}>}
  */
 async function createPixPayment(order) {
-  const baseUrl = (process.env.BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
-  const webhookUrl = process.env.WEBHOOK_URL || baseUrl;
+  const notification_url = getNotificationUrl();
 
   const nameParts = (order.customerName || 'Cliente').trim().split(' ');
   const firstName = nameParts[0];
@@ -98,7 +105,7 @@ async function createPixPayment(order) {
       last_name: lastName,
     },
     external_reference: order._id.toString(),
-    notification_url: `${webhookUrl.replace(/\/$/, '')}/api/payments/webhook`,
+    notification_url,
     metadata: {
       order_id: order._id.toString(),
       order_number: order.orderNumber,

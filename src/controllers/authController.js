@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const mailService = require('../services/mailService');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'oqueeisso_super_secret_jwt_key_2026_artesanato', {
@@ -135,6 +136,10 @@ exports.register = async (req, res) => {
       password,
       phone: phone || '',
     });
+
+    // Enviar e-mail de boas-vindas ao cliente e alerta para a administração (não-bloqueante)
+    mailService.sendWelcomeEmail(user).catch((err) => console.error('[Mail] Erro welcome:', err.message));
+    mailService.sendAdminNewUserAlert(user).catch((err) => console.error('[Mail] Erro alert admin:', err.message));
 
     sendTokenCookie(user, 201, res, '/');
   } catch (error) {
