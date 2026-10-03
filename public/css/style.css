@@ -128,17 +128,14 @@ img {
   width: 100%;
 }
 
+/* Desktop: logo | busca | botões (navbar-top-row "desaparece" e os filhos viram itens do container) */
 .navbar-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
+  display: contents;
 }
 
-.navbar-search-row {
-  flex: 1;
-  max-width: 460px;
-}
+.navbar-top-row .brand-logo { order: 1; }
+.navbar-search-row { order: 2; flex: 1; max-width: 460px; }
+.navbar-top-row .nav-actions { order: 3; }
 
 .admin-badge-btn {
   background: var(--accent);
@@ -1017,16 +1014,9 @@ img {
    RESPONSIVIDADE MOBILE & TABLETS (FLUIDA & SEM OVERFLOW)
    ========================================================================== */
 
-/* Prevenção Absoluta de Transbordo Horizontal */
+/* Prevenção de Transbordo Horizontal */
 html, body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden !important;
-}
-
-.main-wrapper, .hero-section, .family-section, .footer, .footer-container, .navbar-container {
-  box-sizing: border-box !important;
-  max-width: 100% !important;
+  overflow-x: hidden;
 }
 
 @media (max-width: 992px) {
@@ -1060,6 +1050,10 @@ html, body {
 }
 
 @media (max-width: 768px) {
+  .hide-mobile {
+    display: none;
+  }
+
   .navbar-container {
     flex-direction: column;
     align-items: stretch;
