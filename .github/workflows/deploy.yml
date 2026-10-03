@@ -1,0 +1,36 @@
+name: CI/CD Pipeline (Deploy O Que É Isso?)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  code-checks:
+    name: Validação de Sintaxe
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js (v20)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci || npm install
+
+      - name: Checar Sintaxe do Servidor
+        run: node -c src/server.js
+
+  deploy:
+    name: Deploy na VPS Hostinger
+    needs: code-checks
+    runs-on: self-hosted
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Executar Script de Deploy na VPS
+        run: |
+          bash ./deploy.sh
