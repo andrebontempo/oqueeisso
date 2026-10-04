@@ -30,6 +30,11 @@
     </div>
 
     <div class="form-group">
+      <label class="form-label">Ordem de Exibição (Ex: 1, 2, 3)</label>
+      <input type="number" name="order" class="form-control" value="<%= category && typeof category.order !== 'undefined' ? category.order : 99 %>" placeholder="1">
+    </div>
+
+    <div class="form-group">
       <label class="form-label">Descrição da Categoria</label>
       <textarea name="description" class="form-control" rows="3" placeholder="Breve descrição dos tipos de peças inclusas nesta categoria..."><%= category ? category.description : '' %></textarea>
     </div>

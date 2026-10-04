@@ -29,7 +29,7 @@ exports.getDashboard = async (req, res) => {
     // Dados Completos para as Abas
     const products = await Product.find().populate('category').sort({ createdAt: -1 });
     const artisans = await Artisan.find().sort({ order: 1 });
-    const categories = await Category.find().sort({ name: 1 });
+    const categories = await Category.find().sort({ order: 1, name: 1 });
 
     // Usuários com contagem de pedidos
     const usersRaw = await User.find().sort({ createdAt: -1 });
@@ -80,7 +80,7 @@ exports.getProducts = async (req, res) => {
 
 exports.renderCreateProduct = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().sort({ order: 1, name: 1 });
     const artisans = await Artisan.find().sort({ order: 1 });
     res.render('admin/product-form', {
       title: 'Novo Produto | Admin',
@@ -100,7 +100,7 @@ exports.createProduct = async (req, res) => {
     const { name, description, price, originalPrice, categoryId, artisan, stock, featured, isBestSeller, dimensions, materials } = req.body;
 
     if (!name || !description || !price || !categoryId) {
-      const categories = await Category.find();
+      const categories = await Category.find().sort({ order: 1, name: 1 });
       const artisans = await Artisan.find().sort({ order: 1 });
       return res.status(400).render('admin/product-form', {
         title: 'Novo Produto | Admin',
@@ -141,7 +141,7 @@ exports.createProduct = async (req, res) => {
     res.redirect('/admin/dashboard?tab=produtos&success=Produto+criado+com+sucesso');
   } catch (error) {
     console.error('Erro ao criar produto:', error);
-    const categories = await Category.find();
+    const categories = await Category.find().sort({ order: 1, name: 1 });
     const artisans = await Artisan.find().sort({ order: 1 });
     res.status(500).render('admin/product-form', {
       title: 'Novo Produto | Admin',
@@ -157,7 +157,7 @@ exports.renderEditProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const product = await Product.findById(id);
-    const categories = await Category.find();
+    const categories = await Category.find().sort({ order: 1, name: 1 });
     const artisans = await Artisan.find().sort({ order: 1 });
 
     if (!product) {
@@ -486,7 +486,7 @@ exports.renderCreateCategory = (req, res) => {
 
 exports.createCategory = async (req, res) => {
   try {
-    const { name, description, icon } = req.body;
+    const { name, description, icon, order } = req.body;
 
     if (!name) {
       return res.status(400).render('admin/category-form', {
@@ -509,6 +509,7 @@ exports.createCategory = async (req, res) => {
       description: description || '',
       icon: icon || 'fa-shapes',
       image,
+      order: order !== undefined && order !== '' ? Number(order) : 99,
     });
 
     res.redirect('/admin/dashboard?tab=categorias&success=Categoria+criada+com+sucesso');
@@ -545,7 +546,7 @@ exports.renderEditCategory = async (req, res) => {
 exports.updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, icon } = req.body;
+    const { name, description, icon, order } = req.body;
 
     const category = await Category.findById(id);
     if (!category) {
@@ -556,6 +557,9 @@ exports.updateCategory = async (req, res) => {
     category.slug = slugify(name, { lower: true, strict: true });
     category.description = description || '';
     category.icon = icon || 'fa-shapes';
+    if (order !== undefined && order !== '') {
+      category.order = Number(order);
+    }
 
     if (req.file) {
       category.image = `/uploads/${req.file.filename}`;

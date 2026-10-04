@@ -63,10 +63,18 @@ const seedDB = async () => {
       {
         name: 'Nara Bontempo',
         role: 'Artesã',
-        specialty: 'Bolsas e Bonecas',
+        specialty: 'Bolsas & Bonecas',
         bio: 'Confecciona bolsas em tecido de alta durabilidade, niqueleiras com fecho vintage e bonecas de pano afetivas cheias de charme.',
         avatar: '/images/artisan-nara.jpg',
         order: 1,
+      },
+      {
+        name: 'Alcione Pereira',
+        role: 'Artesã',
+        specialty: 'Crochês & Afins',
+        bio: 'Dedica horas tecendo com carinho tapetes rendados, amigurumis e artigos aconchegantes em fio de algodão.',
+        avatar: '/images/artisan-alcione.jpg',
+        order: 2,
       },
       {
         name: 'Humberto Bontempo',
@@ -74,14 +82,6 @@ const seedDB = async () => {
         specialty: 'Trabalhos em Madeira',
         bio: 'Mestre no entalhe de madeiras nobres sustentáveis, esculpindo tábuas rústicas gourmet e peças funcionais para o lar.',
         avatar: '/images/artisan-humberto.jpg',
-        order: 2,
-      },
-      {
-        name: 'Alcione Pereira',
-        role: 'Artesã',
-        specialty: 'Crochês e Afins',
-        bio: 'Dedica horas tecendo com carinho tapetes rendados, amigurumis e artigos aconchegantes em fio de algodão.',
-        avatar: '/images/artisan-alcione.jpg',
         order: 3,
       },
     ];
@@ -125,29 +125,32 @@ const seedDB = async () => {
 
     console.log('[Seed] Usuários criados: Admin (admin@oqueeisso.com) e Cliente.');
 
-    // 2. Criar as 3 Categorias Solicitadas
+    // 2. Criar as 3 Categorias Solicitadas (Ordem: 1. Bolsas & Bonecas, 2. Crochês & Afins, 3. Trabalhos em Madeira)
+    const catBolsasBonecas = await Category.create({
+      name: 'Bolsas & Bonecas',
+      slug: 'bolsas-e-bonecas',
+      description: 'Bolsas de tecido bordadas, niqueleiras e bonecas de pano afetivas por Nara Bontempo.',
+      image: '/images/cat-bolsas-bonecas.jpg',
+      icon: 'fa-shopping-bag',
+      order: 1,
+    });
+
+    const catCroche = await Category.create({
+      name: 'Crochês & Afins',
+      slug: 'croches-e-afins',
+      description: 'Tapetes, caminhos de mesa, amigurumis e artigos aconchegantes em crochê por Alcione Pereira.',
+      image: '/images/cat-croche.jpg',
+      icon: 'fa-certificate',
+      order: 2,
+    });
+
     const catMadeira = await Category.create({
       name: 'Trabalhos em Madeira',
       slug: 'trabalhos-em-madeira',
       description: 'Peças artesanais entalhadas e lixadas à mão em madeira nobre sustentável por Humberto Bontempo.',
       image: '/images/cat-madeira.jpg',
       icon: 'fa-tree',
-    });
-
-    const catBolsasBonecas = await Category.create({
-      name: 'Bolsas e Bonecas',
-      slug: 'bolsas-e-bonecas',
-      description: 'Bolsas de tecido bordadas, niqueleiras e bonecas de pano afetivas por Nara Bontempo.',
-      image: '/images/cat-bolsas-bonecas.jpg',
-      icon: 'fa-shopping-bag',
-    });
-
-    const catCroche = await Category.create({
-      name: 'Crochê',
-      slug: 'croche',
-      description: 'Tapetes, caminhos de mesa, amigurumis e artigos aconchegantes em crochê por Alcione Pereira.',
-      image: '/images/cat-croche.jpg',
-      icon: 'fa-certificate',
+      order: 3,
     });
 
     console.log('[Seed] Categorias criadas com sucesso!');

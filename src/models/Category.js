@@ -26,6 +26,10 @@ const categorySchema = new mongoose.Schema(
       type: String,
       default: 'fa-shapes',
     },
+    order: {
+      type: Number,
+      default: 99,
+    },
   },
   { timestamps: true }
 );

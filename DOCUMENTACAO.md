@@ -1,6 +1,6 @@
 # 📘 Documentação Técnica Completa — O Que É Isso? Artesanato
 
-Bem-vindo à documentação oficial do projeto **O Que É Isso?**, uma plataforma de e-commerce de artesanato feito à mão em família (Trabalhos em Madeira, Bolsas e Bonecas, e Crochê).
+Bem-vindo à documentação oficial do projeto **O Que É Isso?**, uma plataforma de e-commerce de artesanato feito à mão em família (Bolsas & Bonecas, Crochês & Afins, e Trabalhos em Madeira).
 
 ---
 

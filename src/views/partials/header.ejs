@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof title !== 'undefined' ? title : 'O Que É Isso? - Artesanato Feito à Mão' %></title>
-  <meta name="description" content="Peças exclusivas de artesanato feitas à mão pela nossa família: Trabalhos em Madeira, Bolsas e Bonecas, e Crochê. Compre online com segurança!">
+  <meta name="description" content="Peças exclusivas de artesanato feitas à mão pela nossa família: Bolsas & Bonecas, Crochês & Afins, e Trabalhos em Madeira. Compre online com segurança!">
   
   <!-- PWA Meta Tags & Icons -->
   <link rel="manifest" href="/manifest.json">
@@ -94,7 +94,7 @@
       <!-- Search Bar Row -->
       <div class="navbar-search-row">
         <form action="/busca" method="GET" class="search-form" id="header-search-form">
-          <input type="text" name="q" class="search-input" placeholder="Buscar por tábuas, bonecas, crochê..." value="<%= typeof query !== 'undefined' ? query : '' %>" required>
+          <input type="text" name="q" class="search-input" placeholder="Buscar por bolsas, bonecas, crochê, tábuas..." value="<%= typeof query !== 'undefined' ? query : '' %>" required>
           <button type="submit" class="search-btn" title="Buscar">
             <i class="fas fa-search"></i>
           </button>
@@ -110,14 +110,14 @@
       <a href="/" class="cat-item <%= typeof title !== 'undefined' && title.includes('Peças Exclusivas') ? 'active' : '' %>">
         <i class="fas fa-home"></i> Início
       </a>
+      <a href="/categoria/bolsas-e-bonecas" class="cat-item <%= typeof category !== 'undefined' && (category.slug === 'bolsas-e-bonecas' || category.slug === 'bolsas-bonecas') ? 'active' : '' %>">
+        <i class="fas fa-shopping-bag"></i> Bolsas & Bonecas
+      </a>
+      <a href="/categoria/croches-e-afins" class="cat-item <%= typeof category !== 'undefined' && (category.slug === 'croche' || category.slug === 'croches-e-afins') ? 'active' : '' %>">
+        <i class="fas fa-certificate"></i> Crochês & Afins
+      </a>
       <a href="/categoria/trabalhos-em-madeira" class="cat-item <%= typeof category !== 'undefined' && category.slug === 'trabalhos-em-madeira' ? 'active' : '' %>">
         <i class="fas fa-tree"></i> Trabalhos em Madeira
-      </a>
-      <a href="/categoria/bolsas-e-bonecas" class="cat-item <%= typeof category !== 'undefined' && category.slug === 'bolsas-e-bonecas' ? 'active' : '' %>">
-        <i class="fas fa-shopping-bag"></i> Bolsas e Bonecas
-      </a>
-      <a href="/categoria/croche" class="cat-item <%= typeof category !== 'undefined' && category.slug === 'croche' ? 'active' : '' %>">
-        <i class="fas fa-certificate"></i> Crochê
       </a>
       <a href="/contato" class="cat-item <%= typeof title !== 'undefined' && title.includes('Fale Conosco') ? 'active' : '' %>">
         <i class="fas fa-envelope"></i> Contato

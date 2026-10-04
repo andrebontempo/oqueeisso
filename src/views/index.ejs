@@ -8,7 +8,7 @@
     </span>
     <h1 class="hero-title">A Arte Feita à Mão que Transforma o Seu Lar</h1>
     <p class="hero-subtitle">
-      Descubra o trabalho artesanal exclusivo feito com carinho pela nossa família. Entalhes em madeira nobre, bolsas elegantes, bonecas de pano e criações aconchegantes em crochê.
+      Descubra o trabalho artesanal exclusivo feito com carinho pela nossa família. Bolsas elegantes, bonecas de pano, criações aconchegantes em crochê e entalhes em madeira nobre.
     </p>
     <div class="hero-cta">
       <a href="#produtos-destaque" class="btn btn-primary">
@@ -31,34 +31,45 @@
   </div>
 
   <div class="category-grid">
-    
-    <!-- Categoria 1: Trabalhos em Madeira -->
-    <a href="/categoria/trabalhos-em-madeira" class="cat-card">
-      <img src="/images/cat-madeira.jpg" alt="Trabalhos em Madeira">
-      <div class="cat-card-overlay">
-        <h3 class="cat-card-title"><i class="fas fa-tree" style="color: var(--accent-light);"></i> Trabalhos em Madeira</h3>
-        <p class="cat-card-desc">Tábuas entalhadas, caixas organizadoras, descansos de panela e peças rústicas em madeira nobre.</p>
-      </div>
-    </a>
+    <% if (typeof categories !== 'undefined' && categories && categories.length > 0) { %>
+      <% categories.forEach(cat => { %>
+        <a href="/categoria/<%= cat.slug %>" class="cat-card">
+          <img src="<%= cat.image %>" alt="<%= cat.name %>">
+          <div class="cat-card-overlay">
+            <h3 class="cat-card-title"><i class="fas <%= cat.icon || 'fa-tag' %>" style="color: var(--accent-light);"></i> <%= cat.name %></h3>
+            <p class="cat-card-desc"><%= cat.description %></p>
+          </div>
+        </a>
+      <% }); %>
+    <% } else { %>
+      <!-- Fallback estático na ordem exata solicitada -->
+      <!-- Categoria 1: Bolsas & Bonecas -->
+      <a href="/categoria/bolsas-e-bonecas" class="cat-card">
+        <img src="/images/cat-bolsas-bonecas.jpg" alt="Bolsas & Bonecas">
+        <div class="cat-card-overlay">
+          <h3 class="cat-card-title"><i class="fas fa-shopping-bag" style="color: var(--accent-light);"></i> Bolsas & Bonecas</h3>
+          <p class="cat-card-desc">Bolsas em tecido de altíssimo acabamento, niqueleiras e bonecas de pano afetivas personalizadas.</p>
+        </div>
+      </a>
 
-    <!-- Categoria 2: Bolsas e Bonecas -->
-    <a href="/categoria/bolsas-e-bonecas" class="cat-card">
-      <img src="/images/cat-bolsas-bonecas.jpg" alt="Bolsas e Bonecas">
-      <div class="cat-card-overlay">
-        <h3 class="cat-card-title"><i class="fas fa-shopping-bag" style="color: var(--accent-light);"></i> Bolsas e Bonecas</h3>
-        <p class="cat-card-desc">Bolsas em tecido de altíssimo acabamento, niqueleiras e bonecas de pano afetivas personalizadas.</p>
-      </div>
-    </a>
+      <!-- Categoria 2: Crochês & Afins -->
+      <a href="/categoria/croches-e-afins" class="cat-card">
+        <img src="/images/cat-croche.jpg" alt="Crochês & Afins">
+        <div class="cat-card-overlay">
+          <h3 class="cat-card-title"><i class="fas fa-certificate" style="color: var(--accent-light);"></i> Crochês & Afins</h3>
+          <p class="cat-card-desc">Tapetes aconchegantes, amigurumis fofos, caminhos de mesa e artigos delicados tecidos à mão.</p>
+        </div>
+      </a>
 
-    <!-- Categoria 3: Crochê -->
-    <a href="/categoria/croche" class="cat-card">
-      <img src="/images/cat-croche.jpg" alt="Crochê">
-      <div class="cat-card-overlay">
-        <h3 class="cat-card-title"><i class="fas fa-certificate" style="color: var(--accent-light);"></i> Crochê</h3>
-        <p class="cat-card-desc">Tapetes aconchegantes, amigurumis fofos, caminhos de mesa e artigos delicados tecidos à mão.</p>
-      </div>
-    </a>
-
+      <!-- Categoria 3: Trabalhos em Madeira -->
+      <a href="/categoria/trabalhos-em-madeira" class="cat-card">
+        <img src="/images/cat-madeira.jpg" alt="Trabalhos em Madeira">
+        <div class="cat-card-overlay">
+          <h3 class="cat-card-title"><i class="fas fa-tree" style="color: var(--accent-light);"></i> Trabalhos em Madeira</h3>
+          <p class="cat-card-desc">Tábuas entalhadas, caixas organizadoras, descansos de panela e peças rústicas em madeira nobre.</p>
+        </div>
+      </a>
+    <% } %>
   </div>
 </section>
 
@@ -124,7 +135,7 @@
       <span class="family-badge">Família O Que É Isso?</span>
       <h2 class="family-title">Feito por Mãos Dedicadas</h2>
       <p class="family-desc">
-        Cada produto da nossa loja carrega a história e a alma do artesanato brasileiro. Nossa família é unida pelo amor à arte feita à mão: <strong>Nara Bontempo</strong> confecciona bolsas elegantes e bonecas de pano encantadoras, <strong>Humberto Bontempo</strong> esculpe madeiras nobres transformando tábuas brutas em peças funcionais, e <strong>Alcione Pereira</strong> dedica horas tecendo artigos delicados em crochê.
+        Cada produto da nossa loja carrega a história e a alma do artesanato brasileiro. Nossa família é unida pelo amor à arte feita à mão: <strong>Nara Bontempo</strong> confecciona bolsas elegantes e bonecas de pano encantadoras, <strong>Alcione Pereira</strong> dedica horas tecendo artigos delicados em crochê, e <strong>Humberto Bontempo</strong> esculpe madeiras nobres transformando tábuas brutas em peças funcionais.
       </p>
       <p class="family-desc">
         Ao comprar conosco, você apoia o trabalho autêntico e leva para casa uma peça genuína, durável e cheia de significado.

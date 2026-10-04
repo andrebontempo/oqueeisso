@@ -4,7 +4,7 @@ const Artisan = require('../models/Artisan');
 
 exports.getHome = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().sort({ order: 1, name: 1 });
     const featuredProducts = await Product.find({ featured: true }).populate('category').limit(8);
     const bestSellers = await Product.find({ isBestSeller: true }).populate('category').limit(4);
     const recentProducts = await Product.find().sort({ createdAt: -1 }).populate('category').limit(8);
@@ -32,7 +32,13 @@ exports.getCategory = async (req, res) => {
     const { slug } = req.params;
     const { sort, minPrice, maxPrice } = req.query;
 
-    const category = await Category.findOne({ slug });
+    let category = await Category.findOne({ slug });
+    if (!category && slug === 'croche') {
+      category = await Category.findOne({ slug: 'croches-e-afins' });
+    } else if (!category && slug === 'croches-e-afins') {
+      category = await Category.findOne({ slug: 'croche' });
+    }
+
     if (!category) {
       return res.status(404).render('error', {
         title: 'Categoria Não Encontrada',
@@ -54,7 +60,7 @@ exports.getCategory = async (req, res) => {
     if (sort === 'name') sortOption = { name: 1 };
 
     const products = await Product.find(filter).populate('category').sort(sortOption);
-    const allCategories = await Category.find();
+    const allCategories = await Category.find().sort({ order: 1, name: 1 });
 
     res.render('category', {
       title: `${category.name} | O Que É Isso? Artesanato`,
@@ -122,7 +128,7 @@ exports.searchProducts = async (req, res) => {
       $or: [{ name: regex }, { description: regex }, { artisan: regex }],
     }).populate('category');
 
-    const categories = await Category.find();
+    const categories = await Category.find().sort({ order: 1, name: 1 });
 
     res.render('search', {
       title: `Busca por "${q}" | O Que É Isso?`,
