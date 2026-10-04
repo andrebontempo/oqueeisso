@@ -184,7 +184,7 @@
           </span>
           <h3 style="font-size: 1.35rem; margin-bottom: 4px;"><%= artisan.name %></h3>
           <span style="font-size: 0.88rem; font-weight: 700; color: var(--primary); margin-bottom: 14px;">
-            <i class="fas fa-magic"></i> <%= artisan.specialty %>
+            <i class="fas fa-magic"></i> <%= artisan.specialty ? artisan.specialty.replace(/ e /g, ' & ') : '' %>
           </span>
           <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-top: auto;">
             "<%= artisan.bio %>"
