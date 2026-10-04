@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: deploy-vps-main
+  cancel-in-progress: true
+
 jobs:
   code-checks:
     name: Validação de Sintaxe
@@ -29,6 +33,7 @@ jobs:
     name: Deploy na VPS Hostinger
     needs: code-checks
     runs-on: self-hosted
+    timeout-minutes: 10
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Executar Script de Deploy na VPS
