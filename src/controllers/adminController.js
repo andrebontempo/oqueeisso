@@ -6,6 +6,8 @@ const Artisan = require('../models/Artisan');
 const slugify = require('slugify');
 const mailService = require('../services/mailService');
 
+const settingService = require('../services/settingService');
+
 // ==========================================
 // DASHBOARD UNIFICADO EM ABAS
 // ==========================================
@@ -30,6 +32,7 @@ exports.getDashboard = async (req, res) => {
     const products = await Product.find().populate('category').sort({ createdAt: -1 });
     const artisans = await Artisan.find().sort({ order: 1 });
     const categories = await Category.find().sort({ order: 1, name: 1 });
+    const settings = await settingService.getSettings();
 
     // Usuários com contagem de pedidos
     const usersRaw = await User.find().sort({ createdAt: -1 });
@@ -59,6 +62,7 @@ exports.getDashboard = async (req, res) => {
       users,
       artisans,
       categories,
+      settings,
       success: req.query.success || null,
       error: req.query.error || null,
     });
@@ -68,6 +72,21 @@ exports.getDashboard = async (req, res) => {
       title: 'Erro Admin',
       message: 'Erro ao carregar o painel de administração.',
     });
+  }
+};
+
+exports.updateSettings = async (req, res) => {
+  try {
+    const { shippingFee, freeShippingThreshold, storeNotice } = req.body;
+    await settingService.updateSettings({
+      shippingFee,
+      freeShippingThreshold,
+      storeNotice,
+    });
+    res.redirect('/admin/dashboard?tab=frete&success=Configurações+de+frete+e+loja+atualizadas+com+sucesso');
+  } catch (error) {
+    console.error('Erro ao atualizar configurações:', error);
+    res.redirect('/admin/dashboard?tab=frete&error=Erro+ao+atualizar+configurações');
   }
 };
 

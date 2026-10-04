@@ -16,6 +16,8 @@ const saveCartCookie = (res, cart) => {
   });
 };
 
+const settingService = require('../services/settingService');
+
 exports.getCart = async (req, res) => {
   try {
     const rawCart = getCartFromCookie(req);
@@ -35,7 +37,11 @@ exports.getCart = async (req, res) => {
       }
     }
 
-    const shippingFee = subtotal > 200 || subtotal === 0 ? 0 : 25; // Frete grátis acima de R$ 200
+    const settings = await settingService.getSettings();
+    const defaultShippingFee = settings.shippingFee;
+    const freeShippingThreshold = settings.freeShippingThreshold;
+
+    const shippingFee = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : defaultShippingFee;
     const total = subtotal + shippingFee;
 
     res.render('cart', {

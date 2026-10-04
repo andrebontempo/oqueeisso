@@ -1,8 +1,20 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const settingService = require('../services/settingService');
+
 // Verifica se o usuário está autenticado e injeta req.user e res.locals.user
 const optionalAuth = async (req, res, next) => {
+  try {
+    const settings = await settingService.getSettings();
+    res.locals.settings = settings;
+    res.locals.shippingFee = settings.shippingFee;
+    res.locals.freeShippingThreshold = settings.freeShippingThreshold;
+  } catch (e) {
+    res.locals.shippingFee = 25;
+    res.locals.freeShippingThreshold = 200;
+  }
+
   try {
     let token;
     if (req.cookies && req.cookies.token) {

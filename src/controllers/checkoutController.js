@@ -11,6 +11,8 @@ const getCartFromCookie = (req) => {
   }
 };
 
+const settingService = require('../services/settingService');
+
 exports.getCheckout = async (req, res) => {
   try {
     const rawCart = getCartFromCookie(req);
@@ -34,7 +36,8 @@ exports.getCheckout = async (req, res) => {
       }
     }
 
-    const shippingFee = subtotal > 200 || subtotal === 0 ? 0 : 25;
+    const settings = await settingService.getSettings();
+    const shippingFee = subtotal >= settings.freeShippingThreshold || subtotal === 0 ? 0 : settings.shippingFee;
     const total = subtotal + shippingFee;
 
     res.render('checkout', {
@@ -109,7 +112,8 @@ exports.processOrder = async (req, res) => {
       }
     }
 
-    const shippingFee = subtotal > 200 ? 0 : 25;
+    const settings = await settingService.getSettings();
+    const shippingFee = subtotal >= settings.freeShippingThreshold || subtotal === 0 ? 0 : settings.shippingFee;
     const totalAmount = subtotal + shippingFee;
     const orderNumber = 'OQI-' + Math.floor(100000 + Math.random() * 900000);
 

@@ -49,6 +49,9 @@
   <a href="/admin/dashboard?tab=categorias" class="admin-tab-btn <%= activeTab === 'categorias' ? 'active' : '' %>" id="tab-btn-categorias">
     <i class="fas fa-tags"></i> Categorias (<%= totalCategories %>)
   </a>
+  <a href="/admin/dashboard?tab=frete" class="admin-tab-btn <%= activeTab === 'frete' ? 'active' : '' %>" id="tab-btn-frete">
+    <i class="fas fa-truck-ramping"></i> Frete & Regras
+  </a>
   <a href="/admin/dashboard?tab=docs" class="admin-tab-btn <%= activeTab === 'docs' ? 'active' : '' %>" id="tab-btn-docs" style="background: rgba(139, 69, 19, 0.08); border-radius: 8px;">
     <i class="fas fa-book-bookmark"></i> Documentação
   </a>
@@ -509,6 +512,41 @@
     <% } else { %>
       <p style="text-align: center; padding: 36px; color: var(--text-muted);">Nenhuma categoria cadastrada.</p>
     <% } %>
+  </div>
+<% } %>
+
+<!-- =================================================================== -->
+<!-- ABA FRETE & REGRAS DE FRETE GRÁTIS -->
+<!-- =================================================================== -->
+<% if (activeTab === 'frete') { %>
+  <div style="max-width: 650px; margin: 0 auto; background: #FFF; padding: 36px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 48px;">
+    <h3 style="font-size: 1.5rem; margin-bottom: 8px; color: var(--primary);">
+      <i class="fas fa-truck-ramping"></i> Configuração de Frete & Loja
+    </h3>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Altere o valor padrão do frete fixo e o valor mínimo para conceder frete grátis aos clientes.</p>
+
+    <form action="/admin/configuracoes" method="POST">
+      <div class="form-group">
+        <label class="form-label">Valor do Frete Fixo (R$) *</label>
+        <input type="number" step="0.01" name="shippingFee" class="form-control" required value="<%= settings ? settings.shippingFee : 25 %>" placeholder="25.00">
+        <small style="color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 4px;">Valor cobrado no carrinho quando o valor da compra for menor que o limite de frete grátis.</small>
+      </div>
+
+      <div class="form-group" style="margin-top: 20px;">
+        <label class="form-label">Valor Mínimo para Frete Grátis (R$) *</label>
+        <input type="number" step="0.01" name="freeShippingThreshold" class="form-control" required value="<%= settings ? settings.freeShippingThreshold : 200 %>" placeholder="200.00">
+        <small style="color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 4px;">Compras com valor total de produtos igual ou superior a este ganham Frete Grátis automático.</small>
+      </div>
+
+      <div class="form-group" style="margin-top: 20px;">
+        <label class="form-label">Texto do Banner de Destaque no Topo</label>
+        <input type="text" name="storeNotice" class="form-control" value="<%= settings ? settings.storeNotice : 'Artesanato Exclusivo Feito à Mão em Família' %>" placeholder="Artesanato Exclusivo Feito à Mão em Família">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 1.05rem; margin-top: 24px;">
+        <i class="fas fa-save"></i> Salvar Configurações de Frete
+      </button>
+    </form>
   </div>
 <% } %>
 

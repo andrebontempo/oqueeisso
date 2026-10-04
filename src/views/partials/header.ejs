@@ -31,10 +31,10 @@
   <div class="top-bar">
     <div class="top-bar-inner">
       <div>
-        <span><i class="fas fa-heart"></i> Artesanato Exclusivo Feito à Mão em Família</span>
+        <span><i class="fas fa-heart"></i> <%= locals.settings && locals.settings.storeNotice ? locals.settings.storeNotice : 'Artesanato Exclusivo Feito à Mão em Família' %></span>
       </div>
       <div>
-        <span><i class="fas fa-truck"></i> Frete Grátis para compras acima de R$ 200</span>
+        <span><i class="fas fa-truck"></i> Frete Grátis para compras acima de <%= formatMoney(typeof freeShippingThreshold !== 'undefined' ? freeShippingThreshold : 200) %></span>
       </div>
     </div>
   </div>

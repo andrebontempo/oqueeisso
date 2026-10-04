@@ -11,10 +11,11 @@
   <div style="background: #FFF; border: 1px solid var(--border-light); padding: 16px 24px; border-radius: var(--radius-md); margin-bottom: 32px; display: flex; align-items: center; gap: 16px;">
     <i class="fas fa-truck-fast" style="font-size: 1.6rem; color: var(--secondary);"></i>
     <div style="flex: 1;">
-      <% if (subtotal >= 200) { %>
+      <% const threshold = typeof freeShippingThreshold !== 'undefined' ? freeShippingThreshold : 200; %>
+      <% if (subtotal >= threshold) { %>
         <strong style="color: #065F46;">Parabéns! Você ganhou Frete Grátis para todo o Brasil! 🎉</strong>
       <% } else { %>
-        <span>Faltam <strong><%= formatMoney(200 - subtotal) %></strong> em compras para ganhar <strong>Frete Grátis</strong>!</span>
+        <span>Faltam <strong><%= formatMoney(threshold - subtotal) %></strong> em compras para ganhar <strong>Frete Grátis</strong>!</span>
       <% } %>
     </div>
   </div>

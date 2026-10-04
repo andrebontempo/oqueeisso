@@ -47,4 +47,7 @@ router.post('/categorias/excluir/:id', adminController.deleteCategory);
 router.get('/pedidos', adminController.getOrders);
 router.post('/pedidos/status/:id', adminController.updateOrderStatus);
 
+// Configurações de Frete & Loja
+router.post('/configuracoes', adminController.updateSettings);
+
 module.exports = router;
