@@ -69,7 +69,7 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`====================================================`);
-  console.log(`🌸 Servidor O Que É Isso? rodando na porta ${PORT}`);
-  console.log(`👉 Acesse localmente: http://localhost:${PORT}`);
+  console.log(`🌸 Servidor O Que É Isso? (v1.1 - Deploy Automático Ativo) rodando na porta ${PORT}`);
+  console.log(`👉 Acesse: http://localhost:${PORT}`);
   console.log(`====================================================`);
 });
