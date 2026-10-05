@@ -3,8 +3,6 @@ services:
     image: mongo:7.0
     container_name: oqueeisso-mongo
     restart: unless-stopped
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db
     networks:
@@ -38,10 +36,8 @@ volumes:
 networks:
   app-network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.29.0.0/16
   proxy:
     external: true
+
 
 
