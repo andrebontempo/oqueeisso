@@ -49,7 +49,7 @@ exports.getCategory = async (req, res) => {
         description: 'Bordados manuais, bastidores decorativos, panos de prato bordados e delicadezas feitas à mão.',
         image: '/images/cat-bolsas-bonecas.jpg',
         icon: 'fa-cut',
-        order: 4,
+        order: 1,
       });
     }
 

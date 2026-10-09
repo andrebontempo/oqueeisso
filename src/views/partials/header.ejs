@@ -132,6 +132,9 @@
       <a href="/" class="cat-item <%= typeof title !== 'undefined' && title && title.includes('Peças Exclusivas') ? 'active' : '' %>">
         <i class="fas fa-home"></i> Início
       </a>
+      <a href="/categoria/bordados-e-afins" class="cat-item <%= typeof category !== 'undefined' && category && (category.slug === 'bordados' || category.slug === 'bordados-e-afins') ? 'active' : '' %>">
+        <i class="fas fa-cut"></i> Bordados & Afins
+      </a>
       <a href="/categoria/bolsas-e-bonecas" class="cat-item <%= typeof category !== 'undefined' && category && (category.slug === 'bolsas-e-bonecas' || category.slug === 'bolsas-bonecas') ? 'active' : '' %>">
         <i class="fas fa-shopping-bag"></i> Bolsas & Bonecas
       </a>
@@ -140,9 +143,6 @@
       </a>
       <a href="/categoria/trabalhos-em-madeira" class="cat-item <%= typeof category !== 'undefined' && category && category.slug === 'trabalhos-em-madeira' ? 'active' : '' %>">
         <i class="fas fa-tree"></i> Trabalhos em Madeira
-      </a>
-      <a href="/categoria/bordados-e-afins" class="cat-item <%= typeof category !== 'undefined' && category && (category.slug === 'bordados' || category.slug === 'bordados-e-afins') ? 'active' : '' %>">
-        <i class="fas fa-cut"></i> Bordados & Afins
       </a>
       <a href="/contato" class="cat-item <%= typeof title !== 'undefined' && title && title.includes('Fale Conosco') ? 'active' : '' %>">
         <i class="fas fa-envelope"></i> Contato

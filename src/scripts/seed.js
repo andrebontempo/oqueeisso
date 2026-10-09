@@ -125,14 +125,23 @@ const seedDB = async () => {
 
     console.log('[Seed] Usuários criados: Admin (admin@oqueeisso.com) e Cliente.');
 
-    // 2. Criar as 3 Categorias Solicitadas (Ordem: 1. Bolsas & Bonecas, 2. Crochês & Afins, 3. Trabalhos em Madeira)
+    // 2. Criar as Categorias Solicitadas (Ordem: 1. Bordados & Afins, 2. Bolsas & Bonecas, 3. Crochês & Afins, 4. Trabalhos em Madeira)
+    const catBordados = await Category.create({
+      name: 'Bordados & Afins',
+      slug: 'bordados-e-afins',
+      description: 'Bordados manuais, bastidores decorativos, panos de prato bordados e delicadezas feitas à mão.',
+      image: '/images/cat-bolsas-bonecas.jpg',
+      icon: 'fa-cut',
+      order: 1,
+    });
+
     const catBolsasBonecas = await Category.create({
       name: 'Bolsas & Bonecas',
       slug: 'bolsas-e-bonecas',
       description: 'Bolsas de tecido bordadas, niqueleiras e bonecas de pano afetivas por Nara Bontempo.',
       image: '/images/cat-bolsas-bonecas.jpg',
       icon: 'fa-shopping-bag',
-      order: 1,
+      order: 2,
     });
 
     const catCroche = await Category.create({
@@ -141,7 +150,7 @@ const seedDB = async () => {
       description: 'Tapetes, caminhos de mesa, amigurumis e artigos aconchegantes em crochê por Alcione Pereira.',
       image: '/images/cat-croche.jpg',
       icon: 'fa-certificate',
-      order: 2,
+      order: 3,
     });
 
     const catMadeira = await Category.create({
@@ -150,15 +159,6 @@ const seedDB = async () => {
       description: 'Peças artesanais entalhadas e lixadas à mão em madeira nobre sustentável por Humberto Bontempo.',
       image: '/images/cat-madeira.jpg',
       icon: 'fa-tree',
-      order: 3,
-    });
-
-    const catBordados = await Category.create({
-      name: 'Bordados & Afins',
-      slug: 'bordados-e-afins',
-      description: 'Bordados manuais, bastidores decorativos, panos de prato bordados e delicadezas feitas à mão.',
-      image: '/images/cat-bolsas-bonecas.jpg',
-      icon: 'fa-cut',
       order: 4,
     });
 
