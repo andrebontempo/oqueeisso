@@ -1,16 +1,16 @@
 <%- include('partials/header') %>
 
-<div class="cart-header-title" style="margin-bottom: 32px;">
-  <h1 class="cart-page-h1" style="font-size: 2.2rem; margin-bottom: 6px;">Seu Carrinho de Compras</h1>
-  <p class="cart-page-subtitle" style="color: var(--text-muted);">Confira as peças selecionadas antes de finalizar seu pedido.</p>
+<div class="cart-header-title">
+  <h1 class="cart-page-h1">Seu Carrinho de Compras</h1>
+  <p class="cart-page-subtitle">Confira as peças selecionadas antes de finalizar seu pedido.</p>
 </div>
 
 <% if (cartItems && cartItems.length > 0) { %>
 
   <!-- Progresso Frete Grátis -->
-  <div class="cart-free-shipping-banner" style="background: #FFF; border: 1px solid var(--border-light); padding: 16px 24px; border-radius: var(--radius-md); margin-bottom: 32px; display: flex; align-items: center; gap: 16px;">
-    <i class="fas fa-truck-fast free-shipping-icon" style="font-size: 1.6rem; color: var(--secondary);"></i>
-    <div class="free-shipping-text" style="flex: 1;">
+  <div class="cart-free-shipping-banner">
+    <i class="fas fa-truck-fast free-shipping-icon"></i>
+    <div class="free-shipping-text">
       <% const threshold = typeof freeShippingThreshold !== 'undefined' ? freeShippingThreshold : 200; %>
       <% if (subtotal >= threshold) { %>
         <strong style="color: #065F46;">Parabéns! Você ganhou Frete Grátis para todo o Brasil! 🎉</strong>
@@ -24,8 +24,10 @@
     
     <!-- Lista de Itens -->
     <div class="cart-items-column">
-      <div class="cart-table-wrapper" style="background: #FFF; border-radius: var(--radius-md); border: 1px solid var(--border-light); overflow: hidden; box-shadow: var(--shadow-sm);">
-        <table class="table cart-table">
+
+      <!-- TABELA TRADICIONAL DESKTOP (Inalterada para Desktop) -->
+      <div class="cart-table-wrapper hide-mobile-cart">
+        <table class="table">
           <thead>
             <tr>
               <th>Produto</th>
@@ -37,28 +39,26 @@
           </thead>
           <tbody>
             <% cartItems.forEach(item => { %>
-              <tr class="cart-item-row">
-                <td class="cart-product-cell">
-                  <div class="cart-product-info" style="display: flex; align-items: center; gap: 16px;">
-                    <img src="<%= item.product.images[0] %>" alt="<%= item.product.name %>" class="cart-product-img" style="width: 64px; height: 64px; object-fit: cover; border-radius: var(--radius-sm);">
-                    <div class="cart-product-details">
-                      <strong class="cart-product-title" style="display: block; font-size: 1rem;"><%= item.product.name %></strong>
-                      <span class="cart-product-artisan" style="font-size: 0.8rem; color: var(--text-muted);">Feito por <%= item.product.artisan %></span>
-                      <div class="cart-mobile-price"><%= formatMoney(item.product.price) %> cada</div>
+              <tr>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 16px;">
+                    <img src="<%= item.product.images[0] %>" alt="<%= item.product.name %>" style="width: 64px; height: 64px; object-fit: cover; border-radius: var(--radius-sm);">
+                    <div>
+                      <strong style="display: block; font-size: 1rem;"><%= item.product.name %></strong>
+                      <span style="font-size: 0.8rem; color: var(--text-muted);">Feito por <%= item.product.artisan %></span>
                     </div>
                   </div>
                 </td>
-                <td class="cart-price-cell"><%= formatMoney(item.product.price) %></td>
-                <td class="cart-qty-cell" style="text-align: center;">
-                  <form action="/carrinho/atualizar" method="POST" class="cart-qty-form" style="display: inline-flex; align-items: center; gap: 6px;">
+                <td><%= formatMoney(item.product.price) %></td>
+                <td style="text-align: center;">
+                  <form action="/carrinho/atualizar" method="POST" style="display: inline-flex; align-items: center; gap: 6px;">
                     <input type="hidden" name="productId" value="<%= item.product._id %>">
-                    <span class="cart-qty-label-mobile">Qtd:</span>
-                    <input type="number" name="quantity" value="<%= item.quantity %>" min="1" max="<%= item.product.stock %>" class="form-control cart-qty-input" style="width: 60px; text-align: center; padding: 6px;" onchange="this.form.submit()">
+                    <input type="number" name="quantity" value="<%= item.quantity %>" min="1" max="<%= item.product.stock %>" class="form-control" style="width: 60px; text-align: center; padding: 6px;" onchange="this.form.submit()">
                   </form>
                 </td>
-                <td class="cart-total-cell" style="text-align: right; font-weight: 700; color: var(--primary);"><%= formatMoney(item.itemTotal) %></td>
-                <td class="cart-remove-cell" style="text-align: right;">
-                  <a href="/carrinho/remover/<%= item.product._id %>" class="cart-remove-btn" style="color: #991B1B; font-size: 1.1rem; padding: 6px;" title="Remover item">
+                <td style="text-align: right; font-weight: 700; color: var(--primary);"><%= formatMoney(item.itemTotal) %></td>
+                <td style="text-align: right;">
+                  <a href="/carrinho/remover/<%= item.product._id %>" style="color: #991B1B; font-size: 1.1rem; padding: 6px;" title="Remover item">
                     <i class="fas fa-trash-alt"></i>
                   </a>
                 </td>
@@ -68,7 +68,40 @@
         </table>
       </div>
 
-      <div class="cart-actions-row" style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
+      <!-- CARDS FLUIDOS PARA NAVEGAÇÃO EM CELULAR / MOBILE -->
+      <div class="cart-mobile-list hide-desktop-cart">
+        <% cartItems.forEach(item => { %>
+          <div class="cart-mobile-card">
+            <!-- Topo do Card: Imagem, Título, Artesão e Botão Remover -->
+            <div class="cart-mobile-card-top">
+              <img src="<%= item.product.images[0] %>" alt="<%= item.product.name %>" class="cart-mobile-card-img">
+              <div class="cart-mobile-card-info">
+                <strong class="cart-mobile-card-title"><%= item.product.name %></strong>
+                <span class="cart-mobile-card-artisan">Feito por <%= item.product.artisan %></span>
+                <span class="cart-mobile-card-unit-price"><%= formatMoney(item.product.price) %> cada</span>
+              </div>
+              <a href="/carrinho/remover/<%= item.product._id %>" class="cart-mobile-card-remove" title="Remover item">
+                <i class="fas fa-trash-alt"></i>
+              </a>
+            </div>
+
+            <!-- Rodapé do Card: Quantidade e Subtotal -->
+            <div class="cart-mobile-card-bottom">
+              <form action="/carrinho/atualizar" method="POST" class="cart-mobile-qty-form">
+                <input type="hidden" name="productId" value="<%= item.product._id %>">
+                <label class="cart-mobile-qty-label">Qtd:</label>
+                <input type="number" name="quantity" value="<%= item.quantity %>" min="1" max="<%= item.product.stock %>" class="form-control cart-mobile-qty-input" onchange="this.form.submit()">
+              </form>
+              <div class="cart-mobile-card-subtotal">
+                <span>Total:</span>
+                <strong><%= formatMoney(item.itemTotal) %></strong>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+      <div class="cart-actions-row">
         <a href="/" class="btn btn-continue-shopping cart-continue-btn">
           <i class="fas fa-arrow-left"></i> Continuar Comprando
         </a>
@@ -77,31 +110,31 @@
 
     <!-- Resumo do Pedido -->
     <div class="cart-summary-column">
-      <div class="cart-summary-card" style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
-        <h3 class="cart-summary-title" style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
+      <div class="cart-summary-card">
+        <h3 class="cart-summary-title">
           Resumo do Pedido
         </h3>
 
-        <div class="cart-summary-row" style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem;">
+        <div class="cart-summary-row">
           <span style="color: var(--text-muted);">Subtotal</span>
           <strong><%= formatMoney(subtotal) %></strong>
         </div>
 
-        <div class="cart-summary-row" style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 0.95rem;">
+        <div class="cart-summary-row">
           <span style="color: var(--text-muted);">Frete</span>
           <strong><%= shippingFee === 0 ? 'GRÁTIS' : formatMoney(shippingFee) %></strong>
         </div>
 
-        <div class="cart-summary-total-row" style="border-top: 2px dashed var(--border-light); padding-top: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px;">
-          <span class="cart-total-label" style="font-size: 1.1rem; font-weight: 700;">Total</span>
-          <span class="cart-total-value" style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--primary);"><%= formatMoney(total) %></span>
+        <div class="cart-summary-total-row">
+          <span class="cart-total-label">Total</span>
+          <span class="cart-total-value"><%= formatMoney(total) %></span>
         </div>
 
-        <a href="/checkout" class="btn btn-primary cart-checkout-btn" style="width: 100%; padding: 14px;">
+        <a href="/checkout" class="btn btn-primary cart-checkout-btn">
           <i class="fas fa-lock"></i> Finalizar Compra
         </a>
 
-        <div class="cart-security-badge" style="margin-top: 20px; text-align: center; font-size: 0.8rem; color: var(--text-light); display: flex; align-items: center; justify-content: center; gap: 6px;">
+        <div class="cart-security-badge">
           <i class="fas fa-shield-alt" style="color: var(--secondary);"></i> Ambiente 100% Seguro
         </div>
       </div>
@@ -110,10 +143,10 @@
   </div>
 
 <% } else { %>
-  <div class="cart-empty-state" style="text-align: center; padding: 72px 24px; background: #FFF; border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
-    <i class="fas fa-shopping-bag cart-empty-icon" style="font-size: 4rem; color: var(--border-active); margin-bottom: 20px;"></i>
-    <h2 class="cart-empty-title" style="font-size: 1.8rem; margin-bottom: 10px;">Seu carrinho está vazio</h2>
-    <p class="cart-empty-text" style="color: var(--text-muted); margin-bottom: 28px;">Que tal dar uma olhada nas nossas peças exclusivas feitas à mão?</p>
+  <div class="cart-empty-state">
+    <i class="fas fa-shopping-bag cart-empty-icon"></i>
+    <h2 class="cart-empty-title">Seu carrinho está vazio</h2>
+    <p class="cart-empty-text">Que tal dar uma olhada nas nossas peças exclusivas feitas à mão?</p>
     <a href="/" class="btn btn-primary">
       <i class="fas fa-store"></i> Ver Produtos em Destaque
     </a>
@@ -121,4 +154,5 @@
 <% } %>
 
 <%- include('partials/footer') %>
+
 
