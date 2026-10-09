@@ -1,8 +1,8 @@
 <%- include('partials/header') %>
 
-<div style="margin-bottom: 32px;">
-  <h1 style="font-size: 2.2rem; margin-bottom: 6px;">Checkout Seguro</h1>
-  <p style="color: var(--text-muted);">Preencha os dados de entrega para concluir seu pedido.</p>
+<div class="checkout-header-title" style="margin-bottom: 32px;">
+  <h1 class="checkout-page-h1" style="font-size: 2.2rem; margin-bottom: 6px;">Checkout Seguro</h1>
+  <p class="checkout-page-subtitle" style="color: var(--text-muted);">Preencha os dados de entrega para concluir seu pedido.</p>
 </div>
 
 <% if (error) { %>
@@ -15,11 +15,11 @@
   <div class="checkout-layout-grid">
     
     <!-- Dados do Cliente e Endereço -->
-    <div>
+    <div class="checkout-forms-column">
       
       <!-- Dados Pessoais -->
-      <div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); margin-bottom: 28px; box-shadow: var(--shadow-sm);">
-        <h3 style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
+      <div class="checkout-card-section" style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); margin-bottom: 28px; box-shadow: var(--shadow-sm);">
+        <h3 class="checkout-section-title" style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
           <i class="fas fa-user" style="color: var(--secondary);"></i> 1. Dados Pessoais
         </h3>
 
@@ -41,8 +41,8 @@
       </div>
 
       <!-- Endereço de Entrega -->
-      <div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); margin-bottom: 28px; box-shadow: var(--shadow-sm);">
-        <h3 style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
+      <div class="checkout-card-section" style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); margin-bottom: 28px; box-shadow: var(--shadow-sm);">
+        <h3 class="checkout-section-title" style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
           <i class="fas fa-map-marker-alt" style="color: var(--secondary);"></i> 2. Endereço de Entrega
         </h3>
 
@@ -86,40 +86,40 @@
       </div>
 
       <!-- Forma de Pagamento -->
-      <div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
-        <h3 style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+      <div class="checkout-card-section" style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+        <h3 class="checkout-section-title checkout-payment-header" style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
           <span><i class="fas fa-shield-alt" style="color: #009EE3;"></i> 3. Forma de Pagamento</span>
-          <span style="font-size: 0.8rem; background: #E6F5FC; color: #009EE3; padding: 4px 10px; border-radius: 12px; font-weight: 700;">
+          <span class="checkout-mp-badge" style="font-size: 0.8rem; background: #E6F5FC; color: #009EE3; padding: 4px 10px; border-radius: 12px; font-weight: 700;">
             <i class="fas fa-lock"></i> Mercado Pago
           </span>
         </h3>
 
-        <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="payment-options-container" style="display: flex; flex-direction: column; gap: 16px;">
           
           <!-- Opção PIX Mercado Pago -->
-          <label style="display: flex; align-items: center; gap: 16px; padding: 18px; border: 2px solid #32BCAD; border-radius: var(--radius-sm); cursor: pointer; background: #F0FDFB;">
-            <input type="radio" name="paymentMethod" value="pix" checked style="accent-color: #32BCAD; width: 20px; height: 20px;">
-            <div style="width: 44px; height: 44px; background: #32BCAD; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #FFF; font-size: 1.5rem;">
+          <label class="payment-option-card payment-option-pix" style="display: flex; align-items: center; gap: 16px; padding: 18px; border: 2px solid #32BCAD; border-radius: var(--radius-sm); cursor: pointer; background: #F0FDFB;">
+            <input type="radio" name="paymentMethod" value="pix" checked class="payment-radio" style="accent-color: #32BCAD; width: 20px; height: 20px;">
+            <div class="payment-icon-box payment-icon-pix" style="width: 44px; height: 44px; background: #32BCAD; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #FFF; font-size: 1.5rem;">
               <i class="fab fa-pix"></i>
             </div>
-            <div style="flex: 1;">
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <strong style="font-size: 1.05rem; color: var(--text-dark);">Pix (Aprovação Imediata)</strong>
-                <span style="background: #32BCAD; color: #FFF; font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; font-weight: 700;">MAIS RÁPIDO</span>
+            <div class="payment-info-box" style="flex: 1;">
+              <div class="payment-title-row" style="display: flex; align-items: center; gap: 8px;">
+                <strong class="payment-option-title" style="font-size: 1.05rem; color: var(--text-dark);">Pix (Aprovação Imediata)</strong>
+                <span class="payment-fast-badge" style="background: #32BCAD; color: #FFF; font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; font-weight: 700;">MAIS RÁPIDO</span>
               </div>
-              <span style="font-size: 0.88rem; color: var(--text-muted); display: block; margin-top: 2px;">QR Code real e chave Copia e Cola gerados na hora via Mercado Pago.</span>
+              <span class="payment-option-desc" style="font-size: 0.88rem; color: var(--text-muted); display: block; margin-top: 2px;">QR Code real e chave Copia e Cola gerados na hora via Mercado Pago.</span>
             </div>
           </label>
 
           <!-- Opção Mercado Pago (Cartão / Boleto / Conta MP) -->
-          <label style="display: flex; align-items: center; gap: 16px; padding: 18px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); cursor: pointer; background: #FFF;">
-            <input type="radio" name="paymentMethod" value="mercadopago" style="accent-color: #009EE3; width: 20px; height: 20px;">
-            <div style="width: 44px; height: 44px; background: #009EE3; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #FFF; font-size: 1.4rem;">
+          <label class="payment-option-card payment-option-mp" style="display: flex; align-items: center; gap: 16px; padding: 18px; border: 1px solid var(--border-light); border-radius: var(--radius-sm); cursor: pointer; background: #FFF;">
+            <input type="radio" name="paymentMethod" value="mercadopago" class="payment-radio" style="accent-color: #009EE3; width: 20px; height: 20px;">
+            <div class="payment-icon-box payment-icon-mp" style="width: 44px; height: 44px; background: #009EE3; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #FFF; font-size: 1.4rem;">
               <i class="fas fa-credit-card"></i>
             </div>
-            <div style="flex: 1;">
-              <strong style="font-size: 1.05rem; color: var(--text-dark); display: block;">Cartão de Crédito, Boleto ou Mercado Pago</strong>
-              <span style="font-size: 0.88rem; color: var(--text-muted); display: block; margin-top: 2px;">Parcele em até 12x no cartão com total segurança pelo Mercado Pago.</span>
+            <div class="payment-info-box" style="flex: 1;">
+              <strong class="payment-option-title" style="font-size: 1.05rem; color: var(--text-dark); display: block;">Cartão de Crédito, Boleto ou Mercado Pago</strong>
+              <span class="payment-option-desc" style="font-size: 0.88rem; color: var(--text-muted); display: block; margin-top: 2px;">Parcele em até 12x no cartão com total segurança pelo Mercado Pago.</span>
             </div>
           </label>
 
@@ -129,47 +129,47 @@
     </div>
 
     <!-- Resumo do Pedido Lateral -->
-    <div>
-      <div style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); position: sticky; top: 100px; box-shadow: var(--shadow-sm);">
-        <h3 style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
+    <div class="checkout-summary-column">
+      <div class="checkout-summary-card" style="background: #FFF; padding: 28px; border-radius: var(--radius-md); border: 1px solid var(--border-light); position: sticky; top: 100px; box-shadow: var(--shadow-sm);">
+        <h3 class="checkout-summary-title" style="font-size: 1.3rem; margin-bottom: 20px; border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">
           Itens do Pedido
         </h3>
 
-        <div style="max-height: 240px; overflow-y: auto; margin-bottom: 20px; padding-right: 6px;">
+        <div class="checkout-items-scroll" style="max-height: 240px; overflow-y: auto; margin-bottom: 20px; padding-right: 6px;">
           <% cartItems.forEach(item => { %>
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 0.9rem;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="<%= item.product.images[0] %>" alt="<%= item.product.name %>" style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px;">
+            <div class="checkout-item-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; font-size: 0.9rem;">
+              <div class="checkout-item-details" style="display: flex; align-items: center; gap: 10px;">
+                <img src="<%= item.product.images[0] %>" alt="<%= item.product.name %>" class="checkout-item-img" style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px;">
                 <div>
-                  <strong style="display: block; font-size: 0.88rem;"><%= item.product.name %></strong>
-                  <span style="color: var(--text-muted); font-size: 0.78rem;">Qtd: <%= item.quantity %></span>
+                  <strong class="checkout-item-name" style="display: block; font-size: 0.88rem;"><%= item.product.name %></strong>
+                  <span class="checkout-item-qty" style="color: var(--text-muted); font-size: 0.78rem;">Qtd: <%= item.quantity %></span>
                 </div>
               </div>
-              <strong style="color: var(--primary);"><%= formatMoney(item.itemTotal) %></strong>
+              <strong class="checkout-item-price" style="color: var(--primary);"><%= formatMoney(item.itemTotal) %></strong>
             </div>
           <% }); %>
         </div>
 
-        <div style="border-top: 1px solid var(--border-light); padding-top: 14px;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem;">
+        <div class="checkout-summary-totals" style="border-top: 1px solid var(--border-light); padding-top: 14px;">
+          <div class="checkout-summary-subtotal" style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem;">
             <span>Subtotal</span>
             <strong><%= formatMoney(subtotal) %></strong>
           </div>
-          <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 0.9rem;">
+          <div class="checkout-summary-shipping" style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 0.9rem;">
             <span>Frete</span>
             <strong><%= shippingFee === 0 ? 'GRÁTIS' : formatMoney(shippingFee) %></strong>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; color: var(--primary); border-top: 2px dashed var(--border-light); padding-top: 12px; margin-bottom: 24px;">
+          <div class="checkout-summary-total" style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; color: var(--primary); border-top: 2px dashed var(--border-light); padding-top: 12px; margin-bottom: 24px;">
             <span>Total</span>
             <span><%= formatMoney(total) %></span>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 16px; font-size: 1.1rem;">
+        <button type="submit" class="btn btn-primary checkout-submit-btn" style="width: 100%; padding: 16px; font-size: 1.1rem;">
           <i class="fas fa-check-circle"></i> Confirmar e Pagar
         </button>
 
-        <p style="margin-top: 16px; text-align: center; font-size: 0.78rem; color: var(--text-light);">
+        <p class="checkout-terms-text" style="margin-top: 16px; text-align: center; font-size: 0.78rem; color: var(--text-light);">
           Ao clicar em Confirmar, você concorda com nossos termos de entrega e política de privacidade.
         </p>
       </div>
@@ -179,3 +179,4 @@
 </form>
 
 <%- include('partials/footer') %>
+

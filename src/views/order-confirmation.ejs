@@ -1,15 +1,15 @@
 <%- include('partials/header') %>
 
-<div style="max-width: 800px; margin: 0 auto; background: #FFF; padding: 48px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-md); text-align: center; margin-bottom: 48px;">
+<div class="order-confirmation-card" style="max-width: 800px; margin: 0 auto 48px; background: #FFF; padding: 48px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-md); text-align: center;">
   
-  <div id="status-icon" style="width: 80px; height: 80px; background: <%= order.paymentStatus === 'Aprovado' ? '#D1FAE5' : '#FEF3C7' %>; color: <%= order.paymentStatus === 'Aprovado' ? '#065F46' : '#92400E' %>; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 24px;">
+  <div id="status-icon" class="order-status-icon <%= order.paymentStatus === 'Aprovado' ? 'status-icon-approved' : 'status-icon-pending' %>" style="width: 80px; height: 80px; background: <%= order.paymentStatus === 'Aprovado' ? '#D1FAE5' : '#FEF3C7' %>; color: <%= order.paymentStatus === 'Aprovado' ? '#065F46' : '#92400E' %>; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 24px;">
     <i class="<%= order.paymentStatus === 'Aprovado' ? 'fas fa-check' : 'fas fa-clock' %>"></i>
   </div>
 
-  <h1 style="font-size: 2.4rem; color: var(--text-dark); margin-bottom: 8px;">
+  <h1 class="order-confirmation-title" style="font-size: 2.4rem; color: var(--text-dark); margin-bottom: 8px;">
     <%= order.paymentStatus === 'Aprovado' ? 'Pagamento Aprovado!' : 'Pedido Realizado com Sucesso!' %>
   </h1>
-  <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 24px;">
+  <p class="order-confirmation-subtitle" style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 24px;">
     Obrigado por comprar na <strong>O Que É Isso? Artesanato</strong>! O número do seu pedido é <strong style="color: var(--primary);">#<%= order.orderNumber %></strong>.
   </p>
 
@@ -22,57 +22,57 @@
 
   <% if (order.paymentStatus === 'Pendente' && order.paymentMethod === 'pix') { %>
     <!-- Bloco de Pagamento Pix Real Mercado Pago -->
-    <div id="pix-payment-box" style="background: #F0FDFB; border: 2px dashed #32BCAD; border-radius: var(--radius-md); padding: 32px; margin-bottom: 36px; text-align: center;">
-      <h3 style="font-size: 1.3rem; margin-bottom: 12px; color: var(--text-dark);">
+    <div id="pix-payment-box" class="pix-payment-container" style="background: #F0FDFB; border: 2px dashed #32BCAD; border-radius: var(--radius-md); padding: 32px; margin-bottom: 36px; text-align: center;">
+      <h3 class="pix-box-title" style="font-size: 1.3rem; margin-bottom: 12px; color: var(--text-dark);">
         <i class="fab fa-pix" style="color: #32BCAD;"></i> Pague agora via Pix (Mercado Pago)
       </h3>
-      <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;">
+      <p class="pix-box-desc" style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;">
         Abra o app do seu banco, selecione a opção <strong>Pix QR Code ou Copia e Cola</strong> e conclua o pagamento de <strong style="color: var(--primary); font-size: 1.1rem;"><%= formatMoney(order.totalAmount) %></strong>.
       </p>
 
       <!-- Exibição de QR Code Real (Base64 Mercado Pago ou Gerado) -->
-      <div style="width: 200px; height: 200px; background: #FFF; border: 2px solid #32BCAD; border-radius: 16px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; padding: 12px; box-shadow: var(--shadow-sm);">
+      <div class="pix-qrcode-wrapper" style="width: 200px; height: 200px; background: #FFF; border: 2px solid #32BCAD; border-radius: 16px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; padding: 12px; box-shadow: var(--shadow-sm);">
         <% if (order.pixQrCodeBase64) { %>
-          <img src="data:image/png;base64,<%= order.pixQrCodeBase64 %>" alt="QR Code Pix Mercado Pago" style="width: 100%; height: 100%; object-fit: contain;">
+          <img src="data:image/png;base64,<%= order.pixQrCodeBase64 %>" alt="QR Code Pix Mercado Pago" class="pix-qrcode-img" style="width: 100%; height: 100%; object-fit: contain;">
         <% } else { %>
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=<%= encodeURIComponent(order.pixCode) %>" alt="QR Code Pix" style="width: 100%; height: 100%; object-fit: contain;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=<%= encodeURIComponent(order.pixCode) %>" alt="QR Code Pix" class="pix-qrcode-img" style="width: 100%; height: 100%; object-fit: contain;">
         <% } %>
       </div>
 
-      <div class="form-group" style="max-width: 520px; margin: 0 auto 16px;">
-        <input type="text" id="pix-code-input" readonly value="<%= order.pixCode %>" class="form-control" style="font-size: 0.8rem; text-align: center; background: #FFF; font-family: monospace;">
+      <div class="form-group pix-code-group" style="max-width: 520px; margin: 0 auto 16px;">
+        <input type="text" id="pix-code-input" readonly value="<%= order.pixCode %>" class="form-control pix-code-input" style="font-size: 0.8rem; text-align: center; background: #FFF; font-family: monospace;">
       </div>
 
-      <button onclick="copyPixCode()" id="btn-copy-pix" class="btn btn-primary" style="padding: 12px 28px; font-size: 1rem; background: #32BCAD; border-color: #32BCAD;">
+      <button onclick="copyPixCode()" id="btn-copy-pix" class="btn btn-primary pix-copy-btn" style="padding: 12px 28px; font-size: 1rem; background: #32BCAD; border-color: #32BCAD;">
         <i class="fas fa-copy"></i> Copiar Código Pix (Copia e Cola)
       </button>
 
-      <div style="margin-top: 18px; font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;">
+      <div class="pix-polling-notice" style="margin-top: 18px; font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;">
         <i class="fas fa-spinner fa-spin" style="color: #32BCAD;"></i>
         <span>Aguardando confirmação do banco em tempo real...</span>
       </div>
     </div>
   <% } else if (order.paymentStatus === 'Pendente' && order.mercadopagoInitPoint) { %>
-    <div style="background: #E6F5FC; border: 2px dashed #009EE3; border-radius: var(--radius-md); padding: 32px; margin-bottom: 36px;">
-      <h3 style="font-size: 1.3rem; margin-bottom: 12px; color: #009EE3;">
+    <div class="order-mp-redirect-box" style="background: #E6F5FC; border: 2px dashed #009EE3; border-radius: var(--radius-md); padding: 32px; margin-bottom: 36px;">
+      <h3 class="order-mp-title" style="font-size: 1.3rem; margin-bottom: 12px; color: #009EE3;">
         <i class="fas fa-credit-card"></i> Conclua seu pagamento no Mercado Pago
       </h3>
-      <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;">
+      <p class="order-mp-desc" style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px;">
         Seu pedido foi registrado. Para finalizar a compra, clique no botão abaixo para pagar no Mercado Pago.
       </p>
-      <a href="<%= order.mercadopagoInitPoint %>" target="_blank" class="btn btn-primary" style="background: #009EE3; border-color: #009EE3; padding: 14px 32px; font-size: 1.05rem;">
+      <a href="<%= order.mercadopagoInitPoint %>" target="_blank" class="btn btn-primary order-mp-btn" style="background: #009EE3; border-color: #009EE3; padding: 14px 32px; font-size: 1.05rem;">
         <i class="fas fa-external-link-alt"></i> Pagar <%= formatMoney(order.totalAmount) %> no Mercado Pago
       </a>
     </div>
   <% } else if (order.paymentStatus === 'Aprovado') { %>
-    <div class="alert alert-success" style="margin-bottom: 32px; font-size: 1rem; padding: 16px;">
+    <div class="alert alert-success order-approved-alert" style="margin-bottom: 32px; font-size: 1rem; padding: 16px;">
       <i class="fas fa-check-circle" style="font-size: 1.3rem;"></i> <strong>Pagamento Confirmado!</strong> Seu pedido já entrou na esteira de produção e você receberá atualizações no seu e-mail.
     </div>
   <% } %>
 
   <!-- Resumo do Endereço de Entrega -->
-  <div style="text-align: left; background: #FAF7F2; padding: 24px; border-radius: var(--radius-md); margin-bottom: 32px; border: 1px solid var(--border-light);">
-    <h3 style="font-size: 1.1rem; margin-bottom: 12px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px; color: var(--text-dark);">
+  <div class="order-address-box" style="text-align: left; background: #FAF7F2; padding: 24px; border-radius: var(--radius-md); margin-bottom: 32px; border: 1px solid var(--border-light);">
+    <h3 class="order-address-title" style="font-size: 1.1rem; margin-bottom: 12px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px; color: var(--text-dark);">
       <i class="fas fa-truck" style="color: var(--secondary);"></i> Endereço de Entrega
     </h3>
     <p style="font-size: 0.95rem; color: var(--text-dark); margin-bottom: 4px;"><strong><%= order.customerName %></strong> (<%= order.customerEmail %>)</p>
@@ -80,13 +80,13 @@
     <p style="font-size: 0.9rem; color: var(--text-muted);"><%= order.shippingAddress.neighborhood %> — <%= order.shippingAddress.city %> / <%= order.shippingAddress.state %> — CEP: <%= order.shippingAddress.zipCode %></p>
   </div>
 
-  <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+  <div class="order-actions-buttons" style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
     <% if (locals.user) { %>
-      <a href="/minha-conta" class="btn btn-primary">
+      <a href="/minha-conta" class="btn btn-primary order-btn-item">
         <i class="fas fa-box"></i> Ver Meus Pedidos
       </a>
     <% } %>
-    <a href="/" class="btn btn-secondary">
+    <a href="/" class="btn btn-secondary order-btn-item">
       <i class="fas fa-home"></i> Voltar à Loja
     </a>
   </div>
@@ -151,3 +151,4 @@
 </script>
 
 <%- include('partials/footer') %>
+
