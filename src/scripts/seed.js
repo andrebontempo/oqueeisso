@@ -125,22 +125,22 @@ const seedDB = async () => {
 
     console.log('[Seed] Usuários criados: Admin (admin@oqueeisso.com) e Cliente.');
 
-    // 2. Criar as Categorias Solicitadas (Ordem: 1. Bordados & Afins, 2. Bolsas & Bonecas, 3. Crochês & Afins, 4. Trabalhos em Madeira)
-    const catBordados = await Category.create({
-      name: 'Bordados & Afins',
-      slug: 'bordados-e-afins',
-      description: 'Bordados manuais, bastidores decorativos, panos de prato bordados e delicadezas feitas à mão.',
-      image: '/images/cat-bolsas-bonecas.jpg',
-      icon: 'fa-cut',
-      order: 1,
-    });
-
+    // 2. Criar as Categorias (Ordem: 1. Bolsas & Bonecas, 2. Bordados & Afins, 3. Crochês & Afins, 4. Trabalhos em Madeira)
     const catBolsasBonecas = await Category.create({
       name: 'Bolsas & Bonecas',
       slug: 'bolsas-e-bonecas',
       description: 'Bolsas de tecido bordadas, niqueleiras e bonecas de pano afetivas por Nara Bontempo.',
       image: '/images/cat-bolsas-bonecas.jpg',
       icon: 'fa-shopping-bag',
+      order: 1,
+    });
+
+    const catBordados = await Category.create({
+      name: 'Bordados & Afins',
+      slug: 'bordados-e-afins',
+      description: 'Bordados manuais, bastidores decorativos, panos de prato bordados e delicadezas feitas à mão.',
+      image: '/images/cat-bolsas-bonecas.jpg',
+      icon: 'fa-cut',
       order: 2,
     });
 

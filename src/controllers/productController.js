@@ -33,24 +33,59 @@ exports.getCategory = async (req, res) => {
     const { sort, minPrice, maxPrice } = req.query;
 
     let category = await Category.findOne({ slug });
-    if (!category && slug === 'croche') {
-      category = await Category.findOne({ slug: 'croches-e-afins' });
-    } else if (!category && slug === 'croches-e-afins') {
-      category = await Category.findOne({ slug: 'croche' });
-    } else if (!category && (slug === 'bordados' || slug === 'bordados-e-afins')) {
-      category = await Category.findOne({ slug: { $in: ['bordados', 'bordados-e-afins'] } });
+
+    if (!category) {
+      if (slug.includes('bordado')) {
+        category = await Category.findOne({
+          $or: [
+            { slug: 'bordados-e-afins' },
+            { slug: 'bordados-afins' },
+            { slug: 'bordados' },
+            { name: /bordado/i }
+          ]
+        });
+      } else if (slug.includes('bolsa') || slug.includes('boneca')) {
+        category = await Category.findOne({
+          $or: [
+            { slug: 'bolsas-e-bonecas' },
+            { slug: 'bolsas-bonecas' },
+            { name: /bolsas/i }
+          ]
+        });
+      } else if (slug.includes('croche')) {
+        category = await Category.findOne({
+          $or: [
+            { slug: 'croches-e-afins' },
+            { slug: 'croches-afins' },
+            { slug: 'croche' },
+            { name: /croch/i }
+          ]
+        });
+      } else if (slug.includes('madeira')) {
+        category = await Category.findOne({
+          $or: [
+            { slug: 'trabalhos-em-madeira' },
+            { slug: 'madeira' },
+            { name: /madeira/i }
+          ]
+        });
+      }
     }
 
-    // Caso a categoria Bordados & Afins ainda não tenha sido cadastrada no BD, cria automaticamente
-    if (!category && (slug === 'bordados-e-afins' || slug === 'bordados')) {
-      category = await Category.create({
-        name: 'Bordados & Afins',
-        slug: 'bordados-e-afins',
-        description: 'Bordados manuais, bastidores decorativos, panos de prato bordados e delicadezas feitas à mão.',
-        image: '/images/cat-bolsas-bonecas.jpg',
-        icon: 'fa-cut',
-        order: 1,
-      });
+    // Se a categoria Bordados & Afins não existe sob nenhum alias, tenta criar ou recuperar por nome
+    if (!category && slug.includes('bordado')) {
+      try {
+        category = await Category.create({
+          name: 'Bordados & Afins',
+          slug: 'bordados-e-afins',
+          description: 'Bordados manuais, bastidores decorativos, panos de prato bordados e delicadezas feitas à mão.',
+          image: '/images/cat-bolsas-bonecas.jpg',
+          icon: 'fa-cut',
+          order: 3,
+        });
+      } catch (createErr) {
+        category = await Category.findOne({ name: /bordado/i });
+      }
     }
 
     if (!category) {
