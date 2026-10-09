@@ -8,7 +8,28 @@ exports.getHome = async (req, res) => {
     const featuredProducts = await Product.find({ featured: true }).populate('category').limit(8);
     const bestSellers = await Product.find({ isBestSeller: true }).populate('category').limit(4);
     const recentProducts = await Product.find().sort({ createdAt: -1 }).populate('category').limit(8);
+
+    // Garantir a ordem exata no banco de dados para os artesãos
+    await Promise.all([
+      Artisan.updateOne({ name: /nara/i }, { $set: { order: 1 } }),
+      Artisan.updateOne({ name: /rosanilda/i }, { $set: { order: 2 } }),
+      Artisan.updateOne({ name: /alcione/i }, { $set: { order: 3 } }),
+      Artisan.updateOne({ name: /humberto/i }, { $set: { order: 4 } }),
+    ]).catch((e) => console.error('Erro ao ordenar artesãos:', e));
+
     const artisans = await Artisan.find().sort({ order: 1 });
+
+    const orderMap = { nara: 1, rosanilda: 2, alcione: 3, humberto: 4 };
+    artisans.sort((a, b) => {
+      const getRank = (art) => {
+        const nameLower = (art.name || '').toLowerCase();
+        for (const key of Object.keys(orderMap)) {
+          if (nameLower.includes(key)) return orderMap[key];
+        }
+        return art.order || 99;
+      };
+      return getRank(a) - getRank(b);
+    });
 
     res.render('index', {
       title: 'O Que É Isso? - Peças Exclusivas de Artesanato Feitas à Mão',
