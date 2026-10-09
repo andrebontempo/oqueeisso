@@ -153,6 +153,15 @@ const seedDB = async () => {
       order: 3,
     });
 
+    const catBordados = await Category.create({
+      name: 'Bordados & Afins',
+      slug: 'bordados-e-afins',
+      description: 'Bordados manuais, bastidores decorativos, panos de prato bordados e delicadezas feitas à mão.',
+      image: '/images/cat-bolsas-bonecas.jpg',
+      icon: 'fa-cut',
+      order: 4,
+    });
+
     console.log('[Seed] Categorias criadas com sucesso!');
 
     // 3. Criar Produtos Exclusivos
