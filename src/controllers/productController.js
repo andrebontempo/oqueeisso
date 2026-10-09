@@ -98,12 +98,14 @@ exports.getProductDetails = async (req, res) => {
       });
     }
 
-    const relatedProducts = await Product.find({
-      category: product.category._id,
-      _id: { $ne: product._id },
-    })
-      .limit(4)
-      .populate('category');
+    const relatedProducts = product.category
+      ? await Product.find({
+          category: product.category._id,
+          _id: { $ne: product._id },
+        })
+          .limit(4)
+          .populate('category')
+      : [];
 
     res.render('product-details', {
       title: `${product.name} | O Que É Isso?`,

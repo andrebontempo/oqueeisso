@@ -129,19 +129,19 @@
   <!-- Category Bar -->
   <nav class="category-bar">
     <div class="category-bar-inner">
-      <a href="/" class="cat-item <%= typeof title !== 'undefined' && title.includes('Peças Exclusivas') ? 'active' : '' %>">
+      <a href="/" class="cat-item <%= typeof title !== 'undefined' && title && title.includes('Peças Exclusivas') ? 'active' : '' %>">
         <i class="fas fa-home"></i> Início
       </a>
-      <a href="/categoria/bolsas-e-bonecas" class="cat-item <%= typeof category !== 'undefined' && (category.slug === 'bolsas-e-bonecas' || category.slug === 'bolsas-bonecas') ? 'active' : '' %>">
+      <a href="/categoria/bolsas-e-bonecas" class="cat-item <%= typeof category !== 'undefined' && category && (category.slug === 'bolsas-e-bonecas' || category.slug === 'bolsas-bonecas') ? 'active' : '' %>">
         <i class="fas fa-shopping-bag"></i> Bolsas & Bonecas
       </a>
-      <a href="/categoria/croches-e-afins" class="cat-item <%= typeof category !== 'undefined' && (category.slug === 'croche' || category.slug === 'croches-e-afins') ? 'active' : '' %>">
+      <a href="/categoria/croches-e-afins" class="cat-item <%= typeof category !== 'undefined' && category && (category.slug === 'croche' || category.slug === 'croches-e-afins') ? 'active' : '' %>">
         <i class="fas fa-certificate"></i> Crochês & Afins
       </a>
-      <a href="/categoria/trabalhos-em-madeira" class="cat-item <%= typeof category !== 'undefined' && category.slug === 'trabalhos-em-madeira' ? 'active' : '' %>">
+      <a href="/categoria/trabalhos-em-madeira" class="cat-item <%= typeof category !== 'undefined' && category && category.slug === 'trabalhos-em-madeira' ? 'active' : '' %>">
         <i class="fas fa-tree"></i> Trabalhos em Madeira
       </a>
-      <a href="/contato" class="cat-item <%= typeof title !== 'undefined' && title.includes('Fale Conosco') ? 'active' : '' %>">
+      <a href="/contato" class="cat-item <%= typeof title !== 'undefined' && title && title.includes('Fale Conosco') ? 'active' : '' %>">
         <i class="fas fa-envelope"></i> Contato
       </a>
     </div>

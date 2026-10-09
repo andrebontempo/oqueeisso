@@ -507,7 +507,7 @@ exports.createCategory = async (req, res) => {
   try {
     const { name, description, icon, order } = req.body;
 
-    if (!name) {
+    if (!name || !name.trim()) {
       return res.status(400).render('admin/category-form', {
         title: 'Nova Categoria | Admin',
         category: req.body,
@@ -515,7 +515,10 @@ exports.createCategory = async (req, res) => {
       });
     }
 
-    const slug = slugify(name, { lower: true, strict: true });
+    let slug = slugify(name, { lower: true, strict: true });
+    if (!slug) {
+      slug = 'categoria-' + Date.now();
+    }
 
     let image = '/images/category-default.jpg';
     if (req.file) {
@@ -523,9 +526,9 @@ exports.createCategory = async (req, res) => {
     }
 
     await Category.create({
-      name,
+      name: name.trim(),
       slug,
-      description: description || '',
+      description: description ? description.trim() : '',
       icon: icon || 'fa-shapes',
       image,
       order: order !== undefined && order !== '' ? Number(order) : 99,
@@ -534,10 +537,14 @@ exports.createCategory = async (req, res) => {
     res.redirect('/admin/dashboard?tab=categorias&success=Categoria+criada+com+sucesso');
   } catch (error) {
     console.error('Erro ao criar categoria:', error);
-    res.status(500).render('admin/category-form', {
+    let errorMessage = 'Erro ao cadastrar categoria.';
+    if (error.code === 11000) {
+      errorMessage = 'Já existe uma categoria cadastrada com este nome ou slug duplicado.';
+    }
+    res.status(400).render('admin/category-form', {
       title: 'Nova Categoria | Admin',
       category: req.body,
-      error: 'Erro ao cadastrar categoria.',
+      error: errorMessage,
     });
   }
 };
@@ -572,9 +579,22 @@ exports.updateCategory = async (req, res) => {
       return res.redirect('/admin/dashboard?tab=categorias');
     }
 
-    category.name = name;
-    category.slug = slugify(name, { lower: true, strict: true });
-    category.description = description || '';
+    if (!name || !name.trim()) {
+      return res.status(400).render('admin/category-form', {
+        title: `Editar Categoria ${category.name} | Admin`,
+        category: { ...category.toObject(), ...req.body },
+        error: 'O nome da categoria é obrigatório.',
+      });
+    }
+
+    let slug = slugify(name, { lower: true, strict: true });
+    if (!slug) {
+      slug = 'categoria-' + Date.now();
+    }
+
+    category.name = name.trim();
+    category.slug = slug;
+    category.description = description ? description.trim() : '';
     category.icon = icon || 'fa-shapes';
     if (order !== undefined && order !== '') {
       category.order = Number(order);
@@ -588,7 +608,16 @@ exports.updateCategory = async (req, res) => {
     res.redirect('/admin/dashboard?tab=categorias&success=Categoria+atualizada+com+sucesso');
   } catch (error) {
     console.error('Erro ao atualizar categoria:', error);
-    res.redirect('/admin/dashboard?tab=categorias');
+    let errorMessage = 'Erro ao atualizar categoria.';
+    if (error.code === 11000) {
+      errorMessage = 'Já existe uma categoria cadastrada com este nome ou slug duplicado.';
+    }
+    const category = await Category.findById(req.params.id);
+    res.status(400).render('admin/category-form', {
+      title: 'Editar Categoria | Admin',
+      category: category || req.body,
+      error: errorMessage,
+    });
   }
 };
 
