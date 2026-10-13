@@ -1,9 +1,32 @@
 const Product = require('../models/Product');
 const Category = require('../models/Category');
 const Artisan = require('../models/Artisan');
+const fs = require('fs');
+const path = require('path');
+
+// Verifica se uma imagem local (ex: /images/x.jpg) existe em public/
+const localImageExists = (src) => {
+  if (!src) return false;
+  if (/^https?:\/\//i.test(src)) return true;
+  return fs.existsSync(path.join(__dirname, '../../public', src));
+};
 
 exports.getHome = async (req, res) => {
   try {
+    // Garantir imagens válidas para Bordados & Afins e Rosanilda Maciel
+    try {
+      const catBordados = await Category.findOne({ name: /bordado/i });
+      if (catBordados && (!localImageExists(catBordados.image) || catBordados.image === '/images/cat-bolsas-bonecas.jpg')) {
+        await Category.updateOne({ _id: catBordados._id }, { $set: { image: '/images/cat-bordados.jpg' } });
+      }
+      const rosanilda = await Artisan.findOne({ name: /rosanilda/i });
+      if (rosanilda && !localImageExists(rosanilda.avatar)) {
+        await Artisan.updateOne({ _id: rosanilda._id }, { $set: { avatar: '/images/artisan-rosanilda.jpg' } });
+      }
+    } catch (e) {
+      console.error('Erro ao corrigir imagens:', e);
+    }
+
     const categories = await Category.find().sort({ order: 1, name: 1 });
     const featuredProducts = await Product.find({ featured: true }).populate('category').limit(8);
     const bestSellers = await Product.find({ isBestSeller: true }).populate('category').limit(4);
@@ -100,7 +123,7 @@ exports.getCategory = async (req, res) => {
           name: 'Bordados & Afins',
           slug: 'bordados-e-afins',
           description: 'Bordados manuais, bastidores decorativos, panos de prato bordados e delicadezas feitas à mão.',
-          image: '/images/cat-bolsas-bonecas.jpg',
+          image: '/images/cat-bordados.jpg',
           icon: 'fa-cut',
           order: 3,
         });
