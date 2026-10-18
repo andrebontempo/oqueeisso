@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Estamos em Manutenção' %> | O Que É Isso? Artesanato</title>
+  
+  <meta name="description" content="Nossa loja online está passando por melhorias e novidades especiais. Voltaremos em breve!">
+  <meta name="robots" content="noindex, follow">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon.png">
+  
+  <!-- Fontes Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #6B3A2A;
+      --primary-hover: #542B1E;
+      --accent: #D97706;
+      --accent-soft: #FEF3C7;
+      --bg: #FAF7F2;
+      --card-bg: #FFFFFF;
+      --text: #2D2422;
+      --text-muted: #786C68;
+      --border: #EFE9E1;
+      --shadow: 0 10px 30px rgba(107, 58, 42, 0.08);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      line-height: 1.6;
+      background-image: radial-gradient(rgba(107, 58, 42, 0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 620px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 48px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .top-accent-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #6B3A2A, #D97706, #6B3A2A);
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #F5EFEB;
+      color: var(--primary);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+      border: 1px solid rgba(107, 58, 42, 0.1);
+    }
+
+    .icon-wrapper {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 28px;
+      background: #FFF7ED;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 2.8rem;
+      border: 2px dashed #FDBA74;
+      animation: pulseSoft 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .icon-decoration {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 34px;
+      height: 34px;
+      background: var(--primary);
+      color: #FFF;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      border: 3px solid #FFF;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      color: var(--primary);
+      margin-bottom: 16px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .description {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .return-box {
+      background: #FDFBF7;
+      border: 1px solid #F3EDE2;
+      border-left: 4px solid var(--accent);
+      padding: 14px 20px;
+      border-radius: 12px;
+      margin-bottom: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: var(--text);
+      text-align: left;
+    }
+
+    .return-box i {
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    .contact-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .contact-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: #FFF;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+    }
+
+    .btn-whatsapp:hover {
+      background: #1EBE5D;
+      transform: translateY(-2px);
+    }
+
+    .btn-instagram {
+      background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF);
+      color: #FFF;
+      box-shadow: 0 4px 14px rgba(221, 42, 123, 0.25);
+    }
+
+    .btn-instagram:hover {
+      opacity: 0.95;
+      transform: translateY(-2px);
+    }
+
+    .footer-note {
+      margin-top: 32px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .admin-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      margin-top: 16px;
+      display: inline-block;
+      transition: color 0.2s ease;
+      opacity: 0.7;
+    }
+
+    .admin-link:hover {
+      color: var(--primary);
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 36px 20px;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="top-accent-bar"></div>
+
+    <div class="brand-badge">
+      <i class="fas fa-heart"></i> O Que É Isso? Artesanato
+    </div>
+
+    <div class="icon-wrapper">
+      <i class="fas fa-paint-brush"></i>
+      <div class="icon-decoration">
+        <i class="fas fa-cog fa-spin"></i>
+      </div>
+    </div>
+
+    <h1><%= typeof title !== 'undefined' && title ? title : 'Estamos em Manutenção Programada' %></h1>
+
+    <p class="description">
+      <%= typeof message !== 'undefined' && message ? message : 'Estamos preparando novidades e organizando nossas peças feitas à mão com muito carinho. Voltamos em instantes!' %>
+    </p>
+
+    <% if (typeof estimatedReturn !== 'undefined' && estimatedReturn && estimatedReturn.trim() !== '') { %>
+      <div class="return-box">
+        <i class="fas fa-clock"></i>
+        <div>
+          <strong>Previsão de Retorno:</strong><br>
+          <span><%= estimatedReturn %></span>
+        </div>
+      </div>
+    <% } %>
+
+    <div>
+      <div class="contact-title">Precisa falar conosco com urgência?</div>
+      <div class="contact-buttons">
+        <a href="https://wa.me/5511999999999?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20as%20pe%C3%A7as%20da%20loja%20O%20Que%20%C3%89%20Isso%3F" target="_blank" rel="noopener" class="btn btn-whatsapp">
+          <i class="fab fa-whatsapp"></i> Falar no WhatsApp
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener" class="btn btn-instagram">
+          <i class="fab fa-instagram"></i> Acompanhar no Instagram
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <p>Agradecemos a sua compreensão e paciência. 🌸</p>
+      <a href="/login" class="admin-link">
+        <i class="fas fa-lock"></i> Acesso Administrativo
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>

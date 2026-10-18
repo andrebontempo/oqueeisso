@@ -77,13 +77,34 @@ exports.getDashboard = async (req, res) => {
 
 exports.updateSettings = async (req, res) => {
   try {
-    const { shippingFee, freeShippingThreshold, storeNotice } = req.body;
-    await settingService.updateSettings({
+    const {
       shippingFee,
       freeShippingThreshold,
       storeNotice,
-    });
-    res.redirect('/admin/dashboard?tab=frete&success=Configurações+de+frete+e+loja+atualizadas+com+sucesso');
+      maintenanceSettingsIncluded,
+      isMaintenanceMode,
+      maintenanceTitle,
+      maintenanceMessage,
+      maintenanceEstimatedReturn,
+    } = req.body;
+
+    const updatePayload = {};
+
+    if (typeof shippingFee !== 'undefined') updatePayload.shippingFee = shippingFee;
+    if (typeof freeShippingThreshold !== 'undefined') updatePayload.freeShippingThreshold = freeShippingThreshold;
+    if (typeof storeNotice !== 'undefined') updatePayload.storeNotice = storeNotice;
+
+    if (maintenanceSettingsIncluded === '1') {
+      updatePayload.isMaintenanceMode = isMaintenanceMode === 'on' || isMaintenanceMode === 'true' || isMaintenanceMode === '1';
+      if (typeof maintenanceTitle !== 'undefined') updatePayload.maintenanceTitle = maintenanceTitle;
+      if (typeof maintenanceMessage !== 'undefined') updatePayload.maintenanceMessage = maintenanceMessage;
+      if (typeof maintenanceEstimatedReturn !== 'undefined') updatePayload.maintenanceEstimatedReturn = maintenanceEstimatedReturn;
+    } else if (typeof isMaintenanceMode !== 'undefined') {
+      updatePayload.isMaintenanceMode = isMaintenanceMode === 'on' || isMaintenanceMode === 'true' || isMaintenanceMode === '1';
+    }
+
+    await settingService.updateSettings(updatePayload);
+    res.redirect('/admin/dashboard?tab=frete&success=Configurações+atualizadas+com+sucesso');
   } catch (error) {
     console.error('Erro ao atualizar configurações:', error);
     res.redirect('/admin/dashboard?tab=frete&error=Erro+ao+atualizar+configurações');

@@ -16,6 +16,22 @@ const settingSchema = new mongoose.Schema(
       type: String,
       default: 'Artesanato Exclusivo Feito à Mão em Família',
     },
+    isMaintenanceMode: {
+      type: Boolean,
+      default: false,
+    },
+    maintenanceTitle: {
+      type: String,
+      default: 'Estamos em Manutenção Programada',
+    },
+    maintenanceMessage: {
+      type: String,
+      default: 'Estamos preparando novidades e melhorias em nossas peças artesanais. Voltaremos muito em breve!',
+    },
+    maintenanceEstimatedReturn: {
+      type: String,
+      default: '',
+    },
   },
   { timestamps: true }
 );

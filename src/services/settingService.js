@@ -8,6 +8,10 @@ const getSettings = async () => {
         shippingFee: 25,
         freeShippingThreshold: 200,
         storeNotice: 'Artesanato Exclusivo Feito à Mão em Família',
+        isMaintenanceMode: false,
+        maintenanceTitle: 'Estamos em Manutenção Programada',
+        maintenanceMessage: 'Estamos preparando novidades e melhorias em nossas peças artesanais. Voltaremos muito em breve!',
+        maintenanceEstimatedReturn: '',
       });
     }
     return settings;
@@ -17,6 +21,10 @@ const getSettings = async () => {
       shippingFee: 25,
       freeShippingThreshold: 200,
       storeNotice: 'Artesanato Exclusivo Feito à Mão em Família',
+      isMaintenanceMode: false,
+      maintenanceTitle: 'Estamos em Manutenção Programada',
+      maintenanceMessage: 'Estamos preparando novidades e melhorias em nossas peças artesanais. Voltaremos muito em breve!',
+      maintenanceEstimatedReturn: '',
     };
   }
 };
@@ -35,6 +43,18 @@ const updateSettings = async (data) => {
   }
   if (typeof data.storeNotice !== 'undefined') {
     settings.storeNotice = data.storeNotice;
+  }
+  if (typeof data.isMaintenanceMode !== 'undefined') {
+    settings.isMaintenanceMode = data.isMaintenanceMode === true || data.isMaintenanceMode === 'true' || data.isMaintenanceMode === 'on' || data.isMaintenanceMode === '1';
+  }
+  if (typeof data.maintenanceTitle !== 'undefined') {
+    settings.maintenanceTitle = data.maintenanceTitle;
+  }
+  if (typeof data.maintenanceMessage !== 'undefined') {
+    settings.maintenanceMessage = data.maintenanceMessage;
+  }
+  if (typeof data.maintenanceEstimatedReturn !== 'undefined') {
+    settings.maintenanceEstimatedReturn = data.maintenanceEstimatedReturn;
   }
 
   await settings.save();

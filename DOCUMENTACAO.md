@@ -119,3 +119,16 @@ O serviço de e-mail (`src/services/mailService.js`) gerencia os seguintes dispa
   ```bash
   ./deploy.sh
   ```
+
+---
+
+## 🛠️ 8. Modo de Manutenção Programada
+
+A loja possui um sistema inteligente de **Modo de Manutenção** gerenciado dinamicamente via banco de dados:
+
+- **Ativação / Desativação Instantânea**: Pelo Painel Admin (`/admin/dashboard?tab=frete`), o administrador pode ativar ou desativar com apenas um clique e salvar. Não requer rebuild, reinicialização de containers nem conexões SSH.
+- **Bypass para Administradores**: Administradores autenticados continuam navegando livremente pela loja (com um banner amarelo de aviso no topo), permitindo cadastrar produtos, ajustar layouts e testar pedidos antes de reabrir a loja ao público.
+- **Segurança de Acesso**: As rotas de login (`/login`), autenticação Google (`/auth/*`), painel administrativo (`/admin/*`) e arquivos estáticos (`/css`, `/js`, imagens) permanecem 100% operacionais para o admin entrar e desativar o modo de manutenção a qualquer momento.
+- **SEO & Google Friendly**: Para visitantes comuns, a tela acolhedora de manutenção é entregue com o código **HTTP 503 (Service Unavailable)** e cabeçalho `Retry-After: 3600`, preservando o ranqueamento das páginas no Google.
+- **Personalização**: É possível definir Título, Mensagem explicativa e Previsão de Retorno.
+

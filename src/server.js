@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const { optionalAuth } = require('./middleware/auth');
+const maintenanceMiddleware = require('./middleware/maintenance');
 
 const passport = require('passport');
 const configurePassport = require('./config/passport');
@@ -43,6 +44,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Middleware de Autenticação Opcional / Contexto da Sessão
 app.use(optionalAuth);
+
+// Middleware de Modo de Manutenção (Permite bypass de Admin e rotas essenciais)
+app.use(maintenanceMiddleware);
 
 // Helper para formatar moeda em reais nos templates EJS
 app.locals.formatMoney = (value) => {
