@@ -406,11 +406,18 @@
 <!-- ABA 5: ARTESÃOS DA FAMÍLIA -->
 <!-- =================================================================== -->
 <% if (activeTab === 'artesaos') { %>
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
     <h3 style="font-size: 1.3rem;">Membros da Família & Artesãos</h3>
-    <a href="/admin/artesaos/novo" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.9rem;">
-      <i class="fas fa-plus"></i> Adicionar Artesão
-    </a>
+    <div style="display: flex; gap: 10px;">
+      <form action="/admin/restaurar-dados" method="POST" onsubmit="return confirm('Deseja sincronizar e restaurar as 4 categorias oficiais, 4 artesãos da família e produtos padrão?');" style="display: inline;">
+        <button type="submit" class="btn btn-secondary" style="padding: 10px 18px; font-size: 0.9rem; background: #ECFDF5; border: 1px solid #059669; color: #065F46;">
+          <i class="fas fa-shield-halved"></i> Sincronizar Dados Oficiais
+        </button>
+      </form>
+      <a href="/admin/artesaos/novo" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.9rem;">
+        <i class="fas fa-plus"></i> Adicionar Artesão
+      </a>
+    </div>
   </div>
 
   <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
@@ -464,11 +471,18 @@
 <!-- ABA 6: CATEGORIAS -->
 <!-- =================================================================== -->
 <% if (activeTab === 'categorias') { %>
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
     <h3 style="font-size: 1.3rem;">Categorias de Produtos</h3>
-    <a href="/admin/categorias/novo" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.9rem;">
-      <i class="fas fa-plus"></i> Nova Categoria
-    </a>
+    <div style="display: flex; gap: 10px;">
+      <form action="/admin/restaurar-dados" method="POST" onsubmit="return confirm('Deseja sincronizar e restaurar as 4 categorias oficiais, 4 artesãos da família e produtos padrão?');" style="display: inline;">
+        <button type="submit" class="btn btn-secondary" style="padding: 10px 18px; font-size: 0.9rem; background: #ECFDF5; border: 1px solid #059669; color: #065F46;">
+          <i class="fas fa-shield-halved"></i> Sincronizar Dados Oficiais
+        </button>
+      </form>
+      <a href="/admin/categorias/novo" class="btn btn-primary" style="padding: 10px 18px; font-size: 0.9rem;">
+        <i class="fas fa-plus"></i> Nova Categoria
+      </a>
+    </div>
   </div>
 
   <div style="background: #FFF; padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">

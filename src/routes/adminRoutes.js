@@ -50,4 +50,7 @@ router.post('/pedidos/status/:id', adminController.updateOrderStatus);
 // Configurações de Frete & Loja
 router.post('/configuracoes', adminController.updateSettings);
 
+// Restauração / Sincronização dos Dados Oficiais da Família
+router.post('/restaurar-dados', adminController.restoreDefaults);
+
 module.exports = router;

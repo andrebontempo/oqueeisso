@@ -366,11 +366,23 @@ exports.updateArtisan = async (req, res) => {
 exports.deleteArtisan = async (req, res) => {
   try {
     const { id } = req.params;
+    const artisan = await Artisan.findById(id);
+    if (!artisan) {
+      return res.redirect('/admin/dashboard?tab=artesaos');
+    }
+
+    const protectedNames = ['nara', 'rosanilda', 'alcione', 'humberto'];
+    const isProtected = protectedNames.some((name) => (artisan.name || '').toLowerCase().includes(name));
+
+    if (isProtected) {
+      return res.redirect('/admin/dashboard?tab=artesaos&error=Não+é+permitido+excluir+os+artesãos+fundadores+da+família.');
+    }
+
     await Artisan.findByIdAndDelete(id);
     res.redirect('/admin/dashboard?tab=artesaos&success=Artesão+removido+com+sucesso');
   } catch (error) {
     console.error('Erro ao excluir artesão:', error);
-    res.redirect('/admin/dashboard?tab=artesaos');
+    res.redirect('/admin/dashboard?tab=artesaos&error=Erro+ao+excluir+artesão');
   }
 };
 
@@ -645,11 +657,35 @@ exports.updateCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
+    const category = await Category.findById(id);
+    if (!category) {
+      return res.redirect('/admin/dashboard?tab=categorias');
+    }
+
+    const protectedSlugs = ['bolsas-e-bonecas', 'bordados-e-afins', 'croches-e-afins', 'trabalhos-em-madeira'];
+    if (protectedSlugs.includes(category.slug)) {
+      return res.redirect('/admin/dashboard?tab=categorias&error=Não+é+permitido+excluir+as+categorias+oficiais+da+loja.');
+    }
+
     await Category.findByIdAndDelete(id);
     res.redirect('/admin/dashboard?tab=categorias&success=Categoria+removida+com+sucesso');
   } catch (error) {
     console.error('Erro ao excluir categoria:', error);
-    res.redirect('/admin/dashboard?tab=categorias');
+    res.redirect('/admin/dashboard?tab=categorias&error=Erro+ao+excluir+categoria');
+  }
+};
+
+// ==========================================
+// RESTAURAÇÃO E SINCRONIZAÇÃO DE DADOS
+// ==========================================
+exports.restoreDefaults = async (req, res) => {
+  try {
+    const { runDataRecovery } = require('../services/dataRecoveryService');
+    await runDataRecovery();
+    res.redirect('/admin/dashboard?tab=artesaos&success=Dados+oficiais+restaurados+e+sincronizados+com+sucesso!');
+  } catch (error) {
+    console.error('Erro ao sincronizar dados padrão:', error);
+    res.redirect('/admin/dashboard?tab=artesaos&error=Falha+ao+sincronizar+dados+padrão');
   }
 };
 
