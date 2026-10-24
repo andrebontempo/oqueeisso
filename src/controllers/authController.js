@@ -186,9 +186,6 @@ exports.googleCallback = (req, res, next) => {
 // ─── ESQUECEU A SENHA / RECUPERAÇÃO ──────────────────────────────────────────
 
 exports.renderForgotPassword = (req, res) => {
-  if (req.user) {
-    return res.redirect('/');
-  }
   res.render('auth/forgot-password', {
     title: 'Esqueci Minha Senha | O Que É Isso? Artesanato',
     error: null,
@@ -258,10 +255,6 @@ exports.forgotPassword = async (req, res) => {
 };
 
 exports.renderResetPassword = async (req, res) => {
-  if (req.user) {
-    return res.redirect('/');
-  }
-
   const { token } = req.params;
   const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 

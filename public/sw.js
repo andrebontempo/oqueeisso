@@ -1,4 +1,4 @@
-const CACHE_NAME = 'oqueeisso-v4';
+const CACHE_NAME = 'oqueeisso-v5';
 const STATIC_ASSETS = [
   '/',
   '/css/style.css',
@@ -37,12 +37,20 @@ self.addEventListener('activate', (event) => {
 
 // Interceptação de Requisições (Estratégia Network-First para HTML e Cache-First para Assets)
 self.addEventListener('fetch', (event) => {
-  // Ignorar requisições não GET ou requisições para o backend de auth/pagamento
+  // Ignorar requisições não GET
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
 
-  // Ignorar requisições externas ou da API de pagamentos/webhook
-  if (url.origin !== location.origin || url.pathname.startsWith('/api/')) return;
+  // Ignorar requisições externas, API de pagamentos, auth, admin e recuperação de senha
+  if (
+    url.origin !== location.origin ||
+    url.pathname.startsWith('/api/') ||
+    url.pathname.startsWith('/redefinir-senha') ||
+    url.pathname.startsWith('/esqueci-senha') ||
+    url.pathname.startsWith('/login') ||
+    url.pathname.startsWith('/auth') ||
+    url.pathname.startsWith('/admin')
+  ) return;
 
   // Para navegação HTML (Network First)
   if (event.request.mode === 'navigate' || event.request.headers.get('accept').includes('text/html')) {
