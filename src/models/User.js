@@ -45,6 +45,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      select: false,
+    },
     address: {
       street: { type: String, default: '' },
       number: { type: String, default: '' },
@@ -72,6 +80,17 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.matchPassword = async function (enteredPassword) {
   if (!this.password) return false;
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Gerar token seguro para recuperação de senha (válido por 1 hora)
+userSchema.methods.createPasswordResetToken = function () {
+  const crypto = require('crypto');
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  this.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 hora de validade
+
+  return resetToken;
 };
 
 module.exports = mongoose.model('User', userSchema);

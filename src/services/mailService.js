@@ -333,6 +333,49 @@ const sendContactEmail = async ({ name, email, phone, subject, message }) => {
   });
 };
 
+// ─── 8. RECUPERAÇÃO DE SENHA (CLIENTE) ─────────────────────────────────────────
+const sendPasswordResetEmail = async (user, resetToken) => {
+  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+  const resetUrl = `${baseUrl.replace(/\/$/, '')}/redefinir-senha/${resetToken}`;
+
+  const html = `
+    <div style="font-family: 'Segoe UI', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #eaeaea; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <div style="background: linear-gradient(135deg, #2C1A11 0%, #4A2818 100%); padding: 32px 24px; text-align: center; color: #ffffff;">
+        <h1 style="margin: 0; font-size: 26px; letter-spacing: -0.5px;">🌸 O Que É Isso?</h1>
+        <p style="margin: 8px 0 0; font-size: 14px; color: #E85D04; text-transform: uppercase; letter-spacing: 1px;">Artesanato Feito à Mão</p>
+      </div>
+      <div style="padding: 32px 28px; color: #333333; line-height: 1.6;">
+        <h2 style="color: #2C1A11; margin-top: 0;">Redefinição de Senha 🔐</h2>
+        <p>Olá, <strong>${user.name}</strong>!</p>
+        <p>Recebemos uma solicitação para redefinir a senha da sua conta na loja <strong>O Que É Isso? Artesanato</strong>.</p>
+        <p>Para escolher uma nova senha com total segurança, clique no botão abaixo:</p>
+
+        <div style="text-align: center; margin: 32px 0;">
+          <a href="${resetUrl}" style="background: #E85D04; color: #ffffff; padding: 14px 32px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 15px; display: inline-block;">
+            Redefinir Minha Senha
+          </a>
+        </div>
+
+        <div style="background: #FFF9F3; border-left: 4px solid #E85D04; padding: 16px; margin: 24px 0; border-radius: 4px; font-size: 13px; color: #555;">
+          <p style="margin: 0;"><strong>Atenção:</strong> Este link é seguro e expira em <strong>1 hora</strong>.</p>
+          <p style="margin: 6px 0 0;">Se o botão não abrir, copie e cole o seguinte endereço em seu navegador:<br/><span style="word-break: break-all; color: #E85D04;">${resetUrl}</span></p>
+        </div>
+
+        <p style="font-size: 13px; color: #777;">Se você não solicitou a redefinição de senha, desconsidere este e-mail. Sua senha atual permanecerá inalterada e sua conta protegida.</p>
+      </div>
+      <div style="background: #FAF7F2; padding: 20px; text-align: center; font-size: 12px; color: #888888; border-top: 1px solid #eaeaea;">
+        <p style="margin: 0;">O Que É Isso? Artesanato &copy; ${new Date().getFullYear()} — atendimento@oqueeisso.com</p>
+      </div>
+    </div>
+  `;
+
+  return sendEmail({
+    to: user.email,
+    subject: `🔐 Redefinição de Senha — O Que É Isso? Artesanato`,
+    html,
+  });
+};
+
 module.exports = {
   sendEmail,
   sendWelcomeEmail,
@@ -342,4 +385,5 @@ module.exports = {
   sendPaymentApprovedEmail,
   sendStatusUpdateEmail,
   sendContactEmail,
+  sendPasswordResetEmail,
 };
