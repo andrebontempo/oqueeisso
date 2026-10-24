@@ -11,7 +11,7 @@ setInterval(() => {
       loginAttempts.delete(ip);
     }
   }
-}, 10 * 60 * 1000);
+}, 10 * 60 * 1000).unref();
 
 const loginRateLimiter = (options = {}) => {
   const maxAttempts = options.maxAttempts || 5;

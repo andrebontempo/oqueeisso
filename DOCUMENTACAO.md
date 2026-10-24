@@ -53,16 +53,25 @@ ADMIN_ALERT_EMAIL=atendimento@oqueeisso.com
 
 ---
 
-## 🔐 3. Autenticação com Google OAuth 2.0
+## 🔐 3. Autenticação Híbrida & Recuperação de Senha
 
-### Configuração no Google Cloud Console:
-1. Acesse o **[Google Cloud Console](https://console.cloud.google.com/)**.
-2. Em **APIs e Serviços > Credenciais**, selecione ou crie seu ID do cliente OAuth 2.0.
-3. Adicione nas **Origens JavaScript autorizadas**:
-   - `https://oqueeisso.com`
-4. Adicione nos **URIs de redirecionamento autorizados**:
-   - `https://oqueeisso.com/auth/google/callback`
-5. Cole o Client ID e Secret nas variáveis do `.env`.
+A plataforma adota o padrão moderno de e-commerce com autenticação híbrida:
+
+### 3.1. Google OAuth 2.0 (1-Click Login)
+Permite login instantâneo para usuários com conta Google:
+- **Origens JavaScript autorizadas**: `https://oqueeisso.com`
+- **URIs de redirecionamento**: `https://oqueeisso.com/auth/google/callback`
+
+### 3.2. Contas Locais (E-mail e Senha)
+Para clientes que utilizam outros provedores (Outlook, Yahoo, iCloud, corporativos):
+- **Criptografia**: Senhas salvas com hash `bcryptjs` (salt 10).
+- **Proteção contra Força Bruta**: Middleware `loginRateLimiter` em memória protegendo contra abusos no endpoint `/login` e `/esqueci-senha`.
+
+### 3.3. Fluxo "Esqueceu a senha?" (Password Reset)
+1. **Solicitação (`GET/POST /esqueci-senha`)**: O usuário informa o e-mail cadastrado.
+2. **Geração de Token Seguro**: É gerado um token criptográfico pseudo-aleatório (`crypto.randomBytes(32)`), com hash SHA-256 armazenado no banco (`resetPasswordToken`) e validade de 1 hora (`resetPasswordExpires`).
+3. **Disparo do E-mail**: Um e-mail transacional estilizado é enviado com o link direto `https://oqueeisso.com/redefinir-senha/{token}`.
+4. **Redefinição (`GET/POST /redefinir-senha/:token`)**: O usuário define a nova senha com validação de comprimento e confirmação. Ao salvar, a nova senha é hasheada via pre-save hook e o usuário é redirecionado ao login com mensagem de sucesso.
 
 ---
 
@@ -129,6 +138,7 @@ A aplicação emite notificações ricas em HTML formatadas de forma responsiva 
 4. **Atualização de Status (`sendStatusUpdateEmail`)**:
    - Disparado sempre que o administrador avança o status do pedido pelo painel administrativo.
 5. **Outros Disparos do Sistema**:
+   - **Recuperação de Senha (`sendPasswordResetEmail`)**: Link seguro com token SHA-256 e validade de 1 hora.
    - **Boas-vindas (`sendWelcomeEmail`)**: Recepção ao usuário recém-cadastrado.
    - **Alerta de Cadastro (`sendAdminNewUserAlert`)**: Notifica a administração sobre novos clientes.
    - **Formulário de Contato (`sendContactEmail`)**: Envia a mensagem recebida para o admin e uma cópia de confirmação para o solicitante.
