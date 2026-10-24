@@ -77,6 +77,13 @@
       </h2>
 
       <form action="/contato" method="POST">
+        <!-- Proteção Invisível Anti-Spam (Honeypot + Trava de Tempo) -->
+        <div style="display:none !important; position:absolute; left:-9999px; width:0; height:0; opacity:0; pointer-events:none;" aria-hidden="true">
+          <label for="website_url">Não preencha este campo</label>
+          <input type="text" id="website_url" name="website_url" tabindex="-1" autocomplete="off" value="">
+        </div>
+        <input type="hidden" name="_form_time" value="<%= typeof formTimestamp !== 'undefined' ? formTimestamp : Date.now() %>">
+
         <div class="form-group">
           <label class="form-label">Seu Nome Completo *</label>
           <input type="text" name="name" class="form-control" placeholder="Ex: Maria Santos" required value="<%= user ? user.name : (formData.name || '') %>">

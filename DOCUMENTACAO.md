@@ -188,3 +188,22 @@ A loja possui um sistema inteligente de **Modo de Manutenção** gerenciado dina
 - **SEO & Google Friendly**: Para visitantes comuns, a tela acolhedora de manutenção é entregue com o código **HTTP 503 (Service Unavailable)** e cabeçalho `Retry-After: 3600`, preservando o ranqueamento das páginas no Google.
 - **Personalização**: É possível definir Título, Mensagem explicativa e Previsão de Retorno.
 
+---
+
+## 🛡️ 9. Proteção Anti-Spam no Formulário de Contato
+
+Para impedir o envio de mensagens em massa e disparos de robôs automatizados (spambots) sem gerar atrito para os clientes reais, o formulário de contato (`/contato`) utiliza uma proteção invisível em camadas:
+
+1. **Honeypot (Armadilha Oculta)**:
+   - Um campo `website_url` é adicionado ao formulário de forma invisível via CSS para humanos.
+   - Spambots que varrem o código preenchem automaticamente todos os inputs encontrados.
+   - Se o campo for recebido preenchido, o backend descarta o envio de e-mails e simula sucesso, enganando o robô para que ele não tente contornar o filtro.
+
+2. **Time-Gate (Trava de Tempo)**:
+   - Um timestamp do momento em que o formulário foi aberto é enviado no campo `_form_time`.
+   - Como seres humanos levam mais de 3 segundos para digitar seus dados e mensagem, envios concluídos em menos de 3 segundos são bloqueados como robôs automatizados.
+
+3. **Limitador de Requisições (`contactRateLimiter`)**:
+   - Limita a 3 envios a cada 10 minutos por endereço IP, prevenindo ataques de negação de serviço e inundações na caixa de entrada.
+
+

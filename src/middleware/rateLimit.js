@@ -66,4 +66,60 @@ const loginRateLimiter = (options = {}) => {
   };
 };
 
-module.exports = { loginRateLimiter };
+/**
+ * Middleware de proteção contra spam no formulário de contato (máx 3 envios a cada 10 min por IP)
+ */
+const contactSubmissions = new Map();
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, data] of contactSubmissions.entries()) {
+    if (now > data.resetTime) {
+      contactSubmissions.delete(ip);
+    }
+  }
+}, 10 * 60 * 1000).unref();
+
+const contactRateLimiter = (options = {}) => {
+  const maxAttempts = options.maxAttempts || 3;
+  const windowMs = options.windowMs || 10 * 60 * 1000; // 10 minutos
+
+  return (req, res, next) => {
+    if (req.method !== 'POST') return next();
+
+    const clientIp =
+      req.headers['cf-connecting-ip'] ||
+      req.headers['x-real-ip'] ||
+      req.headers['x-forwarded-for']?.split(',')[0].trim() ||
+      req.socket.remoteAddress ||
+      'unknown';
+
+    const now = Date.now();
+    const record = contactSubmissions.get(clientIp);
+
+    if (record) {
+      if (now < record.resetTime) {
+        if (record.count >= maxAttempts) {
+          const remainingMinutes = Math.ceil((record.resetTime - now) / 60000);
+          return res.status(429).render('contact', {
+            title: 'Fale Conosco | O Que É Isso?',
+            user: req.user || null,
+            success: null,
+            error: `Muitas mensagens enviadas recentemente deste dispositivo. Por segurança, aguarde ${remainingMinutes} minuto(s) antes de enviar novamente.`,
+            formData: req.body,
+            formTimestamp: Date.now(),
+          });
+        }
+        record.count += 1;
+      } else {
+        contactSubmissions.set(clientIp, { count: 1, resetTime: now + windowMs });
+      }
+    } else {
+      contactSubmissions.set(clientIp, { count: 1, resetTime: now + windowMs });
+    }
+
+    next();
+  };
+};
+
+module.exports = { loginRateLimiter, contactRateLimiter };
