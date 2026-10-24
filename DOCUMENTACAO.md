@@ -75,17 +75,63 @@ ADMIN_ALERT_EMAIL=atendimento@oqueeisso.com
 
 ---
 
-## ✉️ 5. Notificações por E-mail (Hostinger SMTP)
+## ✉️ 5. Notificações por E-mail (Hostinger SMTP & Cloudflare DNS)
 
-O serviço de e-mail (`src/services/mailService.js`) gerencia os seguintes disparos automáticos:
+O serviço de e-mail (`src/services/mailService.js`) gerencia toda a comunicação transacional da loja através do servidor SMTP da Hostinger (`smtp.hostinger.com:465` via SSL).
 
-1. **Boas-vindas**: Enviado ao cliente ao se cadastrar.
-2. **Alerta de Novo Usuário**: Enviado para `ADMIN_ALERT_EMAIL`.
-3. **Confirmação de Pedido**: Enviado ao cliente com o resumo da compra e Pix.
-4. **Alerta de Novo Pedido**: Enviado para o admin para iniciar a produção.
-5. **Pagamento Aprovado**: Enviado ao cliente quando o Mercado Pago confirma a transação.
-6. **Atualização de Status**: Enviado ao cliente quando o pedido mudo para *Enviado* ou *Entregue*.
-7. **Formulário de Contato**: Enviado para o e-mail de atendimento com a mensagem do cliente.
+### 🌐 5.1. Configuração de Registros DNS no Cloudflare
+Para garantir o envio, recebimento e evitar que mensagens caiam na caixa de spam (reputação com SPF, DKIM e DMARC), a zona DNS no Cloudflare está estruturada da seguinte forma:
+
+| Tipo | Nome | Conteúdo / Destino | Prioridade | Status no Cloudflare | Descrição |
+|---|---|---|:---:|:---:|---|
+| **MX** | `@` | `mx1.hostinger.com` | `5` | *Automático* | Servidor primário de recebimento Hostinger |
+| **MX** | `@` | `mx2.hostinger.com` | `10` | *Automático* | Servidor secundário de recebimento Hostinger |
+| **TXT** | `@` | `v=spf1 include:_spf.mail.hostinger.com ~all` | - | *Automático* | Autorização SPF contra spoofing/antispam |
+| **TXT** | `_dmarc` | `v=DMARC1; p=none` | - | *Automático* | Política DMARC para validação de remetente |
+| **CNAME** | `hostingemail-a._domainkey` | `hostingemail-a.dkim.mail.hostinger.com` | - | **DNS Only (Nuvem Cinza ⚪)** | Chave DKIM A (Criptografia) |
+| **CNAME** | `hostingemail-b._domainkey` | `hostingemail-b.dkim.mail.hostinger.com` | - | **DNS Only (Nuvem Cinza ⚪)** | Chave DKIM B (Criptografia) |
+| **CNAME** | `hostingemail-c._domainkey` | `hostingemail-c.dkim.mail.hostinger.com` | - | **DNS Only (Nuvem Cinza ⚪)** | Chave DKIM C (Criptografia) |
+| **CNAME** | `autodiscover` | `autodiscover.mail.hostinger.com` | - | **DNS Only (Nuvem Cinza ⚪)** | Autodescoberta para clientes Outlook |
+| **CNAME** | `autoconfig` | `autoconfig.mail.hostinger.com` | - | **DNS Only (Nuvem Cinza ⚪)** | Autoconfiguração para clientes Thunderbird |
+
+> ⚠️ **Importante sobre o Cloudflare**: Todos os registros CNAME de e-mail (`_domainkey`, `autodiscover`, `autoconfig`) devem permanecer estritamente em **DNS Only (Nuvem Cinza)**. Ativar o Proxy (Nuvem Laranja) nestes registros interfere na validação de chaves e quebra a assinatura DKIM. Registros do tipo `A` e `CNAME www` apontam para o servidor web da aplicação, não para o e-mail.
+
+---
+
+### 📦 5.2. Ciclo de Vida e Notificações de Pedidos
+
+A aplicação emite notificações ricas em HTML formatadas de forma responsiva para acompanhamento em qualquer dispositivo:
+
+```
+[Cliente Finaliza Pedido]
+       │
+       ├──► 📧 Cliente: Confirmação de Pedido Recebido (#OQI-XXXXXX) + Resumo + Pix Copia/Cola
+       └──► 🚨 Admin: Alerta de Novo Pedido no Ateliê com itens, comprador e telefone
+       
+[Mercado Pago Aprova Pagamento / Webhook IPN]
+       │
+       └──► ✅ Cliente: Notificação de Pagamento Aprovado (#OQI-XXXXXX) -> "Em Produção"
+       
+[Admin Altera Status no Painel]
+       │
+       └──► 📦 Cliente: Atualização de Envio (ex: "Em Trânsito", código de rastreio, "Entregue")
+```
+
+1. **Confirmação de Pedido (`sendOrderConfirmationEmail`)**:
+   - Enviado imediatamente ao cliente ao concluir o checkout.
+   - Apresenta tabela com itens comprados, fotos, artesão responsável, frete, endereço completo e código Pix copia-e-cola (se aplicável).
+2. **Alerta de Pedido no Ateliê (`sendAdminNewOrderAlert`)**:
+   - Enviado para `ADMIN_ALERT_EMAIL` (`atendimento@oqueeisso.com`).
+   - Notifica a equipe com dados do comprador, telefone de contato e lista dos itens para separação de estoque e produção.
+3. **Pagamento Confirmado (`sendPaymentApprovedEmail`)**:
+   - Disparado pelo Webhook do Mercado Pago ou no retorno de aprovação.
+   - Informa que a cobrança foi liquidada e o pedido avançou para a etapa de confecção/preparação.
+4. **Atualização de Status (`sendStatusUpdateEmail`)**:
+   - Disparado sempre que o administrador avança o status do pedido pelo painel administrativo.
+5. **Outros Disparos do Sistema**:
+   - **Boas-vindas (`sendWelcomeEmail`)**: Recepção ao usuário recém-cadastrado.
+   - **Alerta de Cadastro (`sendAdminNewUserAlert`)**: Notifica a administração sobre novos clientes.
+   - **Formulário de Contato (`sendContactEmail`)**: Envia a mensagem recebida para o admin e uma cópia de confirmação para o solicitante.
 
 ---
 
